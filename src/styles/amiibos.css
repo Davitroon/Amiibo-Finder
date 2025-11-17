@@ -1,0 +1,27 @@
+.amiibo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.amiibo-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform .2s;
+}
+
+.amiibo-card:hover {
+  transform: translateY(-5px);
+  cursor: pointer;
+}
+
+.amiibo-card img {
+  width: 100%;
+  height: auto;
+  max-height: 291.781px;
+  max-width: 207.562px;
+}
