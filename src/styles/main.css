@@ -11,6 +11,10 @@ p {
   font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
+h1 {
+  text-align: center;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -41,4 +45,11 @@ p {
   background: none;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+.amiibo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
 }

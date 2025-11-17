@@ -1,21 +1,36 @@
 ---
-// Props
+import "../styles/amiibos.css";
+
 interface Props {
-    amiibo: {
-        name: string;
-        image: string;
-        gameSeries: string;
-        head: string;
-        tail: string;
-    };
+	amiibo: {
+		name: string;
+		image: string;
+		gameSeries: string;
+		head: string;
+		tail: string;
+		type: string;
+	};
 }
-const amiiboId = Astro.props.amiibo.head + Astro.props.amiibo.tail;
+
+const a = Astro.props.amiibo;
+const id = a.head + a.tail;
 ---
 
-<div id={amiiboId} class="amiibo-card">
-    <a href=`/amiibo/${amiiboId}`>
-        <img src={Astro.props.amiibo.image} alt={Astro.props.amiibo.name} />
-        <h3>{Astro.props.amiibo.name}</h3>
-        <p>{Astro.props.amiibo.gameSeries}</p>
-    </a>
+<div
+	class="amiibo-card"
+	role="button"
+	title="Ver detalles de este amiibo"
+	data-id={id}
+	data-name={a.name}
+	data-image={a.image}
+	data-series={a.gameSeries}
+	data-type={a.type}
+>
+	<img src={a.image} alt={a.name} />
+	<h3>{a.name}</h3>
+	<p>{a.gameSeries}</p>
 </div>
+
+<script>
+	
+</script>

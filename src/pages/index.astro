@@ -1,12 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import AmiiboCard from "../components/AmiiboCard.astro";
-import { trySerializeLocals } from "astro/middleware";
+import AmiiboModal from "../components/AmiiboModal.astro";
 
 // API call
-const res = await fetch("https://amiiboapi.com/api/amiibo/?page=1");
+const res = await fetch("https://amiiboapi.com/api/amiibo/?page=1&type=figure");
 const json = await res.json();
-const amiibos = json.amiibo.slice(0, 24);
+const amiibos = json.amiibo.slice(0, 60);
 
 interface amiibo {
 	amiiboSeries: string;
@@ -27,8 +27,10 @@ interface amiibo {
 ---
 
 <BaseLayout>
-	<h1>Página principal</h1>
+	<h1>Home page</h1>
 	<div class="amiibo-grid">
 		{amiibos.map((amiibo: amiibo) => <AmiiboCard amiibo={amiibo} />)}
 	</div>
+
+	<AmiiboModal />
 </BaseLayout>
