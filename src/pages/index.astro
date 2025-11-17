@@ -1,19 +1,9 @@
 ---
 import Header from "../components/header.astro";
+import BaseLayout from "../layouts/baseLayout.astro";
 import "../styles/main.css";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Amiibo Fiinder</title>
-	</head>
-	<body>
-		<Header/>
-		<h1>Página principal</h1>
-		<p>Aqui seria la introducción</p>
-	</body>
-</html>
+<BaseLayout>
+	<h1>Página principal</h1>
+</BaseLayout>
