@@ -1,9 +1,41 @@
 ---
-import Header from "../components/header.astro";
-import BaseLayout from "../layouts/baseLayout.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/main.css";
+
+// API call
+const res = await fetch("https://amiiboapi.com/api/amiibo/?page=1");
+const json = await res.json();
+const amiibos = json.amiibo.slice(0, 24);
+
+interface amiibo {
+	amiiboSeries: string;
+	character: string;
+	gameSeries: string;
+	head: string;
+	image: string;
+	name: string;
+	release: {
+		au?: string;
+		eu?: string;
+		jp?: string;
+		na?: string;
+	};
+	tail: string;
+	type: string;
+}
 ---
 
 <BaseLayout>
 	<h1>Página principal</h1>
+	<div class="amiibo-grid">
+		{
+			amiibos.map((amiibo: amiibo) => (
+				<div class="amiibo-card">
+					<img src={amiibo.image} alt={amiibo.name} />
+					<h3>{amiibo.name}</h3>
+					<p>{amiibo.gameSeries}</p>
+				</div>
+			))
+		}
+	</div>
 </BaseLayout>
