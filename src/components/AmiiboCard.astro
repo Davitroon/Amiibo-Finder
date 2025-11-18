@@ -1,4 +1,8 @@
 ---
+// - AmiiboCard component -
+// Displays a single Amiibo card with basic info.
+// This element is interactive and sends its data via dataset attributes.
+
 import "../styles/amiibos.css";
 
 interface Props {
@@ -22,13 +26,7 @@ const a = Astro.props.amiibo;
 const id = a.head + a.tail;
 ---
 
-<!-- 
-	AmiiboCard component
-	Displays a single Amiibo card with basic info.
-	This element is interactive and sends its data via dataset attributes.
--->
-
-<div
+<article
 	class="amiibo-card"
 	role="button"
 	title={"See details of " + a.name}
@@ -42,4 +40,4 @@ const id = a.head + a.tail;
 	<img src={a.image} alt={a.name} />
 	<h3>{a.name}</h3>
 	<p>{a.gameSeries}</p>
-</div>
+</article>

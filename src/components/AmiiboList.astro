@@ -1,4 +1,6 @@
 ---
+//  - Grid container for Amiibo cards -
+
 import AmiiboCard from "../components/AmiiboCard.astro";
 
 // Fetch Amiibo figures from API
@@ -8,26 +10,23 @@ const amiibos = json.amiibo.slice(0, 80);
 
 // TypeScript interface
 interface Amiibo {
-  amiiboSeries: string;
-  character: string;
-  gameSeries: string;
-  head: string;
-  image: string;
-  name: string;
-  release: {
-    au?: string;
-    eu?: string;
-    jp?: string;
-    na?: string;
-  };
-  tail: string;
-  type: string;
+	amiiboSeries: string;
+	character: string;
+	gameSeries: string;
+	head: string;
+	image: string;
+	name: string;
+	release: {
+		au?: string;
+		eu?: string;
+		jp?: string;
+		na?: string;
+	};
+	tail: string;
+	type: string;
 }
 ---
 
-<!-- Grid container for Amiibo cards -->
-<div class="amiibo-grid">
-  {amiibos.map((amiibo: Amiibo) => (
-    <AmiiboCard amiibo={amiibo} />
-  ))}
-</div>
+<section class="amiibo-grid">
+	{amiibos.map((amiibo: Amiibo) => <AmiiboCard amiibo={amiibo} />)}
+</section>

@@ -60,5 +60,15 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 1rem;
-  padding: 1rem;
+  padding-inline: 10rem;
+  margin-top: 2rem;
+}
+
+/* -------------------------------
+   Responsive Styles
+------------------------------- */
+@media (max-width: 1000px) {
+.amiibo-grid {
+  padding-inline: 1rem;
+}
 }

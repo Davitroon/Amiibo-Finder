@@ -1,25 +1,25 @@
 ---
+// - Main layout for the Amiibo Finder site. -
+// Includes the global header, footer, and a content slot for page-specific content
+
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/main.css";
 ---
 
-<!-- 
-	Main layout for the Amiibo Finder site.
-	Includes the global header, footer, and a content slot for page-specific content.
--->
-
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Amiibo Finder</title>
-  </head>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Amiibo Finder</title>
+	</head>
 
-  <body>
-    <Header />
-    <slot />
-    <Footer/>
-  </body>
+	<body>
+		<Header />
+		<main>
+			<slot />
+		</main>
+		<Footer />
+	</body>
 </html>
