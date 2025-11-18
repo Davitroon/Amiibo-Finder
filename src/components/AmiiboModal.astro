@@ -2,6 +2,11 @@
 import "../styles/modal.css";
 ---
 
+<!-- 
+	Amiibo Modal Component
+	Displays detailed information of a selected Amiibo.
+	The modal becomes visible when a card is clicked.
+-->
 <div id="amiibo-modal" class="modal">
 	<div class="modal-content">
 		<span
@@ -20,16 +25,16 @@ import "../styles/modal.css";
 </div>
 
 <script>
+	/* 
+		References to modal elements 
+		These are updated every time an Amiibo card is clicked.
+	*/
 	const modal = document.getElementById("amiibo-modal")! as HTMLDivElement;
-	const closeModal = document.getElementById(
-		"close-modal",
-	)! as HTMLSpanElement;
+	const closeModal = document.getElementById("close-modal")! as HTMLSpanElement;
 
 	const img = document.getElementById("modal-img")! as HTMLImageElement;
 	const name = document.getElementById("modal-name")! as HTMLHeadingElement;
-	const series = document.getElementById(
-		"modal-series",
-	)! as HTMLParagraphElement;
+	const series = document.getElementById("modal-series")! as HTMLParagraphElement;
 	const type = document.getElementById("modal-type")! as HTMLParagraphElement;
 	const date = document.getElementById("modal-date")! as HTMLParagraphElement;
 	const idEl = document.getElementById("modal-id")! as HTMLParagraphElement;

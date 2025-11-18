@@ -3,11 +3,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import AmiiboCard from "../components/AmiiboCard.astro";
 import AmiiboModal from "../components/AmiiboModal.astro";
 
-// API call
+// Fetch the first page of Amiibo figures from the API, only figures
 const res = await fetch("https://amiiboapi.com/api/amiibo/?page=1&type=figure");
 const json = await res.json();
 const amiibos = json.amiibo.slice(0, 60);
 
+// TypeScript interface for Amiibo data
 interface amiibo {
 	amiiboSeries: string;
 	character: string;
@@ -28,9 +29,11 @@ interface amiibo {
 
 <BaseLayout>
 	<h1>Home page</h1>
+	<!-- Grid container for Amiibo cards -->
 	<div class="amiibo-grid">
 		{amiibos.map((amiibo: amiibo) => <AmiiboCard amiibo={amiibo} />)}
 	</div>
 
+	<!-- Hidden modal component for displaying Amiibo details -->
 	<AmiiboModal />
 </BaseLayout>
