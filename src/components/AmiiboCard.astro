@@ -7,6 +7,12 @@ interface Props {
 		image: string;
 		gameSeries: string;
 		head: string;
+		release: {
+			au?: string;
+			eu?: string;
+			jp?: string;
+			na?: string;
+		};
 		tail: string;
 		type: string;
 	};
@@ -19,18 +25,17 @@ const id = a.head + a.tail;
 <div
 	class="amiibo-card"
 	role="button"
-	title="Ver detalles de " + a.name}
+	title={"See details of " + a.name}
 	data-id={id}
 	data-name={a.name}
 	data-image={a.image}
 	data-series={a.gameSeries}
 	data-type={a.type}
+	data-date={a.release.eu}
 >
 	<img src={a.image} alt={a.name} />
 	<h3>{a.name}</h3>
 	<p>{a.gameSeries}</p>
 </div>
 
-<script>
-	
-</script>
+<script></script>

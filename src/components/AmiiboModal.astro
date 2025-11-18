@@ -4,25 +4,34 @@ import "../styles/modal.css";
 
 <div id="amiibo-modal" class="modal">
 	<div class="modal-content">
-		<span id="close-modal" class="close">&times;</span>
+		<span
+			id="close-modal"
+			class="close"
+			title="Close popup"
+			aria-label="Close popup">&times;</span
+		>
 		<img id="modal-img" />
 		<h2 id="modal-name"></h2>
 		<p id="modal-series"></p>
 		<p id="modal-type"></p>
+		<p id="modal-date"></p>
 		<p id="modal-id"></p>
 	</div>
 </div>
 
 <script>
 	const modal = document.getElementById("amiibo-modal")! as HTMLDivElement;
-	const closeModal = document.getElementById("close-modal")! as HTMLSpanElement;
+	const closeModal = document.getElementById(
+		"close-modal",
+	)! as HTMLSpanElement;
 
 	const img = document.getElementById("modal-img")! as HTMLImageElement;
 	const name = document.getElementById("modal-name")! as HTMLHeadingElement;
 	const series = document.getElementById(
-		"modal-series"
+		"modal-series",
 	)! as HTMLParagraphElement;
 	const type = document.getElementById("modal-type")! as HTMLParagraphElement;
+	const date = document.getElementById("modal-date")! as HTMLParagraphElement;
 	const idEl = document.getElementById("modal-id")! as HTMLParagraphElement;
 
 	document.querySelectorAll<HTMLElement>(".amiibo-card").forEach((card) => {
@@ -34,13 +43,14 @@ import "../styles/modal.css";
 			name.textContent = data.name!;
 			series.textContent = "Serie: " + data.series!;
 			type.textContent = "Type: " + data.type!;
+			date.textContent = "Release date (EU): " + data.date!;
 			idEl.textContent = "ID: " + data.id!;
 
 			modal.classList.add("show");
 		});
 	});
 
-	// Cerrar modal
+	// Close modal on click
 	closeModal.onclick = () => modal.classList.remove("show");
 	modal.onclick = (e) => {
 		if (e.target === modal) modal.classList.remove("show");
