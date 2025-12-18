@@ -1,0 +1,58 @@
+---
+
+---
+
+<p id="button-trigger">Unlock new amiibo</p>
+<p id="see-full-list">See full list</p>
+<p id="button-delete">Borrar local storage</p>
+
+<script>
+	const stored = localStorage.getItem("amiiboFinderFullList");
+	let amiibos: any[] | null = null;
+
+	if (stored) {
+		amiibos = JSON.parse(stored);
+	}
+
+	async function getRandomAmiibo() {
+		if (!amiibos) amiibos = await getFullList();
+
+		if (!amiibos || amiibos.length === 0) {
+			console.log("No hay amiibos disponibles");
+			return null;
+		}
+
+		const randomAmiibo = amiibos[Math.floor(Math.random() * amiibos.length)];
+
+		console.log("Random Amiibo:", randomAmiibo);
+
+		// return randomAmiibo;
+	}
+
+	async function getFullList() {
+		console.log("Llamando a API...");
+
+		const res = await fetch(
+			"https://amiiboapi.com/api/amiibo/?page=1&type=figure"
+		);
+		const json = await res.json();
+
+		let data = json.amiibo;
+		localStorage.setItem("amiiboFinderFullList", JSON.stringify(data));
+		return data;
+	}
+
+	document
+		.getElementById("button-trigger")
+		?.addEventListener("click", getRandomAmiibo);
+
+	document.getElementById("button-delete")?.addEventListener("click", () => {
+		localStorage.removeItem("amiiboFinderFullList");
+		amiibos = null;
+		console.log("Cache borrada");
+	});
+
+	document.getElementById("see-full-list")?.addEventListener("click", () => {
+		console.log(amiibos);
+	});
+</script>
