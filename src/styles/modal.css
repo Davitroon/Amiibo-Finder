@@ -1,0 +1,72 @@
+/* -------------------------------
+   Modal Container
+------------------------------- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  z-index: 9999;
+  transition: background-color 0.3s ease;
+}
+
+.modal.show {
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* -------------------------------
+   Modal Content Box
+------------------------------- */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 350px;
+  text-align: center;
+  transform: scale(0.8);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* -------------------------------
+   Close Button
+------------------------------- */
+.close {
+  float: right;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  color: red;
+  transition: 0.2s;
+}
+
+.close:hover {
+  transform: scale(1.1);
+}
+
+/* -------------------------------
+   Modal Images
+------------------------------- */
+.modal img {
+  max-width: 294px;
+  max-height: 216px;
+}
+
+@media (max-width: 780px) {
+  .modal img {
+    max-width: 194px;
+    max-height: 116px;
+  }
+}
