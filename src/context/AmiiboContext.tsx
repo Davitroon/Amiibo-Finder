@@ -44,7 +44,6 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 	// Función para borrar datos
 	const clearStorage = () => {
 		localStorage.removeItem("amiiboFinderUserList");
-		localStorage.removeItem("amiiboFinderFullList");
 		setUserAmiibos([]);
 	};
 
