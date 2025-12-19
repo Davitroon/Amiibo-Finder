@@ -9,7 +9,7 @@ const Collection = () => {
 
   return (
     <div>
-      <h1>My Collection</h1>
+      <h2>My Collection</h2>
       <hr />
       
       <section className="amiibo-grid">

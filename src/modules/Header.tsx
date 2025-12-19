@@ -3,7 +3,7 @@ import "../styles/header.css";
 
 const Header = () => (
 	<header id="header">
-		<p>Amiibo Finder</p>
+		<h1>Amiibo Finder</h1>
 		<div id="header-links">
 			<Link to="/" title="See my Amiibos">
 				Collection

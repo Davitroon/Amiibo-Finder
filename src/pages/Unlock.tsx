@@ -46,7 +46,7 @@ const Unlock = () => {
 
 	return (
 		<div>
-			<h1>Unlock new Amiibos</h1>
+			<h2>Unlock new Amiibos</h2>
 			<hr />
 
 			<div style={{ display: "flex", gap: "1rem", marginTop: "20px" }}>

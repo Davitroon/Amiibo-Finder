@@ -15,17 +15,6 @@ const Footer: React.FC = () => {
 					Amiibo API
 				</a>
 			</p>
-			<p>
-				Project developed with{" "}
-				<a
-					href="https://react.dev/"
-					title="React Official Site"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					React
-				</a>
-			</p>
 		</footer>
 	);
 };
