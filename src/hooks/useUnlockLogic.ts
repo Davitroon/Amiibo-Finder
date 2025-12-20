@@ -33,7 +33,7 @@ export const useUnlockLogic = () => {
     // --- Timer Effect ---
     useEffect(() => {
         const checkTimer = () => {
-            const lastUnlock = localStorage.getItem("lastUnlockTime");
+            const lastUnlock = localStorage.getItem("amiiboFinderLastUnlockTime");
             if (lastUnlock) {
                 const elapsed = Date.now() - parseInt(lastUnlock, 10);
                 const left = COOLDOWN_TIME - elapsed;
@@ -84,7 +84,7 @@ export const useUnlockLogic = () => {
 
             await Promise.all([animationDelay, imageLoad]);
 
-            localStorage.setItem("lastUnlockTime", Date.now().toString());
+            localStorage.setItem("amiiboFinderLastUnlockTime", Date.now().toString());
             setRemainingTime(COOLDOWN_TIME);
 
             // ---------------------------------------------------------

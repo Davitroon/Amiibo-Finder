@@ -3,7 +3,7 @@ import { useAmiibos } from "../context/AmiiboContext";
 import Modal from "../modules/Modal";
 import AmiiboList from "../modules/AmiiboList";
 import DeleteCollectionModal from "../modules/DeleteCollectionModal";
-import "../styles/collection.css"; // Asegúrate de importar el CSS actualizado
+import "../styles/collection.css";
 
 const Collection = () => {
     const { userAmiibos, clearStorage } = useAmiibos();
@@ -21,27 +21,33 @@ const Collection = () => {
             <hr />
 
             <section className="collection-body">
-                {userAmiibos.length > 0 ? (
-                    <>
-                        <AmiiboList setSelectedAmiibo={setSelectedAmiibo} />
-                        
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <button
-                                onClick={() => setShowDeleteConfirm(true)}
-                                className="delete-collection"
-                                title="Delete my Amiibos collection"
-                            >
-                                Delete collection
-                            </button>
+                
+                {/* CAMBIO: Este contenedor "frame" siempre es visible */}
+                <div className="collection-frame">
+                    
+                    {userAmiibos.length > 0 ? (
+                        <>
+                            <AmiiboList setSelectedAmiibo={setSelectedAmiibo} />
+                            
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <button
+                                    onClick={() => setShowDeleteConfirm(true)}
+                                    className="delete-collection"
+                                    title="Delete my Amiibos collection"
+                                >
+                                    Delete collection
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        /* El contenido vacío ya no necesita bordes, solo centra el texto */
+                        <div className="empty-content">
+                            <p className="empty-title">Your collection is empty</p>
+                            <p className="empty-subtitle">Go to the Unlock page to get your first Amiibo!</p>
                         </div>
-                    </>
-                ) : (
-                    /* CAMBIO: Mejor formato para lista vacía */
-                    <div className="empty-state">
-                        <p className="empty-title">Your collection is empty</p>
-                        <p className="empty-subtitle">Go to the Unlock page to get your first Amiibo!</p>
-                    </div>
-                )}
+                    )}
+                    
+                </div>
             </section>
 
             <Modal

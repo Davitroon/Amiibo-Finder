@@ -3,37 +3,53 @@
 ------------------------------- */
 .collection-body {
     padding-inline: 10rem;
-    min-height: 50vh; /* Asegura espacio vertical */
+    min-height: 50vh;
+}
+
+/* NUEVO: El marco que siempre está visible.
+   Hereda el estilo que tenía antes el estado vacío.
+*/
+.collection-frame {
+    margin-top: 2rem;
+    background-color: #f9f9f9;
+    border: 2px dashed #ddd; /* El borde que te gustó */
+    border-radius: 12px;
+    padding: 2rem; /* Espacio interno para que los amiibos no toquen el borde */
+    min-height: 400px; /* Altura mínima para que se vea bien siempre */
+    
+    display: flex;
+    flex-direction: column;
+    /* Si está vacío, esto ayuda a centrar. Si tiene datos, se expande */
+    justify-content: flex-start; 
 }
 
 .amiibo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 1.5rem; /* Un poco más de espacio entre cartas */
 }
 
 /* -------------------------------
-   Botón Delete Mejorado
+   Botón Delete
 ------------------------------- */
 .delete-collection {
-    background-color: #ff4d4d; /* Rojo suave */
+    background-color: #ff4d4d;
     color: white;
     padding: 10px 24px;
     font-size: 16px;
     font-weight: 600;
-    margin-top: 50px;
+    margin-top: 40px; /* Separación de la grid */
     border: none;
-    border-radius: 8px; /* Bordes redondeados */
+    border-radius: 8px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease; /* Transición suave */
+    transition: all 0.3s ease;
 }
 
 .delete-collection:hover {
-    background-color: #ff1a1a; /* Rojo más intenso */
-    transform: translateY(-2px); /* Se eleva un poco */
-    box-shadow: 0 6px 12px rgba(255, 26, 26, 0.3); /* Sombra roja brillante */
+    background-color: #ff1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 26, 26, 0.3);
 }
 
 .delete-collection:active {
@@ -41,20 +57,17 @@
 }
 
 /* -------------------------------
-   Estado Vacío (Empty State)
+   Contenido Vacío (Texto)
 ------------------------------- */
-.empty-state {
+.empty-content {
+    /* Hacemos que ocupe todo el espacio disponible del padre para centrar verticalmente */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 300px; /* Altura para centrar verticalmente */
     text-align: center;
     color: #666;
-    border: 2px dashed #ddd; /* Un borde punteado decorativo */
-    border-radius: 12px;
-    margin-top: 30px;
-    background-color: #f9f9f9;
 }
 
 .empty-title {
@@ -77,7 +90,8 @@
         padding-inline: 1rem;
     }
     
-    .empty-state {
-        height: 200px;
+    .collection-frame {
+        min-height: 300px;
+        padding: 1rem;
     }
 }
