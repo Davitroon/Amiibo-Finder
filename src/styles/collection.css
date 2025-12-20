@@ -1,0 +1,83 @@
+/* -------------------------------
+   Body Content
+------------------------------- */
+.collection-body {
+    padding-inline: 10rem;
+    min-height: 50vh; /* Asegura espacio vertical */
+}
+
+.amiibo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* -------------------------------
+   Botón Delete Mejorado
+------------------------------- */
+.delete-collection {
+    background-color: #ff4d4d; /* Rojo suave */
+    color: white;
+    padding: 10px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 50px;
+    border: none;
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease; /* Transición suave */
+}
+
+.delete-collection:hover {
+    background-color: #ff1a1a; /* Rojo más intenso */
+    transform: translateY(-2px); /* Se eleva un poco */
+    box-shadow: 0 6px 12px rgba(255, 26, 26, 0.3); /* Sombra roja brillante */
+}
+
+.delete-collection:active {
+    transform: translateY(0);
+}
+
+/* -------------------------------
+   Estado Vacío (Empty State)
+------------------------------- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px; /* Altura para centrar verticalmente */
+    text-align: center;
+    color: #666;
+    border: 2px dashed #ddd; /* Un borde punteado decorativo */
+    border-radius: 12px;
+    margin-top: 30px;
+    background-color: #f9f9f9;
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #444;
+}
+
+.empty-subtitle {
+    font-size: 1rem;
+    color: #888;
+}
+
+/* -------------------------------
+   Responsive Styles
+------------------------------- */
+@media (max-width: 1000px) {
+    .collection-body {
+        padding-inline: 1rem;
+    }
+    
+    .empty-state {
+        height: 200px;
+    }
+}

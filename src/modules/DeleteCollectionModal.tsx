@@ -1,4 +1,4 @@
-import "../styles/delete-modal.css"; // Asegúrate de importar el archivo CSS
+import "../styles/delete-modal.css";
 
 interface Props {
     setShowDeleteConfirm: (status: boolean) => void;

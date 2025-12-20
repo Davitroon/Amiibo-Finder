@@ -29,14 +29,13 @@ const GiftBox: React.FC<GiftBoxProps> = ({
 	if (isLoading) {
 		boxClass += " opening";
 		imgClass += " pop-anim";
+
 	} else if (isLocked) {
 		boxClass += " locked";
+
 	} else {
 		imgClass += " wobble-anim";
 	}
-
-	// Nota: en tu CSS original usabas .gift-open y .gift-closed para tamaños
-	const sizeClass = showOpenImage ? "gift-open" : "gift-closed";
 
 	return (
 		<div className="gift-stage">
@@ -57,7 +56,7 @@ const GiftBox: React.FC<GiftBoxProps> = ({
 				<img
 					src={showOpenImage ? giftOpen : giftClosed}
 					alt="Mystery Gift"
-					className={`${sizeClass} ${imgClass}`}
+					className={`gift ${imgClass}`}
 				/>
 
 				<p className="gift-text">
