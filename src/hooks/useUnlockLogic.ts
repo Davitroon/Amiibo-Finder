@@ -9,6 +9,9 @@ export const useUnlockLogic = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isOpeningAnim, setIsOpeningAnim] = useState(false);
     const [remainingTime, setRemainingTime] = useState<number>(0);
+    
+    // NUEVO: Estado independiente para el confeti
+    const [showConfetti, setShowConfetti] = useState(false);
 
     // --- Helpers ---
     const formatTime = (ms: number) => {
@@ -33,7 +36,7 @@ export const useUnlockLogic = () => {
     // --- Timer Effect ---
     useEffect(() => {
         const checkTimer = () => {
-            const lastUnlock = localStorage.getItem("amiiboFinderLastUnlockTime");
+            const lastUnlock = localStorage.getItem("lastUnlockTime"); // Asegúrate de usar la misma key siempre
             if (lastUnlock) {
                 const elapsed = Date.now() - parseInt(lastUnlock, 10);
                 const left = COOLDOWN_TIME - elapsed;
@@ -62,9 +65,7 @@ export const useUnlockLogic = () => {
             if (storedList) {
                 fullList = JSON.parse(storedList);
             } else {
-                const res = await fetch(
-                    "https://amiiboapi.com/api/amiibo/?page=1&type=figure"
-                );
+                const res = await fetch("https://amiiboapi.com/api/amiibo/?page=1&type=figure");
                 const json = await res.json();
                 fullList = json.amiibo;
                 localStorage.setItem("amiiboFinderFullList", JSON.stringify(fullList));
@@ -84,22 +85,21 @@ export const useUnlockLogic = () => {
 
             await Promise.all([animationDelay, imageLoad]);
 
-            localStorage.setItem("amiiboFinderLastUnlockTime", Date.now().toString());
+            localStorage.setItem("lastUnlockTime", Date.now().toString());
             setRemainingTime(COOLDOWN_TIME);
 
-            // ---------------------------------------------------------
-            // CAMBIO: Preparamos el objeto Amiibo personalizado
-            // ---------------------------------------------------------
             const amiiboToSave = { 
                 ...random, 
-                unlockedAt: new Date().toLocaleDateString() // Guardamos la fecha actual (DD/MM/YYYY)
+                unlockedAt: new Date().toLocaleDateString()
             };
-
-            // Eliminamos la propiedad 'type' para que no se registre
             delete amiiboToSave.type;
 
             unlockAmiibo(amiiboToSave);
             setUnlockedAmiibo(amiiboToSave);
+            
+            // NUEVO: Activamos el confeti aquí
+            setShowConfetti(true);
+            
             setIsLoading(false);
         } else {
             setIsLoading(false);
@@ -110,6 +110,12 @@ export const useUnlockLogic = () => {
     const closeModal = () => {
         setUnlockedAmiibo(null);
         setIsOpeningAnim(false);
+        // NOTA: NO reseteamos showConfetti aquí. Dejamos que termine solo.
+    };
+
+    // NUEVO: Función para cuando el confeti termina su animación
+    const handleConfettiComplete = () => {
+        setShowConfetti(false);
     };
 
     return {
@@ -118,6 +124,8 @@ export const useUnlockLogic = () => {
         isOpeningAnim,
         remainingTime,
         isLocked,
+        showConfetti, // Exportamos estado
+        handleConfettiComplete, // Exportamos handler
         handleUnlock,
         closeModal,
         formatTime,
