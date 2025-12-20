@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
 import Modal from "../modules/Modal";
 import AmiiboList from "../modules/AmiiboList";
@@ -6,64 +6,172 @@ import DeleteCollectionModal from "../modules/DeleteCollectionModal";
 import "../styles/collection.css";
 
 const Collection = () => {
-    const { userAmiibos, clearStorage } = useAmiibos();
-    const [selectedAmiibo, setSelectedAmiibo] = useState<any>(null);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const { userAmiibos, clearStorage } = useAmiibos();
+	const [selectedAmiibo, setSelectedAmiibo] = useState<any>(null);
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-    const handleConfirmDelete = () => {
-        clearStorage();
-        setShowDeleteConfirm(false);
-    };
+	// Estado para mostrar/ocultar el panel de filtros
+	const [showFilters, setShowFilters] = useState(false);
 
-    return (
-        <>
-            <h2>My Collection</h2>
-            <hr />
+	// Estados para los valores de los filtros (puedes mover esto a un hook si crece mucho)
+	const [searchTerm, setSearchTerm] = useState("");
+	const [selectedSeries, setSelectedSeries] = useState("All");
+	const [sortOrder, setSortOrder] = useState("newest");
 
-            <section className="collection-body">
-                
-                {/* CAMBIO: Este contenedor "frame" siempre es visible */}
-                <div className="collection-frame">
-                    
-                    {userAmiibos.length > 0 ? (
-                        <>
-                            <AmiiboList setSelectedAmiibo={setSelectedAmiibo} />
-                            
-                            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                <button
-                                    onClick={() => setShowDeleteConfirm(true)}
-                                    className="delete-collection"
-                                    title="Delete my Amiibos collection"
-                                >
-                                    Delete collection
-                                </button>
-                            </div>
-                        </>
-                    ) : (
-                        /* El contenido vacío ya no necesita bordes, solo centra el texto */
-                        <div className="empty-content">
-                            <p className="empty-title">Your collection is empty</p>
-                            <p className="empty-subtitle">Go to the Unlock page to get your first Amiibo!</p>
-                        </div>
-                    )}
-                    
-                </div>
-            </section>
+	const handleConfirmDelete = () => {
+		clearStorage();
+		setShowDeleteConfirm(false);
+	};
 
-            <Modal
-                isOpen={!!selectedAmiibo}
-                onClose={() => setSelectedAmiibo(null)}
-                amiibo={selectedAmiibo}
-            />
+	// --- LÓGICA DE FILTRADO ---
+	// Obtenemos las series únicas para el select
+	const uniqueSeries = useMemo(() => {
+		const series = userAmiibos.map((a) => a.gameSeries);
+		return ["All", ...Array.from(new Set(series))];
+	}, [userAmiibos]);
 
-            {showDeleteConfirm && (
-                <DeleteCollectionModal
-                    setShowDeleteConfirm={setShowDeleteConfirm}
-                    handleConfirmDelete={handleConfirmDelete}
-                />
-            )}
-        </>
-    );
+	// Filtramos y ordenamos la lista
+	const filteredAmiibos = useMemo(() => {
+		let result = [...userAmiibos];
+
+		// 1. Filtro por texto
+		if (searchTerm) {
+			result = result.filter((a) =>
+				a.name.toLowerCase().includes(searchTerm.toLowerCase())
+			);
+		}
+
+		// 2. Filtro por serie
+		if (selectedSeries !== "All") {
+			result = result.filter((a) => a.gameSeries === selectedSeries);
+		}
+
+		// 3. Ordenamiento
+		result.sort((a, b) => {
+			if (sortOrder === "newest") {
+				// Asumiendo que unlockedAt es "DD/MM/YYYY" o timestamp.
+				// Si es string simple, esto es básico. Lo ideal es guardar timestamp.
+				// Para simplificar, aquí usaremos el orden de array invertido (lo último añadido suele estar al final)
+				return -1;
+			} else if (sortOrder === "oldest") {
+				return 1;
+			} else if (sortOrder === "az") {
+				return a.name.localeCompare(b.name);
+			} else if (sortOrder === "za") {
+				return b.name.localeCompare(a.name);
+			}
+			return 0;
+		});
+
+		return result;
+	}, [userAmiibos, searchTerm, selectedSeries, sortOrder]);
+
+	return (
+		<>
+			<h2>My Collection</h2>
+
+			<hr />
+
+			<div className="collection-header">
+				{/* Botón Toggle Filtros */}
+				<button
+					className={`filter-toggle-btn ${showFilters ? "active" : ""}`}
+					onClick={() => setShowFilters(!showFilters)}
+				>
+					{showFilters ? "Hide Filters" : "Show Filters"}
+				</button>
+			</div>
+
+            			{/* PANEL DE FILTROS EXPANDIBLE */}
+			<div className={`filter-panel ${showFilters ? "open" : ""}`}>
+				<div className="filter-content">
+					{/* 1. Buscador */}
+					<div className="filter-group">
+						<label>Search:</label>
+						<input
+							type="text"
+							placeholder="Mario, Link..."
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+					</div>
+
+					{/* 2. Series */}
+					<div className="filter-group">
+						<label>Series:</label>
+						<select
+							value={selectedSeries}
+							onChange={(e) => setSelectedSeries(e.target.value)}
+						>
+							{uniqueSeries.map((series) => (
+								<option key={series} value={series}>
+									{series}
+								</option>
+							))}
+						</select>
+					</div>
+
+					{/* 3. Ordenar */}
+					<div className="filter-group">
+						<label>Sort by:</label>
+						<select
+							value={sortOrder}
+							onChange={(e) => setSortOrder(e.target.value)}
+						>
+							<option value="newest">Newest first</option>
+							<option value="oldest">Oldest first</option>
+							<option value="az">Name (A-Z)</option>
+							<option value="za">Name (Z-A)</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<section className="collection-body">
+				<div className="collection-frame">
+					{userAmiibos.length > 0 ? (
+						<>
+							{/* Pasamos la lista filtrada en lugar de userAmiibos completos */}
+							<AmiiboList
+								amiibos={filteredAmiibos}
+								setSelectedAmiibo={setSelectedAmiibo}
+							/>
+
+							<div style={{ display: "flex", justifyContent: "center" }}>
+								<button
+									onClick={() => setShowDeleteConfirm(true)}
+									className="delete-collection"
+									title="Delete my Amiibos collection"
+								>
+									Delete collection
+								</button>
+							</div>
+						</>
+					) : (
+						<div className="empty-content">
+							<p className="empty-title">Your collection is empty</p>
+							<p className="empty-subtitle">
+								Go to the Unlock page to get your first Amiibo!
+							</p>
+						</div>
+					)}
+				</div>
+			</section>
+
+			<Modal
+				isOpen={!!selectedAmiibo}
+				onClose={() => setSelectedAmiibo(null)}
+				amiibo={selectedAmiibo}
+			/>
+
+			{showDeleteConfirm && (
+				<DeleteCollectionModal
+					setShowDeleteConfirm={setShowDeleteConfirm}
+					handleConfirmDelete={handleConfirmDelete}
+				/>
+			)}
+		</>
+	);
 };
 
 export default Collection;
