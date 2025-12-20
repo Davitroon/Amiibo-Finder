@@ -1,0 +1,111 @@
+/* Contenedor principal para centrar */
+.unlock-container {
+	text-align: center;
+	padding: 20px;
+}
+
+.gift-stage {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 40px;
+	height: 300px; /* Espacio reservado para la animación */
+}
+
+/* El área clickable del regalo */
+.gift-box {
+	cursor: pointer;
+	position: relative;
+	transition: transform 0.2s ease;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* Efecto hover simple: crece un poco */
+.gift-box:hover {
+	transform: scale(1.05);
+}
+
+/* Estilo base de la imagen */
+.gift-open {
+	width: 220px;
+	height: 150px;
+}
+
+.gift-closed {
+	width: 150px;
+	height: auto;
+}
+
+.gift-open,
+.gift-closed {
+	filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
+	transition: all 0.3s ease;
+}
+
+.gift-text {
+	margin-top: 15px;
+	font-weight: bold;
+	color: #555;
+	opacity: 0.8;
+}
+
+/* ------------------------------------------------
+   ANIMACIONES
+------------------------------------------------ */
+
+/* 1. Animación de reposo (Tambaleo suave) */
+@keyframes wobble {
+	0% {
+		transform: rotate(0deg);
+	}
+	15% {
+		transform: rotate(-3deg);
+	}
+	30% {
+		transform: rotate(2deg);
+	}
+	45% {
+		transform: rotate(-3deg);
+	}
+	60% {
+		transform: rotate(2deg);
+	}
+	75% {
+		transform: rotate(-1deg);
+	}
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+.wobble-anim {
+	/* Se repite infinitamente cada 2.5 segundos */
+	/* animation: wobble 2.5s infinite ease-in-out;
+	transform-origin: bottom center; */
+}
+
+/* 2. Animación de apertura (Pop) */
+@keyframes popOpen {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2) translateY(-10px);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.pop-anim {
+	/* Ejecuta una vez al abrir */
+	animation: popOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Deshabilitar interacción mientras se abre */
+.gift-box.opening {
+	pointer-events: none;
+	cursor: default;
+}

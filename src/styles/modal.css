@@ -19,6 +19,28 @@
 .modal.show {
   pointer-events: auto;
   background-color: rgba(0, 0, 0, 0.6);
+  /* Un backdrop-filter ayuda a que destaque más */
+  backdrop-filter: blur(2px);
+}
+
+/* -------------------------------
+   Animación de Rebote (Bounce)
+------------------------------- */
+@keyframes modalBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(50px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-10px); /* Se pasa un poco (rebote) */
+  }
+  70% {
+    transform: scale(0.95); /* Se encoge un poco */
+  }
+  100% {
+    transform: scale(1); /* Se asienta */
+  }
 }
 
 /* -------------------------------
@@ -30,14 +52,20 @@
   border-radius: 12px;
   width: 350px;
   text-align: center;
-  transform: scale(0.8);
+  
+  /* Estado inicial (invisible) */
   opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: scale(0.8);
+
+  /* Transición suave SOLO para cuando se cierra */
+  transition: transform 0.2s ease-in, opacity 0.2s ease-in;
 }
 
+/* Cuando tiene la clase .show, ejecutamos la animación de entrada */
 .modal.show .modal-content {
-  transform: scale(1);
   opacity: 1;
+  /* El cubic-bezier acentúa el efecto elástico */
+  animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* -------------------------------
@@ -48,12 +76,13 @@
   font-size: 32px;
   font-weight: bold;
   cursor: pointer;
-  color: red;
-  transition: 0.2s;
+  color: #ff4d4d;
+  transition: transform 0.2s;
+  line-height: 20px;
 }
 
 .close:hover {
-  transform: scale(1.1);
+  transform: scale(1.2) rotate(90deg); /* Pequeño giro al hover */
 }
 
 /* -------------------------------
@@ -62,6 +91,17 @@
 .modal img {
   max-width: 294px;
   max-height: 216px;
+  margin-top: 10px;
+  
+  /* Un pequeño zoom in para la imagen también */
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+/* Al abrir, la imagen crece un poquito para dar profundidad */
+.modal.show img {
+  transform: scale(1);
+  transition-delay: 0.2s; /* Espera un poco a que el modal se abra */
 }
 
 @media (max-width: 780px) {

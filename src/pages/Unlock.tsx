@@ -1,63 +1,109 @@
 import { useState } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
-import Modal from "../modules/Modal";
+// CAMBIO: Importamos el nuevo ModalUnlocked
+import ModalUnlocked from "../modules/ModalUnlocked";
+import "../styles/unlock.css";
+
+import giftClosed from "../assets/gift-closed.png";
+import giftOpen from "../assets/gift-open.png";
 
 const Unlock = () => {
 	const { unlockAmiibo } = useAmiibos();
 	const [unlockedAmiibo, setUnlockedAmiibo] = useState<any>(null);
 	const [isLoading, setIsLoading] = useState(false);
+	const [isBoxOpen, setIsBoxOpen] = useState(false);
 
-	// Lógica de obtención de datos
+	// ... (Mantén la función preloadImage igual) ...
+	const preloadImage = (src: string) => {
+		return new Promise((resolve) => {
+			const img = new Image();
+			img.src = src;
+			img.onload = resolve;
+			img.onerror = resolve;
+		});
+	};
+
+	// ... (Mantén la función handleUnlock igual) ...
 	const handleUnlock = async () => {
-		setIsLoading(true);
-		let fullList = [];
+		if (isLoading || isBoxOpen) return;
 
-		// Intentar leer caché o fetch API
+		setIsLoading(true);
+		setIsBoxOpen(true);
+
+		let fullList = [];
 		const storedList = localStorage.getItem("amiiboFinderFullList");
 
-		if (storedList) {
-			fullList = JSON.parse(storedList);
-
-		} else {
-			try {
+		try {
+			if (storedList) {
+				fullList = JSON.parse(storedList);
+			} else {
 				const res = await fetch(
 					"https://amiiboapi.com/api/amiibo/?page=1&type=figure"
 				);
 				const json = await res.json();
 				fullList = json.amiibo;
 				localStorage.setItem("amiiboFinderFullList", JSON.stringify(fullList));
-
-			} catch (error) {
-				console.error("Error fetching amiibos", error);
-				setIsLoading(false);
-				return;
 			}
+		} catch (error) {
+			console.error("Error fetching amiibos", error);
+			setIsLoading(false);
+			setIsBoxOpen(false);
+			return;
 		}
 
 		if (fullList.length > 0) {
 			const random = fullList[Math.floor(Math.random() * fullList.length)];
 
+			// Promesa A: Animación
+			const animationDelay = new Promise((resolve) => setTimeout(resolve, 800));
+			// Promesa B: Carga de imagen
+			const imageLoad = preloadImage(random.image);
+
+			await Promise.all([animationDelay, imageLoad]);
+
 			unlockAmiibo(random);
 			setUnlockedAmiibo(random);
+			setIsLoading(false);
+		} else {
+			setIsLoading(false);
+			setIsBoxOpen(false);
 		}
-		setIsLoading(false);
+	};
+
+	const handleCloseModal = () => {
+		setUnlockedAmiibo(null);
+		setIsBoxOpen(false);
 	};
 
 	return (
-		<div>
+		<div className="unlock-container">
 			<h2>Unlock new Amiibos</h2>
 			<hr />
 
-			<div style={{ display: "flex", gap: "1rem", marginTop: "20px" }}>
-				<button onClick={handleUnlock} disabled={isLoading}>
-					{isLoading ? "Unlocking..." : "Unlock new amiibo"}
-				</button>
+			<div className="gift-stage">
+				<div
+					className={`gift-box ${isLoading ? "opening" : ""}`}
+					onClick={handleUnlock}
+					title="Click to open!"
+				>
+					<img
+						src={isBoxOpen ? giftOpen : giftClosed}
+						alt="Mystery Gift"
+						className={`${isBoxOpen ? "gift-open" : "gift-closed"} ${
+							!isBoxOpen ? "wobble-anim" : "pop-anim"
+						}`}
+					/>
+
+					<p className="gift-text">
+						{isLoading ? "Opening..." : "Tap the gift!"}
+					</p>
+				</div>		
 			</div>
 
-			{/* Reutilizamos el mismo componente Modal */}
-			<Modal
+			{/* CAMBIO: Usamos ModalUnlocked en lugar de Modal */}
+			<ModalUnlocked
 				isOpen={!!unlockedAmiibo}
-				onClose={() => setUnlockedAmiibo(null)}
+				onClose={handleCloseModal}
 				amiibo={unlockedAmiibo}
 			/>
 		</div>
