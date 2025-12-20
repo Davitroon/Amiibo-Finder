@@ -1,38 +1,69 @@
-import { useState } from 'react';
-import { useAmiibos } from '../context/AmiiboContext';
-import AmiiboCard from '../modules/AmiiboCard';
-import Modal from '../modules/Modal';
+import { useState } from "react";
+import { useAmiibos } from "../context/AmiiboContext";
+import Modal from "../modules/Modal";
+import AmiiboList from "../modules/AmiiboList";
+import DeleteCollectionModal from "../modules/DeleteCollectionModal";
+import "../styles/collection.css";
 
 const Collection = () => {
-  const { userAmiibos } = useAmiibos();
-  const [selectedAmiibo, setSelectedAmiibo] = useState<any>(null);
+    const { userAmiibos, clearStorage } = useAmiibos();
+    const [selectedAmiibo, setSelectedAmiibo] = useState<any>(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  return (
-    <div>
-      <h1>My Collection</h1>
-      <hr />
-      
-      <section className="amiibo-grid">
-        {userAmiibos.length > 0 ? (
-          userAmiibos.map((amiibo) => (
-            <AmiiboCard 
-              key={amiibo.head + amiibo.tail} 
-              amiibo={amiibo} 
-              onClick={() => setSelectedAmiibo(amiibo)}
+    const handleConfirmDelete = () => {
+        clearStorage();
+        setShowDeleteConfirm(false);
+    };
+
+    return (
+        <>
+            <h2>My Collection</h2>
+            <hr />
+
+            <section className="collection-body">
+                
+                {/* CAMBIO: Este contenedor "frame" siempre es visible */}
+                <div className="collection-frame">
+                    
+                    {userAmiibos.length > 0 ? (
+                        <>
+                            <AmiiboList setSelectedAmiibo={setSelectedAmiibo} />
+                            
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <button
+                                    onClick={() => setShowDeleteConfirm(true)}
+                                    className="delete-collection"
+                                    title="Delete my Amiibos collection"
+                                >
+                                    Delete collection
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        /* El contenido vacío ya no necesita bordes, solo centra el texto */
+                        <div className="empty-content">
+                            <p className="empty-title">Your collection is empty</p>
+                            <p className="empty-subtitle">Go to the Unlock page to get your first Amiibo!</p>
+                        </div>
+                    )}
+                    
+                </div>
+            </section>
+
+            <Modal
+                isOpen={!!selectedAmiibo}
+                onClose={() => setSelectedAmiibo(null)}
+                amiibo={selectedAmiibo}
             />
-          ))
-        ) : (
-          <p>No hay amiibos desbloqueados. ¡Ve a la página Unlock!</p>
-        )}
-      </section>
 
-      <Modal 
-        isOpen={!!selectedAmiibo} 
-        onClose={() => setSelectedAmiibo(null)} 
-        amiibo={selectedAmiibo} 
-      />
-    </div>
-  );
+            {showDeleteConfirm && (
+                <DeleteCollectionModal
+                    setShowDeleteConfirm={setShowDeleteConfirm}
+                    handleConfirmDelete={handleConfirmDelete}
+                />
+            )}
+        </>
+    );
 };
 
 export default Collection;

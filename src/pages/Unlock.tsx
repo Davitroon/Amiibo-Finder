@@ -1,71 +1,39 @@
-import { useState } from "react";
-import { useAmiibos } from "../context/AmiiboContext";
-import Modal from "../modules/Modal";
+import ModalUnlocked from "../modules/ModalUnlocked";
+import GiftBox from "../modules/GiftBox"; // Importamos el componente visual
+import { useUnlockLogic } from "../hooks/useUnlockLogic"; // Importamos la lógica
+import "../styles/unlock.css";
 
 const Unlock = () => {
-	const { unlockAmiibo, clearStorage } = useAmiibos();
-	const [unlockedAmiibo, setUnlockedAmiibo] = useState<any>(null);
-	const [isLoading, setIsLoading] = useState(false);
-
-	// Lógica de obtención de datos
-	const handleUnlock = async () => {
-		setIsLoading(true);
-		let fullList = [];
-
-		// Intentar leer caché o fetch API
-		const storedList = localStorage.getItem("amiiboFinderFullList");
-
-		if (storedList) {
-			fullList = JSON.parse(storedList);
-		} else {
-			try {
-				const res = await fetch(
-					"https://amiiboapi.com/api/amiibo/?page=1&type=figure"
-				);
-				const json = await res.json();
-				fullList = json.amiibo;
-				localStorage.setItem("amiiboFinderFullList", JSON.stringify(fullList));
-			} catch (error) {
-				console.error("Error fetching amiibos", error);
-				setIsLoading(false);
-				return;
-			}
-		}
-
-		if (fullList.length > 0) {
-			const random = fullList[Math.floor(Math.random() * fullList.length)];
-
-			// Guardar en contexto global
-			unlockAmiibo(random);
-
-			// Mostrar modal
-			setUnlockedAmiibo(random);
-		}
-		setIsLoading(false);
-	};
+	const {
+		unlockedAmiibo,
+		isLoading,
+		isOpeningAnim,
+		remainingTime,
+		isLocked,
+		handleUnlock,
+		closeModal,
+		formatTime,
+	} = useUnlockLogic();
 
 	return (
-		<div>
-			<h1>Unlock new Amiibos</h1>
+		<div className="unlock-container">
+			<h2>Unlock new Amiibos</h2>
 			<hr />
 
-			<div style={{ display: "flex", gap: "1rem", marginTop: "20px" }}>
-				<button onClick={handleUnlock} disabled={isLoading}>
-					{isLoading ? "Unlocking..." : "Unlock new amiibo"}
-				</button>
+			{/* Componente que maneja el regalo y el timer */}
+			<GiftBox
+				isLoading={isLoading}
+				isLocked={isLocked}
+				isOpeningAnim={isOpeningAnim}
+				remainingTime={remainingTime}
+				formatTime={formatTime}
+				onUnlock={handleUnlock}
+			/>
 
-				<button
-					onClick={clearStorage}
-					style={{ background: "#ff4444", color: "white" }}
-				>
-					Borrar local storage
-				</button>
-			</div>
-
-			{/* Reutilizamos el mismo componente Modal */}
-			<Modal
+			{/* Componente del Modal */}
+			<ModalUnlocked
 				isOpen={!!unlockedAmiibo}
-				onClose={() => setUnlockedAmiibo(null)}
+				onClose={closeModal}
 				amiibo={unlockedAmiibo}
 			/>
 		</div>
