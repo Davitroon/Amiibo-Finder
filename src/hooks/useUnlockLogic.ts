@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
 
-const COOLDOWN_TIME = 2 * 60 * 60 * 1000; 
+const COOLDOWN_TIME = 2 * 60 * 60 * 1000; // 2 Horas
 
 export const useUnlockLogic = () => {
-    // CAMBIO: Extraemos triggerConfetti del contexto
-    const { unlockAmiibo, triggerConfetti } = useAmiibos(); 
+    const { unlockAmiibo, triggerConfetti } = useAmiibos();
     
     const [unlockedAmiibo, setUnlockedAmiibo] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isOpeningAnim, setIsOpeningAnim] = useState(false);
     const [remainingTime, setRemainingTime] = useState<number>(0);
-    
-    // ELIMINADO: const [showConfetti, setShowConfetti] = useState(false); ya no hace falta localmente
 
     const formatTime = (ms: number) => {
         const totalSeconds = Math.floor(ms / 1000);
@@ -33,13 +30,50 @@ export const useUnlockLogic = () => {
         });
     };
 
+    // --- NOTIFICATIONS HELPERS ---
+    const requestNotificationPermission = () => {
+        if ("Notification" in window && Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+    };
+
+    const triggerNotification = () => {
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification("Amiibo Finder", {
+                body: "🎁 Your gift is ready! Click to unlock a new Amiibo.",
+                icon: "/favicon.ico", // Puedes poner la ruta de tu imagen de regalo aquí
+            });
+        }
+    };
+
     useEffect(() => {
+        // Pedimos permiso al montar el hook
+        requestNotificationPermission();
+
         const checkTimer = () => {
             const lastUnlock = localStorage.getItem("lastUnlockTime");
+            
             if (lastUnlock) {
                 const elapsed = Date.now() - parseInt(lastUnlock, 10);
                 const left = COOLDOWN_TIME - elapsed;
-                setRemainingTime(left > 0 ? left : 0);
+
+                if (left > 0) {
+                    setRemainingTime(left);
+                } else {
+                    // El tiempo ha terminado
+                    setRemainingTime(0);
+
+                    // --- LÓGICA DE NOTIFICACIÓN ---
+                    // Verificamos si ya enviamos la notificación para este ciclo
+                    const notificationSent = localStorage.getItem("amiiboNotificationSent");
+                    
+                    // Si NO se ha enviado y el tiempo llegó a 0...
+                    if (notificationSent !== "true") {
+                        triggerNotification();
+                        // Marcamos que ya avisamos para no repetir
+                        localStorage.setItem("amiiboNotificationSent", "true");
+                    }
+                }
             }
         };
 
@@ -52,6 +86,9 @@ export const useUnlockLogic = () => {
 
     const handleUnlock = async () => {
         if (isLoading || isOpeningAnim || isLocked) return;
+
+        // Pedimos permiso también al hacer clic por si el navegador lo bloqueó antes
+        requestNotificationPermission();
 
         setIsLoading(true);
         setIsOpeningAnim(true);
@@ -83,7 +120,12 @@ export const useUnlockLogic = () => {
 
             await Promise.all([animationDelay, imageLoad]);
 
+            // Guardamos timestamp del desbloqueo
             localStorage.setItem("lastUnlockTime", Date.now().toString());
+            
+            // RESETEAMOS LA NOTIFICACIÓN PARA EL PRÓXIMO CICLO
+            localStorage.setItem("amiiboNotificationSent", "false"); 
+            
             setRemainingTime(COOLDOWN_TIME);
 
             const amiiboToSave = { 
@@ -95,7 +137,6 @@ export const useUnlockLogic = () => {
             unlockAmiibo(amiiboToSave);
             setUnlockedAmiibo(amiiboToSave);
             
-            // CAMBIO: Disparamos el confeti GLOBAL
             triggerConfetti();
             
             setIsLoading(false);
@@ -109,8 +150,6 @@ export const useUnlockLogic = () => {
         setUnlockedAmiibo(null);
         setIsOpeningAnim(false);
     };
-
-    // ELIMINADO: handleConfettiComplete ya no se necesita aquí
 
     return {
         unlockedAmiibo,

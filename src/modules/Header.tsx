@@ -1,16 +1,31 @@
-import { Link } from "react-router-dom";
+// 1. Cambiamos la importación de Link a NavLink
+import { NavLink } from "react-router-dom";
 import "../styles/header.css";
 
 const Header = () => (
 	<header id="header">
 		<h1>Amiibo Finder</h1>
 		<div id="header-links">
-			<Link to="/" title="See my Amiibos">
+			{/* 2. Usamos NavLink. 
+               La prop 'end' en la ruta "/" asegura que solo se marque 
+               cuando sea EXACTAMENTE el home, y no en subrutas.
+            */}
+			<NavLink
+				to="/"
+				title="See my Amiibos"
+				end
+				className={({ isActive }) => (isActive ? "active" : "")}
+			>
 				Collection
-			</Link>
-			<Link to="/unlock" title="Unlock new Amiibos">
+			</NavLink>
+
+			<NavLink
+				to="/unlock"
+				title="Unlock new Amiibos"
+				className={({ isActive }) => (isActive ? "active" : "")}
+			>
 				Unlock
-			</Link>
+			</NavLink>
 		</div>
 	</header>
 );

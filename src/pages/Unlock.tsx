@@ -17,10 +17,6 @@ const Unlock = () => {
 
     return (
         <div className="unlock-container">
-            {/* YA NO HAY <Confetti /> AQUÍ. 
-               Ahora vive en BaseLayout.tsx 
-            */}
-
             <h2>Unlock new Amiibos</h2>
             <hr />
 
