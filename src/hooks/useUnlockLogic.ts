@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
 
-const COOLDOWN_TIME = 2 * 60 * 60 * 1000; // 2 Horas
+const COOLDOWN_TIME = 2 * 60 * 60 * 1000; 
 
 export const useUnlockLogic = () => {
-    const { unlockAmiibo } = useAmiibos();
+    // CAMBIO: Extraemos triggerConfetti del contexto
+    const { unlockAmiibo, triggerConfetti } = useAmiibos(); 
+    
     const [unlockedAmiibo, setUnlockedAmiibo] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isOpeningAnim, setIsOpeningAnim] = useState(false);
     const [remainingTime, setRemainingTime] = useState<number>(0);
     
-    // NUEVO: Estado independiente para el confeti
-    const [showConfetti, setShowConfetti] = useState(false);
+    // ELIMINADO: const [showConfetti, setShowConfetti] = useState(false); ya no hace falta localmente
 
-    // --- Helpers ---
     const formatTime = (ms: number) => {
         const totalSeconds = Math.floor(ms / 1000);
         const hours = Math.floor(totalSeconds / 3600);
@@ -33,10 +33,9 @@ export const useUnlockLogic = () => {
         });
     };
 
-    // --- Timer Effect ---
     useEffect(() => {
         const checkTimer = () => {
-            const lastUnlock = localStorage.getItem("lastUnlockTime"); // Asegúrate de usar la misma key siempre
+            const lastUnlock = localStorage.getItem("lastUnlockTime");
             if (lastUnlock) {
                 const elapsed = Date.now() - parseInt(lastUnlock, 10);
                 const left = COOLDOWN_TIME - elapsed;
@@ -51,7 +50,6 @@ export const useUnlockLogic = () => {
 
     const isLocked = remainingTime > 0;
 
-    // --- Main Action ---
     const handleUnlock = async () => {
         if (isLoading || isOpeningAnim || isLocked) return;
 
@@ -97,8 +95,8 @@ export const useUnlockLogic = () => {
             unlockAmiibo(amiiboToSave);
             setUnlockedAmiibo(amiiboToSave);
             
-            // NUEVO: Activamos el confeti aquí
-            setShowConfetti(true);
+            // CAMBIO: Disparamos el confeti GLOBAL
+            triggerConfetti();
             
             setIsLoading(false);
         } else {
@@ -110,13 +108,9 @@ export const useUnlockLogic = () => {
     const closeModal = () => {
         setUnlockedAmiibo(null);
         setIsOpeningAnim(false);
-        // NOTA: NO reseteamos showConfetti aquí. Dejamos que termine solo.
     };
 
-    // NUEVO: Función para cuando el confeti termina su animación
-    const handleConfettiComplete = () => {
-        setShowConfetti(false);
-    };
+    // ELIMINADO: handleConfettiComplete ya no se necesita aquí
 
     return {
         unlockedAmiibo,
@@ -124,8 +118,6 @@ export const useUnlockLogic = () => {
         isOpeningAnim,
         remainingTime,
         isLocked,
-        showConfetti, // Exportamos estado
-        handleConfettiComplete, // Exportamos handler
         handleUnlock,
         closeModal,
         formatTime,
