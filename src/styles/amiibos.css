@@ -2,18 +2,30 @@
    Card Container
 ------------------------------- */
 .amiibo-card {
-  background: #fff;
+  background: var(--card-bg); /* CAMBIO: Variable */
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: 0.2s;
+  transition: transform 0.2s, background-color 0.3s; /* Animamos cambio de color */
+  
+  /* CAMBIO: Borde sutil para modo oscuro */
+  border: 1px solid transparent; 
+}
+
+/* En modo oscuro, a veces ayuda un borde fino */
+body.dark-mode .amiibo-card {
+  border-color: #444;
 }
 
 .amiibo-card:hover {
   transform: translateY(-5px);
   cursor: pointer;
-  background: #f5f5f5;
+  background: var(--bg-color); /* CAMBIO: Un poco de contraste al hover */
+  /* Si el fondo es muy oscuro, quizás quieras un gris un poco más claro: */
+}
+body.dark-mode .amiibo-card:hover {
+  background: #383838;
 }
 
 /* -------------------------------

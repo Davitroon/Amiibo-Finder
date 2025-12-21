@@ -47,18 +47,20 @@
    Modal Content Box
 ------------------------------- */
 .modal-content {
-  background: white;
+  background: var(--card-bg); /* CAMBIO */
+  color: var(--text-color); /* CAMBIO: Asegura texto visible */
+  
   padding: 20px;
   border-radius: 12px;
   width: 350px;
   text-align: center;
   
-  /* Estado inicial (invisible) */
   opacity: 0;
   transform: scale(0.8);
-
-  /* Transición suave SOLO para cuando se cierra */
   transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+  
+  /* Sombra más sutil en oscuro */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
 /* Cuando tiene la clase .show, ejecutamos la animación de entrada */
@@ -76,7 +78,8 @@
   font-size: 32px;
   font-weight: bold;
   cursor: pointer;
-  color: #ff4d4d;
+  color: #ff4d4d; 
+  /* Nota: En modo oscuro el rojo sigue viéndose bien, no hace falta cambiar */
   transition: transform 0.2s;
   line-height: 20px;
 }

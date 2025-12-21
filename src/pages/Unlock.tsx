@@ -16,7 +16,7 @@ const Unlock = () => {
     } = useUnlockLogic();
 
     return (
-        <div className="unlock-container">
+        <>
             <h2>Unlock new Amiibos</h2>
             <hr />
 
@@ -34,7 +34,7 @@ const Unlock = () => {
                 onClose={closeModal}
                 amiibo={unlockedAmiibo}
             />
-        </div>
+        </>
     );
 };
 

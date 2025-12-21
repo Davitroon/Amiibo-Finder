@@ -12,14 +12,15 @@
     z-index: 1000;
 }
 
-/* Caja blanca del modal */
+/* Caja del modal */
 .delete-modal-content {
-    background: white;
+    background: var(--card-bg); /* CAMBIO */
+    color: var(--text-color); /* CAMBIO */
+    
     padding: 2rem;
     border-radius: 8px;
     text-align: center;
     max-width: 300px;
-    color: black;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -53,9 +54,9 @@
 
 /* Variantes de colores */
 .modal-btn.cancel {
-    background-color: gray;
+    background-color: #777; /* Gris neutro */
 }
 
 .modal-btn.delete {
-    background-color: #d32f2f; /* Un rojo un poco más profesional */
+    background-color: #d32f2f;
 }

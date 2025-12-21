@@ -1,41 +1,93 @@
-/* ... Tus estilos anteriores ... */
-
 #header {
-	top: 0;
-	background: rgb(211, 59, 59);
-	padding: 15px;
-	z-index: 100;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	text-align: center;
-	color: white;
+    position: sticky;
+    top: 0;
+    /* CAMBIO: Usamos las variables para que cambie de color */
+    background: var(--header-bg);
+    color: var(--header-text);
+    
+    padding: 15px 20px;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, color 0.3s;
+
+    /* CAMBIO: Flexbox para alinear contenido y botón */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Envolvemos Título + Links para centrarlos */
+.header-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Esto asegura que ocupe el espacio central */
+    flex-grow: 1;
+    /* Pequeño truco: margen a la izquierda para compensar el botón de la derecha 
+       y que el título quede perfectamente centrado visualmente */
+    margin-left: 40px; 
+}
+
+#header h1 {
+    margin: 0 0 10px 0; /* Reducimos margen para ajustar */
 }
 
 #header-links {
-	display: flex;
-	justify-content: center;
-	gap: 3vw;
+    display: flex;
+    justify-content: center;
+    gap: 3vw;
 }
 
 #header-links a {
-	text-decoration: none;
-	color: inherit;
-	font-weight: bold;
-	transition: 0.1s;
-	/* Añadimos un borde transparente por defecto para que el texto no salte al activarse */
-	border-bottom: 2px solid transparent;
-	padding-bottom: 2px;
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    transition: 0.1s;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
 }
 
 #header-links a:hover {
-	color: rgb(253, 255, 121);
-	transform: scale(1.03);
-	text-shadow: 1px 2px 4px black;
+    color: rgb(253, 255, 121);
+    transform: scale(1.03);
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra suavizada */
 }
 
-/* --- NUEVO ESTILO PARA EL LINK ACTIVO --- */
+/* LINK ACTIVO */
 #header-links a.active {
-	color: rgb(253, 255, 121);
-	border-bottom: 2px solid rgb(253, 255, 121);
-	text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
-	cursor: default; /* Opcional: indica que ya estás ahí */
+    color: rgb(253, 255, 121);
+    border-bottom: 2px solid rgb(253, 255, 121);
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+    cursor: default;
+}
+
+/* --- NUEVO: ESTILOS DEL BOTÓN DE TEMA --- */
+.theme-toggle-btn {
+    background: rgba(0, 0, 0, 0.15); /* Fondo semitransparente */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: inherit; /* Hereda el color de texto del header */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+/* Responsive para móviles */
+@media (max-width: 600px) {
+    #header {
+        padding: 10px;
+    }
+    .header-main {
+        margin-left: 0; /* Quitamos la compensación en pantallas pequeñas */
+    }
 }

@@ -3,14 +3,24 @@
 ------------------------------- */
 
 .site-footer {
-  background-color: #1a1a1a;
+  /* En modo claro: #1a1a1a (casi negro). 
+     En modo oscuro: quizas un poco más claro que el fondo o igual */
+  background-color: #1a1a1a; 
   color: #f0f0f0;
+  
   text-align: center;
   padding: 15px 20px;
   font-size: 0.9rem;
   margin-top: 40px;
   padding-bottom: 3rem;
-  /* padding-top: 1rem; */
+  
+  border-top: 1px solid transparent;
+}
+
+/* Ajuste opcional para modo oscuro: Borde superior para separar */
+body.dark-mode .site-footer {
+    border-top: 1px solid #333;
+    background-color: #111; /* Un negro aun más profundo */
 }
 
 .site-footer a {
