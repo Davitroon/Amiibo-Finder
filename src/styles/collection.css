@@ -6,27 +6,36 @@
     min-height: 50vh;
 }
 
-/* NUEVO: El marco que siempre está visible.
-   Hereda el estilo que tenía antes el estado vacío.
-*/
+/* MARCO PRINCIPAL */
 .collection-frame {
-    margin-top: 1rem;
-    background-color: #f9f9f9;
-    border: 2px dashed #ddd; /* El borde que te gustó */
-    border-radius: 12px;
-    padding: 2rem; /* Espacio interno para que los amiibos no toquen el borde */
-    min-height: 400px; /* Altura mínima para que se vea bien siempre */
+    margin-top: 20px;
     
+    /* CAMBIO: Usamos var(--bg-color) o un color base, pero necesitamos la transición */
+    background-color: var(--bg-color); 
+    /* Sobreescribimos con transparencia para el efecto visual */
+    background-color: rgba(0,0,0,0.03); 
+    
+    border: 2px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 2rem;
+    min-height: 400px;
     display: flex;
     flex-direction: column;
-    /* Si está vacío, esto ayuda a centrar. Si tiene datos, se expande */
     justify-content: flex-start; 
+    
+    /* NUEVO: Animación suave al cambiar de tema */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Ajuste específico para modo oscuro */
+body.dark-mode .collection-frame {
+    background-color: rgba(255,255,255,0.05);
 }
 
 .amiibo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1.5rem; /* Un poco más de espacio entre cartas */
+    gap: 1.5rem;
 }
 
 /* -------------------------------
@@ -57,92 +66,120 @@
 }
 
 /* -------------------------------
-   Contenido Vacío (Texto)
+   Contenido Vacío
 ------------------------------- */
 .empty-content {
-    /* Hacemos que ocupe todo el espacio disponible del padre para centrar verticalmente */
     flex-grow: 1; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: #666;
+    color: var(--text-color);
+    opacity: 0.7;
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 .empty-title {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #444;
+    color: var(--text-color);
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 .empty-subtitle {
     font-size: 1rem;
-    color: #888;
+    color: var(--text-color);
+    opacity: 0.6;
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 /* -------------------------------
-   Header del Frame
+   HEADER DE FILTROS Y CONTADOR
 ------------------------------- */
-/* Cabecera con Flexbox para alinear título y botón */
 .collection-header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding-inline: 10rem;
     margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.results-count {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.95rem;
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 .filter-toggle-btn {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 10px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    
+    padding: 8px 18px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.3s;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    /* CAMBIO: Añadimos border-color y color a la transición existente */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.1s;
 }
 
 .filter-toggle-btn:hover {
-    background-color: #555;
+    filter: brightness(0.9);
+}
+body.dark-mode .filter-toggle-btn:hover {
+    filter: brightness(1.2);
 }
 
 .filter-toggle-btn.active {
-    background-color: #E60012; /* Rojo Nintendo cuando está abierto */
+    background-color: #E60012; 
+    color: white;
+    border-color: #E60012;
 }
 
-/* ----------------------------------------------------
-   PANEL DE FILTROS (Acordeón)
----------------------------------------------------- */
+/* -------------------------------
+   PANEL DE FILTROS (Animado)
+------------------------------- */
 .filter-panel {
-    /* Estado inicial: Cerrado */
     max-height: 0;
     opacity: 0;
     overflow: hidden; 
-    transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out, margin-bottom 0.4s ease;
+    transition: all 0.4s ease-in-out;
     padding-inline: 10rem;
-    margin-top: 10px;
 }
 
 .filter-panel.open {
-    /* Estado abierto */
-    max-height: 150px;
+    max-height: 120px;
     opacity: 1;
     margin-bottom: 20px;
 }
 
 .filter-content {
-    background-color: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
     
-    /* Layout Horizontal */
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 25px;
     align-items: center;
+
+    /* NUEVO: Transición suave para el fondo y el borde del panel */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .filter-group {
@@ -152,46 +189,73 @@
 }
 
 .filter-group label {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 0.9rem;
-    color: #555;
+    color: var(--text-color);
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
+/* Inputs y Selects estilizados */
 .filter-group input,
 .filter-group select {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
     font-size: 0.9rem;
+    
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    
+    /* CAMBIO: Añadimos background-color y color a la transición */
+    transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ----------------------------------------------------
-   Responsive
----------------------------------------------------- */
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #E60012;
+    outline: none;
+}
+
+/* -------------------------------
+   RESPONSIVE
+------------------------------- */
 @media (max-width: 1000px) {
-    .collection-header {
-        padding-right: 1rem;
-    }
+    .collection-body,
+    .collection-header,
     .filter-panel {
         padding-inline: 1rem;
     }
     
-    /* En móviles, permitimos que el panel crezca más si los filtros se apilan */
-    .filter-panel.open {
-        max-height: 300px; 
+    .collection-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
-}
 
-/* -------------------------------
-   Responsive Styles
-------------------------------- */
-@media (max-width: 1000px) {
-    .collection-body {
-        padding-inline: 1rem;
+    .results-count {
+        align-self: flex-end; 
+        font-size: 0.85rem;
     }
     
-    .collection-frame {
-        min-height: 300px;
-        padding: 1rem;
+    .filter-panel.open {
+        max-height: 400px;
+    }
+
+    .filter-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .filter-group input,
+    .filter-group select {
+        width: 100%;
     }
 }

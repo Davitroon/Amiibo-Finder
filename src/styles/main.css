@@ -1,20 +1,49 @@
 /* -------------------------------
+   CSS Variables (Theme Logic)
+------------------------------- */
+:root {
+	/* Colores MODO CLARO (Default) */
+	--bg-color: #ffffff;
+	--text-color: #333333;
+	--card-bg: #ffffff;
+	--header-bg: rgb(211, 59, 59);
+	--header-text: white;
+	--border-color: #ddd;
+}
+
+/* Colores MODO OSCURO */
+body.dark-mode {
+	--bg-color: #1a1a1a;
+	--text-color: #f0f0f0;
+	--card-bg: #2d2d2d;
+	--header-bg: #8b0000; /* Rojo más oscuro */
+	--header-text: #ddd;
+	--border-color: #444;
+}
+
+/* -------------------------------
    Global Styles
 ------------------------------- */
 body {
 	margin: 0;
 	padding: 0;
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	transition: background-color 0.3s, color 0.3s; 
 }
 
 main {
-	min-height: 67.2vh;
+	min-height: 70.4vh;
 }
 
 h1,
 h2,
 h3,
 a,
-p {
+p,
+button,
+input,
+select {
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -31,7 +60,7 @@ h2 {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba(0, 0, 0, 0.5); /* Esto se queda igual en ambos */
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -39,12 +68,14 @@ h2 {
 }
 
 .modal-content {
-	background: white;
+	background: var(--card-bg); /* Variable para fondo de modal */
+	color: var(--text-color);
 	padding: 2rem;
 	border-radius: 12px;
 	max-width: 400px;
 	width: 90%;
 	position: relative;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .modal-close {
@@ -55,4 +86,5 @@ h2 {
 	background: none;
 	font-size: 1.2rem;
 	cursor: pointer;
+	color: var(--text-color); /* La X se adapta al color de texto */
 }

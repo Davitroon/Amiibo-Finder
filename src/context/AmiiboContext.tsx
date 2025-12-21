@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 
-// Tipos (basados en tu código original)
+// Tipos
 interface Amiibo {
 	amiiboSeries: string;
 	character: string;
@@ -10,13 +10,18 @@ interface Amiibo {
 	name: string;
 	release: { au?: string; eu?: string; jp?: string; na?: string };
 	tail: string;
-	type: string;
+	type?: string; // Lo hago opcional porque a veces lo borramos
+	unlockedAt?: string; // Añadido opcionalmente por si lo usas
 }
 
 interface AmiiboContextType {
 	userAmiibos: Amiibo[];
 	unlockAmiibo: (amiibo: Amiibo) => void;
 	clearStorage: () => void;
+	// --- NUEVO: Propiedades para el Confeti ---
+	isConfettiActive: boolean;
+	triggerConfetti: () => void;
+	stopConfetti: () => void;
 }
 
 const AmiiboContext = createContext<AmiiboContextType | undefined>(undefined);
@@ -25,6 +30,9 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [userAmiibos, setUserAmiibos] = useState<Amiibo[]>([]);
+
+	// NUEVO: Estado para controlar el confeti globalmente
+	const [isConfettiActive, setIsConfettiActive] = useState(false);
 
 	// Cargar desde localStorage al iniciar
 	useEffect(() => {
@@ -47,8 +55,22 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 		setUserAmiibos([]);
 	};
 
+	// NUEVO: Funciones para controlar el confeti
+	const triggerConfetti = () => setIsConfettiActive(true);
+	const stopConfetti = () => setIsConfettiActive(false);
+
 	return (
-		<AmiiboContext.Provider value={{ userAmiibos, unlockAmiibo, clearStorage }}>
+		<AmiiboContext.Provider
+			value={{
+				userAmiibos,
+				unlockAmiibo,
+				clearStorage,
+				// Exportamos las cosas del confeti
+				isConfettiActive,
+				triggerConfetti,
+				stopConfetti,
+			}}
+		>
 			{children}
 		</AmiiboContext.Provider>
 	);

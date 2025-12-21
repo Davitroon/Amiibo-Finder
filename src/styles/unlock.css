@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 50px; /* Ajustado para dejar espacio al timer */
+    margin-top: 50px;
     height: 350px;
 }
 
@@ -23,48 +23,48 @@
 
 /* Estado Bloqueado (Cooldown) */
 .gift-box.locked {
-    cursor: default; /* Cursor normal */
-    transform: none; /* Asegura que no crezca */
-    opacity: 0.8; /* Un poco más apagado visualmente */
+    cursor: default;
+    transform: none;
+    opacity: 0.8;
 }
 
 /* Tamaños de imagen */
 .gift {
     width: 450px;
     height: auto;
-}
-
-/* Propiedades comunes de imagen */
-.gift {
     filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
     transition: all 0.3s ease;
-    /* transition: width 0.3s ease; Esto evita saltos bruscos al cambiar src si fuera svg, 
-       pero con pngs de distinto ratio a veces es mejor dejarlo en 'all' o quitarlo */
 }
 
 .gift-text {
     margin-top: 15px;
     font-weight: bold;
-    color: #555;
+    color: var(--text-color);
     opacity: 0.8;
+    
+    /* NUEVO: Añadida transición para que el color cambie suavemente */
+    transition: color 0.3s ease;
 }
 
 /* ------------------------------------------------
    TIMER STYLES
 ------------------------------------------------ */
 .timer-display {
-    background-color: #333;
+    /* Opcional: Si quieres que el timer también cambie con el tema, usa variables aquí */
+    background-color: #333; 
     color: #fff;
+    
     padding: 5px 12px;
     border-radius: 20px;
     font-family: monospace;
     font-size: 1.2rem;
     font-weight: bold;
-    margin-bottom: 20px; /* Espacio entre timer y regalo */
+    margin-bottom: 20px;
     
-    /* Animación suave para aparecer/desaparecer */
     opacity: 0; 
     transform: translateY(10px);
+    
+    /* Mantenemos las transiciones existentes */
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 

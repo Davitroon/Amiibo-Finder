@@ -1,0 +1,62 @@
+/* -------------------------------
+   Card Container
+------------------------------- */
+.amiibo-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  
+  /* CAMBIO: Borde transparente por defecto para evitar saltos de tamaño */
+  border: 1px solid transparent; 
+
+  /* CAMBIO IMPORTANTE: 
+     Añadimos border-color y color a la transición para que 
+     al cambiar de tema sea suave, manteniendo el transform rápido para el hover 
+  */
+  transition: 
+    transform 0.2s ease, 
+    background-color 0.3s ease, 
+    border-color 0.3s ease, 
+    color 0.3s ease;
+}
+
+/* En modo oscuro, el borde aparece suavemente gracias a la transición de arriba */
+body.dark-mode .amiibo-card {
+  border-color: #444;
+}
+
+.amiibo-card:hover {
+  transform: translateY(-5px);
+  cursor: pointer;
+  background: var(--bg-color); 
+}
+
+body.dark-mode .amiibo-card:hover {
+  background: #383838;
+}
+
+/* -------------------------------
+   Card Image
+------------------------------- */
+.amiibo-card img {
+  width: 140px;
+  height: 220px;
+  /* Opcional: Si quieres que la imagen también tenga transición suave si le aplicas filtros */
+  transition: transform 0.2s ease;
+}
+
+/* -------------------------------
+   Responsive Styles
+------------------------------- */
+@media (max-width: 780px) {
+  .amiibo-card {
+    padding: 0.5rem;
+  }
+
+  .amiibo-card img {
+    width: 80px;
+    height: 120px;
+  }
+}
