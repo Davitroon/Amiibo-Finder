@@ -9,25 +9,28 @@
 /* MARCO PRINCIPAL */
 .collection-frame {
     margin-top: 20px;
-    background-color: var(--bg-color); /* Antes era #f9f9f9, ahora usa variable o similar */
-    /* Para dar contraste, quizás quieras una variable nueva --frame-bg */
-    /* Pero por ahora, usemos un ajuste manual o variable */
+    
+    /* CAMBIO: Usamos var(--bg-color) o un color base, pero necesitamos la transición */
+    background-color: var(--bg-color); 
+    /* Sobreescribimos con transparencia para el efecto visual */
     background-color: rgba(0,0,0,0.03); 
     
-    border: 2px dashed var(--border-color); /* CAMBIO: Variable */
+    border: 2px dashed var(--border-color);
     border-radius: 12px;
     padding: 2rem;
     min-height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
+    
+    /* NUEVO: Animación suave al cambiar de tema */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Ajuste específico para modo oscuro */
 body.dark-mode .collection-frame {
     background-color: rgba(255,255,255,0.05);
 }
-
 
 .amiibo-grid {
     display: grid;
@@ -72,21 +75,27 @@ body.dark-mode .collection-frame {
     justify-content: center;
     align-items: center;
     text-align: center;
-    color: var(--text-color); /* CAMBIO */
+    color: var(--text-color);
     opacity: 0.7;
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 .empty-title {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 10px;
-    color: var(--text-color); /* CAMBIO */
+    color: var(--text-color);
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 .empty-subtitle {
     font-size: 1rem;
-    color: var(--text-color); /* CAMBIO */
+    color: var(--text-color);
     opacity: 0.6;
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 /* -------------------------------
@@ -102,34 +111,37 @@ body.dark-mode .collection-frame {
 }
 
 .results-count {
-    color: var(--text-color); /* CAMBIO */
+    color: var(--text-color);
     opacity: 0.8;
     font-size: 0.95rem;
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 .filter-toggle-btn {
-    background-color: var(--card-bg); /* CAMBIO */
-    color: var(--text-color); /* CAMBIO */
-    border: 1px solid var(--border-color); /* CAMBIO */
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
     
     padding: 8px 18px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 0.95rem;
     font-weight: 500;
-    transition: background 0.2s, transform 0.1s;
     display: flex;
     align-items: center;
     gap: 8px;
+    
+    /* CAMBIO: Añadimos border-color y color a la transición existente */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.1s;
 }
 
 .filter-toggle-btn:hover {
-    filter: brightness(0.9); /* Oscurece un poco al hover */
+    filter: brightness(0.9);
 }
 body.dark-mode .filter-toggle-btn:hover {
-    filter: brightness(1.2); /* Aclara en modo oscuro */
+    filter: brightness(1.2);
 }
-
 
 .filter-toggle-btn.active {
     background-color: #E60012; 
@@ -155,8 +167,8 @@ body.dark-mode .filter-toggle-btn:hover {
 }
 
 .filter-content {
-    background-color: var(--card-bg); /* CAMBIO */
-    border: 1px solid var(--border-color); /* CAMBIO */
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 15px 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.04);
@@ -165,6 +177,9 @@ body.dark-mode .filter-toggle-btn:hover {
     flex-wrap: wrap;
     gap: 25px;
     align-items: center;
+
+    /* NUEVO: Transición suave para el fondo y el borde del panel */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .filter-group {
@@ -176,21 +191,24 @@ body.dark-mode .filter-toggle-btn:hover {
 .filter-group label {
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--text-color); /* CAMBIO */
+    color: var(--text-color);
+    /* NUEVO: Transición de color */
+    transition: color 0.3s ease;
 }
 
 /* Inputs y Selects estilizados */
 .filter-group input,
 .filter-group select {
     padding: 8px 12px;
-    border: 1px solid var(--border-color); /* CAMBIO */
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 0.9rem;
     
-    background-color: var(--bg-color); /* CAMBIO */
-    color: var(--text-color); /* CAMBIO */
+    background-color: var(--bg-color);
+    color: var(--text-color);
     
-    transition: border-color 0.2s;
+    /* CAMBIO: Añadimos background-color y color a la transición */
+    transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
 
 .filter-group input:focus,

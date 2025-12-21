@@ -2,18 +2,27 @@
    Card Container
 ------------------------------- */
 .amiibo-card {
-  background: var(--card-bg); /* CAMBIO: Variable */
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, background-color 0.3s; /* Animamos cambio de color */
   
-  /* CAMBIO: Borde sutil para modo oscuro */
+  /* CAMBIO: Borde transparente por defecto para evitar saltos de tamaño */
   border: 1px solid transparent; 
+
+  /* CAMBIO IMPORTANTE: 
+     Añadimos border-color y color a la transición para que 
+     al cambiar de tema sea suave, manteniendo el transform rápido para el hover 
+  */
+  transition: 
+    transform 0.2s ease, 
+    background-color 0.3s ease, 
+    border-color 0.3s ease, 
+    color 0.3s ease;
 }
 
-/* En modo oscuro, a veces ayuda un borde fino */
+/* En modo oscuro, el borde aparece suavemente gracias a la transición de arriba */
 body.dark-mode .amiibo-card {
   border-color: #444;
 }
@@ -21,9 +30,9 @@ body.dark-mode .amiibo-card {
 .amiibo-card:hover {
   transform: translateY(-5px);
   cursor: pointer;
-  background: var(--bg-color); /* CAMBIO: Un poco de contraste al hover */
-  /* Si el fondo es muy oscuro, quizás quieras un gris un poco más claro: */
+  background: var(--bg-color); 
 }
+
 body.dark-mode .amiibo-card:hover {
   background: #383838;
 }
@@ -34,6 +43,8 @@ body.dark-mode .amiibo-card:hover {
 .amiibo-card img {
   width: 140px;
   height: 220px;
+  /* Opcional: Si quieres que la imagen también tenga transición suave si le aplicas filtros */
+  transition: transform 0.2s ease;
 }
 
 /* -------------------------------

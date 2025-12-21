@@ -3,8 +3,6 @@
 ------------------------------- */
 
 .site-footer {
-  /* En modo claro: #1a1a1a (casi negro). 
-     En modo oscuro: quizas un poco más claro que el fondo o igual */
   background-color: #1a1a1a; 
   color: #f0f0f0;
   
@@ -15,17 +13,22 @@
   padding-bottom: 3rem;
   
   border-top: 1px solid transparent;
+
+  /* NUEVO: Añadimos la transición para fondo y borde */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Ajuste opcional para modo oscuro: Borde superior para separar */
+/* Ajuste para modo oscuro */
 body.dark-mode .site-footer {
     border-top: 1px solid #333;
-    background-color: #111; /* Un negro aun más profundo */
+    background-color: #111; 
 }
 
 .site-footer a {
   color: #4db5ff;
   text-decoration: none;
+  /* Opcional: transición para el color del link también */
+  transition: color 0.2s ease;
 }
 
 .site-footer a:hover {

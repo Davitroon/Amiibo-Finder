@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/amiibos.css"; // Asegúrate de mover tus estilos CSS
+import "../styles/amiibo-card.css"; // Asegúrate de mover tus estilos CSS
 
 interface Props {
 	amiibo: any; // Usa la interfaz Amiibo completa si prefieres
