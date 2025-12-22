@@ -1,35 +1,29 @@
 #header {
     position: sticky;
     top: 0;
-    /* CAMBIO: Usamos las variables para que cambie de color */
     background: var(--header-bg);
     color: var(--header-text);
-    
-    padding: 15px 20px;
+    padding: 10px 20px;
     z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background 0.3s, color 0.3s;
-
-    /* CAMBIO: Flexbox para alinear contenido y botón */
+    height: 8.9vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* Envolvemos Título + Links para centrarlos */
 .header-main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Esto asegura que ocupe el espacio central */
     flex-grow: 1;
-    /* Pequeño truco: margen a la izquierda para compensar el botón de la derecha 
-       y que el título quede perfectamente centrado visualmente */
-    margin-left: 40px; 
+    /* Ajustamos el margen izquierdo para compensar el ancho de los DOS botones a la derecha */
+    margin-left: 90px; 
 }
 
 #header h1 {
-    margin: 0 0 10px 0; /* Reducimos margen para ajustar */
+    margin: 0 0 10px 0;
 }
 
 #header-links {
@@ -50,10 +44,9 @@
 #header-links a:hover {
     color: rgb(253, 255, 121);
     transform: scale(1.03);
-    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra suavizada */
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* LINK ACTIVO */
 #header-links a.active {
     color: rgb(253, 255, 121);
     border-bottom: 2px solid rgb(253, 255, 121);
@@ -61,33 +54,54 @@
     cursor: default;
 }
 
-/* --- NUEVO: ESTILOS DEL BOTÓN DE TEMA --- */
-.theme-toggle-btn {
-    background: rgba(0, 0, 0, 0.15); /* Fondo semitransparente */
+/* --- NUEVO: CONTENEDOR DE ACCIONES (Derecha) --- */
+.header-actions {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+    align-items: center;
+}
+
+/* --- ESTILOS DE LOS BOTONES DE ICONO --- */
+.icon-btn {
+    background: rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    color: inherit; /* Hereda el color de texto del header */
+    color: inherit;
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
+    
+    /* Centrado de iconos SVG */
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    font-size: 1.2rem; /* Tamaño del icono */
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.theme-toggle-btn:hover {
+.icon-btn:hover {
     background: rgba(0, 0, 0, 0.3);
     transform: scale(1.1);
 }
 
-/* Responsive para móviles */
+/* Estilo especial cuando las notificaciones están activas */
+.icon-btn.active-notify {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: rgb(253, 255, 121); /* Amarillo brillante */
+}
+
+/* Responsive */
 @media (max-width: 600px) {
     #header {
         padding: 10px;
     }
     .header-main {
-        margin-left: 0; /* Quitamos la compensación en pantallas pequeñas */
+        margin-left: 0; 
+    }
+    .header-actions {
+        /* En móviles, quizás queramos que los botones sean un poco más pequeños */
+        gap: 5px;
     }
 }
