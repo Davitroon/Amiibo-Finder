@@ -1,23 +1,26 @@
 import { useState, useMemo } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
+import { useFilters } from "../context/FilterContext"; // <--- IMPORTAR HOOK
 import AmiiboList from "../modules/AmiiboList";
 import DeleteCollectionModal from "../modules/DeleteModal";
-import Filters, { type FilterState } from "../modules/Filters"; // Importar tipo FilterState
+import Filters from "../modules/Filters"; 
 import { IoFilter } from "react-icons/io5"; 
 import "../styles/collection.css";
 
 const Collection = () => {
     const { userAmiibos, clearStorage } = useAmiibos();
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    
+    // --- CAMBIO: Usamos el contexto de filtros en lugar de useState local ---
+    const { 
+        filters, 
+        setFilters, 
+        isFilterPanelOpen, 
+        toggleFilterPanel 
+    } = useFilters();
 
-    // Estado actualizado con showFavoritesOnly
-    const [filters, setFilters] = useState<FilterState>({
-        name: "",
-        series: "",
-        sortBy: "date_new",
-        showFavoritesOnly: false
-    });
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    
+    // NOTA: Hemos eliminado 'const [isFilterOpen...]' y 'const [filters...]' locales
 
     const handleConfirmDelete = () => {
         clearStorage();
@@ -32,7 +35,7 @@ const Collection = () => {
     const filteredAmiibos = useMemo(() => {
         let result = [...userAmiibos];
 
-        // 1. Filtro por Favoritos (NUEVO)
+        // 1. Filtro por Favoritos
         if (filters.showFavoritesOnly) {
             result = result.filter((a) => a.isFavorite);
         }
@@ -51,13 +54,9 @@ const Collection = () => {
 
         // 4. Ordenamiento
         result.sort((a, b) => {
-            // Lógica especial para "Favoritos Primero"
             if (filters.sortBy === "favorites_first") {
-                // Si a es favorito y b no, a va antes (-1)
                 if (a.isFavorite && !b.isFavorite) return -1;
-                // Si b es favorito y a no, b va antes (1)
                 if (!a.isFavorite && b.isFavorite) return 1;
-                // Si ambos son iguales, se ordenan por nombre secundariamente
                 return a.name.localeCompare(b.name);
             }
 
@@ -83,11 +82,13 @@ const Collection = () => {
 
             <div className="collection-header">
                 <button
-                    className={`filter-toggle-btn ${isFilterOpen ? "active" : ""}`}
-                    onClick={() => setIsFilterOpen(!isFilterOpen)}
+                    // Usamos la variable del contexto: isFilterPanelOpen
+                    className={`filter-toggle-btn ${isFilterPanelOpen ? "active" : ""}`}
+                    // Usamos la función del contexto: toggleFilterPanel
+                    onClick={toggleFilterPanel}
                 >
                     <IoFilter style={{ marginRight: '5px' }} /> 
-                    {isFilterOpen ? "Hide Filters" : "Filters"}
+                    {isFilterPanelOpen ? "Hide Filters" : "Filters"}
                 </button>
                 
                 <span className="results-count">
@@ -95,8 +96,9 @@ const Collection = () => {
                 </span>
             </div>
 
+            {/* Pasamos los estados globales al componente */}
             <Filters 
-                isOpen={isFilterOpen}
+                isOpen={isFilterPanelOpen}
                 filters={filters}
                 setFilters={setFilters}
                 availableSeries={uniqueSeries}
