@@ -29,56 +29,58 @@ const Filters: React.FC<Props> = ({
     <div className={`filter-panel-container ${isOpen ? "open" : ""}`}>
       <div className="filter-content-wrapper">
         
+        {/* Usaremos justify-content: space-between aquí */}
         <div className="filter-row">
             
-          {/* 1. Nombre (Quitamos 'grow') */}
-          <div className="filter-group">
-            <label>Name</label>
-            <input
-              type="text"
-              placeholder="Mario, Link..."
-              value={filters.name}
-              onChange={(e) => setFilters({ ...filters, name: e.target.value })}
-            />
+          {/* GRUPO IZQUIERDO: Inputs de Filtro */}
+          <div className="filter-left-group">
+              <div className="filter-group">
+                <label>Name</label>
+                <input
+                  type="text"
+                  placeholder="Mario, Link..."
+                  value={filters.name}
+                  onChange={(e) => setFilters({ ...filters, name: e.target.value })}
+                />
+              </div>
+
+              <div className="filter-group">
+                <label>Game Series</label>
+                <select
+                  value={filters.series}
+                  onChange={(e) => setFilters({ ...filters, series: e.target.value })}
+                >
+                  <option value="">All Series</option>
+                  {availableSeries.map((series) => (
+                    <option key={series} value={series}>
+                      {series}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <label>Sort By</label>
+                <select
+                  value={filters.sortBy}
+                  onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as any })}
+                >
+                  <option value="date_new">Newest</option>
+                  <option value="date_old">Oldest</option>
+                  <option value="name_asc">Name (A-Z)</option>
+                  <option value="name_desc">Name (Z-A)</option>
+                  <option value="series">Series</option>
+                </select>
+              </div>
           </div>
 
-          {/* 2. Saga (Quitamos 'grow') */}
-          <div className="filter-group">
-            <label>Game Series</label>
-            <select
-              value={filters.series}
-              onChange={(e) => setFilters({ ...filters, series: e.target.value })}
-            >
-              <option value="">All Series</option>
-              {availableSeries.map((series) => (
-                <option key={series} value={series}>
-                  {series}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 3. Ordenar */}
-          <div className="filter-group">
-            <label>Sort By</label>
-            <select
-              value={filters.sortBy}
-              onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as any })}
-            >
-              <option value="date_new">Newest</option>
-              <option value="date_old">Oldest</option>
-              <option value="name_asc">Name (A-Z)</option>
-              <option value="name_desc">Name (Z-A)</option>
-              <option value="series">Series</option>
-            </select>
-          </div>
-
-          {/* Botón Clean (AÑADIDO: 'push-right' para empujarlo al final) */}
-          <div className="filter-group push-right">
+          {/* GRUPO DERECHO: Botón Clean */}
+          <div className="filter-right-group">
              <button className="clean-filters-btn" onClick={handleClean}>
                 Clean
              </button>
           </div>
+          
         </div>
 
       </div>

@@ -1,18 +1,12 @@
 /* Contenedor animado (Acordeón) */
 .filter-panel-container {
     background-color: var(--card-bg);
-    
-    /* CAMBIO: Definimos un borde base transparente para animarlo */
     border: 1px solid transparent; 
-    border-top: none; /* Sin borde arriba para que parezca salir del header */
-    
+    border-top: none;
     overflow: hidden;
     
-    /* Animación de altura */
     max-height: 0;
     opacity: 0;
-    
-    /* CAMBIO: Añadimos transform para mejorar el efecto de aparición */
     transform: translateY(-10px); 
 
     transition: 
@@ -21,7 +15,7 @@
         border-color 0.3s ease,
         background-color 0.3s ease,
         transform 0.3s ease,
-        box-shadow 0.3s ease; /* Animamos también la sombra */
+        box-shadow 0.3s ease;
     
     margin-inline: 10rem;
     border-radius: 0 0 12px 12px;
@@ -31,58 +25,44 @@
 .filter-panel-container.open {
     max-height: 150px;
     opacity: 1;
-    transform: translateY(0); /* Vuelve a su sitio */
-
-    /* CAMBIO: Borde visible usando tu variable (lados y abajo) */
+    transform: translateY(0);
     border-color: var(--border-color);
-
-    /* CAMBIO: Sombra mucho más pronunciada para separarlo del fondo */
-    /* En modo claro da profundidad, en modo oscuro da resplandor sutil */
     box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15), 
                 0 0 5px rgba(0,0,0,0.05);
-    
     margin-bottom: 20px;
 }
 
-/* Ajuste específico para modo oscuro para que destaque más */
 body.dark-mode .filter-panel-container.open {
-    /* Un borde un poco más claro en modo oscuro ayuda a delimitar */
     border-color: #555; 
     box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4);
 }
 
-/* ... (Estilos del contenedor y estados open se mantienen igual) ... */
-
-/* Wrapper interno para dar padding */
 .filter-content-wrapper {
     padding: 20px;
 }
 
-/* Disposición horizontal de los filtros */
+/* LA CLAVE: Separar los dos grandes grupos */
 .filter-row {
     display: flex;
+    justify-content: space-between; /* Izquierda <--- Espacio ---> Derecha */
+    align-items: flex-end; /* Alinear abajo para que coincidan con los inputs */
+    width: 100%;
+    flex-wrap: wrap; 
+    gap: 20px; /* Espacio mínimo si se juntan mucho */
+}
+
+/* GRUPO IZQUIERDO: Donde están los inputs */
+.filter-left-group {
+    display: flex;
     gap: 20px;
+    flex-wrap: wrap; /* Permitir que los inputs bajen si no caben */
     align-items: flex-end;
-    width: 100%; /* Aseguramos que ocupe todo el ancho */
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
-}
-
-/* NUEVO: Empuja el elemento hacia la derecha del todo */
-.push-right {
-    margin-left: auto;
-}
-
-.filter-group label {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--text-color);
-    opacity: 0.9;
-    transition: color 0.3s ease;
 }
 
 /* Inputs y Selects */
@@ -95,7 +75,10 @@ body.dark-mode .filter-panel-container.open {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: all 0.3s ease;
-    min-width: 150px; /* Ancho mínimo para que no se vean muy pequeños */
+    
+    width: 100%; 
+    min-width: 150px; /* Ancho mínimo para legibilidad */
+    box-sizing: border-box; 
 }
 
 .filter-group input:focus,
@@ -105,7 +88,6 @@ body.dark-mode .filter-panel-container.open {
     box-shadow: 0 0 0 2px rgba(230, 0, 18, 0.1); 
 }
 
-/* Botón Clean */
 .clean-filters-btn {
     padding: 10px 20px;
     height: 40px;
@@ -117,6 +99,10 @@ body.dark-mode .filter-panel-container.open {
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
+
+    /* --- CORRECCIÓN TAMBIÉN AQUÍ --- */
+    /* Para cuando esté en móvil al 100% de ancho */
+    box-sizing: border-box; 
 }
 
 .clean-filters-btn:hover {
@@ -125,28 +111,35 @@ body.dark-mode .filter-panel-container.open {
     border-color: #E60012;
 }
 
-/* --- RESPONSIVE (Móvil) --- */
+/* --- RESPONSIVE (Móvil y Tablets) --- */
 @media (max-width: 1000px) {
     .filter-panel-container {
         margin-inline: 1rem;
     }
 
+    /* Aumentamos la altura máxima porque ahora se apilan */
     .filter-panel-container.open {
-        max-height: 400px;
+        max-height: 500px; 
     }
 
-    .filter-row {
-        flex-direction: column;
+.filter-row {
+        flex-direction: column; /* Cambiar a columna */
+        align-items: stretch; /* Estirar todo */
+        gap: 15px;
+    }
+
+    .filter-left-group {
+        flex-direction: column; /* Los inputs uno debajo de otro */
         align-items: stretch;
+        width: 100%;
     }
 
-    /* En móvil quitamos el margen automático para que se apilen normal */
-    .push-right {
-        margin-left: 0;
+    .filter-right-group {
+        width: 100%;
+        margin-top: 5px;
     }
     
     .clean-filters-btn {
         width: 100%;
-        margin-top: 10px;
     }
 }

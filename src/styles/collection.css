@@ -104,25 +104,28 @@ body.dark-mode .collection-frame {
 .collection-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* Alineación vertical CENTRADA */
     padding-inline: 10rem;
     margin-top: 40px;
     margin-bottom: 10px;
+    flex-wrap: wrap; /* Permitir que baje si la pantalla es muy pequeña */
+    gap: 15px; 
 }
 
 .results-count {
     color: var(--text-color);
     opacity: 0.8;
     font-size: 0.95rem;
-    /* NUEVO: Transición de color */
     transition: color 0.3s ease;
+    white-space: nowrap; /* Evitar que el texto se rompa raro */
 }
 
 .filter-toggle-btn {
     background-color: var(--card-bg);
     color: var(--text-color);
     border: 1px solid var(--border-color);
-    width: 159.73px;
+    /* width: 159.73px;  <-- ELIMINADO para que se adapte al contenido */
+    min-width: 120px; /* Ancho mínimo razonable */
     padding: 8px 18px;
     border-radius: 8px;
     cursor: pointer;
@@ -130,9 +133,9 @@ body.dark-mode .collection-frame {
     font-weight: 500;
     display: flex;
     align-items: center;
+    justify-content: center; /* Centrar contenido horizontalmente */
     gap: 8px;
     
-    /* CAMBIO: Añadimos border-color y color a la transición existente */
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.1s;
 }
 
@@ -225,12 +228,6 @@ body.dark-mode .filter-toggle-btn:hover {
     .collection-header,
     .filter-panel {
         padding-inline: 1rem;
-    }
-    
-    .collection-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
     }
 
     .results-count {
