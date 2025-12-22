@@ -5,9 +5,55 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>amiibo-finder</title>
+
+    <style>
+      /* Definimos variables básicas para que estén disponibles instantáneamente */
+      :root {
+        --bg-color: #ffffff;     /* Tu color claro hexadecimal */
+        --text-color: #333333;   /* Tu color texto claro */
+      }
+      
+      /* Colores modo oscuro */
+      body.dark-mode {
+        --bg-color: #1a1a1a;     /* PON AQUÍ TU COLOR OSCURO EXACTO DE MAIN.CSS */
+        --text-color: #f0f0f0;   /* PON AQUÍ TU COLOR TEXTO OSCURO EXACTO */
+        background-color: var(--bg-color) !important; /* Forzamos el color */
+        color: var(--text-color) !important;
+      }
+
+      /* Clase para matar animaciones durante la carga */
+      .preload * {
+        -webkit-transition: none !important;
+        -moz-transition: none !important;
+        -ms-transition: none !important;
+        -o-transition: none !important;
+        transition: none !important;
+      }
+    </style>
   </head>
-  <body>
+  
+  <body class="preload">
+    
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem("siteTheme");
+        // Si hay tema oscuro guardado, añadimos la clase inmediatamente
+        if (savedTheme === "dark") {
+          document.body.classList.add("dark-mode");
+        }
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <script>
+        window.addEventListener('load', () => {
+            // Un pequeño timeout asegura que el pintado inicial ya ocurrió
+            setTimeout(() => {
+                document.body.classList.remove('preload');
+            }, 100);
+        });
+    </script>
   </body>
 </html>
