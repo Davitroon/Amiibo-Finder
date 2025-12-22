@@ -1,151 +1,115 @@
 import { useState, useMemo } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
-import Modal from "../modules/Modal";
+import { useFilters } from "../context/FilterContext"; // <--- IMPORTAR HOOK
 import AmiiboList from "../modules/AmiiboList";
-import DeleteCollectionModal from "../modules/DeleteCollectionModal";
+import DeleteCollectionModal from "../modules/DeleteModal";
+import Filters from "../modules/Filters"; 
+import { IoFilter } from "react-icons/io5"; 
 import "../styles/collection.css";
 
 const Collection = () => {
     const { userAmiibos, clearStorage } = useAmiibos();
-    const [selectedAmiibo, setSelectedAmiibo] = useState<any>(null);
+    
+    // --- CAMBIO: Usamos el contexto de filtros en lugar de useState local ---
+    const { 
+        filters, 
+        setFilters, 
+        isFilterPanelOpen, 
+        toggleFilterPanel 
+    } = useFilters();
+
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-    // Estado para mostrar/ocultar el panel de filtros
-    const [showFilters, setShowFilters] = useState(false);
-
-    // Estados para los filtros
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedSeries, setSelectedSeries] = useState("All");
-    const [sortOrder, setSortOrder] = useState("newest");
+    
+    // NOTA: Hemos eliminado 'const [isFilterOpen...]' y 'const [filters...]' locales
 
     const handleConfirmDelete = () => {
         clearStorage();
         setShowDeleteConfirm(false);
     };
 
-    // --- LÓGICA DE FILTRADO ---
-    // Obtenemos las series únicas para el select
     const uniqueSeries = useMemo(() => {
         const series = userAmiibos.map((a) => a.gameSeries);
-        // Ordenamos las series alfabéticamente para el dropdown
-        return ["All", ...Array.from(new Set(series)).sort()];
+        return Array.from(new Set(series)).sort();
     }, [userAmiibos]);
 
-    // Filtramos y ordenamos la lista
     const filteredAmiibos = useMemo(() => {
         let result = [...userAmiibos];
 
-        // 1. Filtro por texto
-        if (searchTerm) {
+        // 1. Filtro por Favoritos
+        if (filters.showFavoritesOnly) {
+            result = result.filter((a) => a.isFavorite);
+        }
+
+        // 2. Filtro por texto
+        if (filters.name) {
             result = result.filter((a) =>
-                a.name.toLowerCase().includes(searchTerm.toLowerCase())
+                a.name.toLowerCase().includes(filters.name.toLowerCase())
             );
         }
 
-        // 2. Filtro por serie (Dropdown de filtrado)
-        if (selectedSeries !== "All") {
-            result = result.filter((a) => a.gameSeries === selectedSeries);
+        // 3. Filtro por serie
+        if (filters.series) {
+            result = result.filter((a) => a.gameSeries === filters.series);
         }
 
-        // 3. Ordenamiento
+        // 4. Ordenamiento
         result.sort((a, b) => {
-            if (sortOrder === "newest") {
-                return -1; // Asumiendo orden de inserción invertido
-            } else if (sortOrder === "oldest") {
-                return 1;
-            } else if (sortOrder === "az") {
-                return a.name.localeCompare(b.name);
-            } else if (sortOrder === "za") {
-                return b.name.localeCompare(a.name);
-            } else if (sortOrder === "series") {
-                // NUEVO: Lógica para ordenar por Serie alfabéticamente
-                // Si la serie es igual, ordena por nombre secundariamente
-                const seriesComparison = a.gameSeries.localeCompare(b.gameSeries);
-                if (seriesComparison !== 0) return seriesComparison;
+            if (filters.sortBy === "favorites_first") {
+                if (a.isFavorite && !b.isFavorite) return -1;
+                if (!a.isFavorite && b.isFavorite) return 1;
                 return a.name.localeCompare(b.name);
             }
-            return 0;
+
+            switch (filters.sortBy) {
+                case "date_new": return -1;
+                case "date_old": return 1;
+                case "name_asc": return a.name.localeCompare(b.name);
+                case "name_desc": return b.name.localeCompare(a.name);
+                case "series":
+                    const seriesComp = a.gameSeries.localeCompare(b.gameSeries);
+                    return seriesComp !== 0 ? seriesComp : a.name.localeCompare(b.name);
+                default: return 0;
+            }
         });
 
         return result;
-    }, [userAmiibos, searchTerm, selectedSeries, sortOrder]);
+    }, [userAmiibos, filters]);
 
     return (
         <>
             <h2>My Collection</h2>
-
             <hr />
 
-            {/* HEADER CON BOTÓN Y CONTADOR */}
             <div className="collection-header">
                 <button
-                    className={`filter-toggle-btn ${showFilters ? "active" : ""}`}
-                    onClick={() => setShowFilters(!showFilters)}
+                    // Usamos la variable del contexto: isFilterPanelOpen
+                    className={`filter-toggle-btn ${isFilterPanelOpen ? "active" : ""}`}
+                    // Usamos la función del contexto: toggleFilterPanel
+                    onClick={toggleFilterPanel}
                 >
-                    {showFilters ? "Hide Filters" : "Show Filters"}
+                    <IoFilter style={{ marginRight: '5px' }} /> 
+                    {isFilterPanelOpen ? "Hide Filters" : "Filters"}
                 </button>
                 
-                {/* Contador de resultados */}
                 <span className="results-count">
                     Showing <strong>{filteredAmiibos.length}</strong> of {userAmiibos.length} Amiibos
                 </span>
             </div>
 
-            {/* PANEL DE FILTROS EXPANDIBLE */}
-            <div className={`filter-panel ${showFilters ? "open" : ""}`}>
-                <div className="filter-content">
-                    {/* 1. Buscador */}
-                    <div className="filter-group">
-                        <label>Search:</label>
-                        <input
-                            type="text"
-                            placeholder="Mario, Link..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-
-                    {/* 2. Series (Filtrado) */}
-                    <div className="filter-group">
-                        <label>Filter by Series:</label>
-                        <select
-                            value={selectedSeries}
-                            onChange={(e) => setSelectedSeries(e.target.value)}
-                        >
-                            {uniqueSeries.map((series) => (
-                                <option key={series} value={series}>
-                                    {series}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* 3. Ordenar (Sorting) */}
-                    <div className="filter-group">
-                        <label>Sort by:</label>
-                        <select
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                        >
-                            <option value="newest">Newest first</option>
-                            <option value="oldest">Oldest first</option>
-                            <option value="az">Name (A-Z)</option>
-                            <option value="za">Name (Z-A)</option>
-                            <option value="series">Series</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+            {/* Pasamos los estados globales al componente */}
+            <Filters 
+                isOpen={isFilterPanelOpen}
+                filters={filters}
+                setFilters={setFilters}
+                availableSeries={uniqueSeries}
+            />
 
             <section className="collection-body">
                 <div className="collection-frame">
                     {userAmiibos.length > 0 ? (
                         <>
                             {filteredAmiibos.length > 0 ? (
-                                <AmiiboList
-                                    amiibos={filteredAmiibos}
-                                    setSelectedAmiibo={setSelectedAmiibo}
-                                />
+                                <AmiiboList amiibos={filteredAmiibos} />
                             ) : (
                                 <div className="empty-content" style={{ minHeight: '200px' }}>
                                     <p>No amiibos found matching your filters.</p>
@@ -172,12 +136,6 @@ const Collection = () => {
                     )}
                 </div>
             </section>
-
-            <Modal
-                isOpen={!!selectedAmiibo}
-                onClose={() => setSelectedAmiibo(null)}
-                amiibo={selectedAmiibo}
-            />
 
             {showDeleteConfirm && (
                 <DeleteCollectionModal

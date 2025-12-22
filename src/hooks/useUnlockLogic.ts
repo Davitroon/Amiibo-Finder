@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
 
-const COOLDOWN_TIME = 2 * 60 * 60 * 1000; // 2 Horas
+const COOLDOWN_TIME = 2 * 60 * 60 * 1000; 
 
 export const useUnlockLogic = () => {
     const { unlockAmiibo, triggerConfetti } = useAmiibos();
@@ -10,6 +10,7 @@ export const useUnlockLogic = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isOpeningAnim, setIsOpeningAnim] = useState(false);
     const [remainingTime, setRemainingTime] = useState<number>(0);
+    const isFirstCheck = useRef(true);
 
     const formatTime = (ms: number) => {
         const totalSeconds = Math.floor(ms / 1000);
@@ -30,25 +31,20 @@ export const useUnlockLogic = () => {
         });
     };
 
-    // --- NOTIFICATIONS HELPERS ---
-    const requestNotificationPermission = () => {
-        if ("Notification" in window && Notification.permission === "default") {
-            Notification.requestPermission();
-        }
-    };
-
+    // --- FUNCIÓN DE NOTIFICACIÓN ---
     const triggerNotification = () => {
+        // Solo enviamos si el permiso YA está concedido
         if ("Notification" in window && Notification.permission === "granted") {
             new Notification("Amiibo Finder", {
                 body: "🎁 Your gift is ready! Click to unlock a new Amiibo.",
-                icon: "/favicon.ico", // Puedes poner la ruta de tu imagen de regalo aquí
+                icon: "/favicon.ico", 
             });
         }
     };
 
     useEffect(() => {
-        // Pedimos permiso al montar el hook
-        requestNotificationPermission();
+        // NOTA: Ya NO pedimos permiso automáticamente aquí. 
+        // El usuario lo hará desde el botón del Header.
 
         const checkTimer = () => {
             const lastUnlock = localStorage.getItem("lastUnlockTime");
@@ -59,22 +55,22 @@ export const useUnlockLogic = () => {
 
                 if (left > 0) {
                     setRemainingTime(left);
+                    localStorage.setItem("amiiboNotificationSent", "false");
                 } else {
-                    // El tiempo ha terminado
                     setRemainingTime(0);
 
-                    // --- LÓGICA DE NOTIFICACIÓN ---
-                    // Verificamos si ya enviamos la notificación para este ciclo
-                    const notificationSent = localStorage.getItem("amiiboNotificationSent");
-                    
-                    // Si NO se ha enviado y el tiempo llegó a 0...
-                    if (notificationSent !== "true") {
-                        triggerNotification();
-                        // Marcamos que ya avisamos para no repetir
+                    if (!isFirstCheck.current) {
+                        const notificationSent = localStorage.getItem("amiiboNotificationSent");
+                        if (notificationSent !== "true") {
+                            triggerNotification(); 
+                            localStorage.setItem("amiiboNotificationSent", "true");
+                        }
+                    } else {
                         localStorage.setItem("amiiboNotificationSent", "true");
                     }
                 }
             }
+            isFirstCheck.current = false;
         };
 
         checkTimer();
@@ -86,10 +82,6 @@ export const useUnlockLogic = () => {
 
     const handleUnlock = async () => {
         if (isLoading || isOpeningAnim || isLocked) return;
-
-        // Pedimos permiso también al hacer clic por si el navegador lo bloqueó antes
-        requestNotificationPermission();
-
         setIsLoading(true);
         setIsOpeningAnim(true);
 
@@ -114,18 +106,13 @@ export const useUnlockLogic = () => {
 
         if (fullList.length > 0) {
             const random = fullList[Math.floor(Math.random() * fullList.length)];
-
             const animationDelay = new Promise((resolve) => setTimeout(resolve, 800));
             const imageLoad = preloadImage(random.image);
 
             await Promise.all([animationDelay, imageLoad]);
 
-            // Guardamos timestamp del desbloqueo
             localStorage.setItem("lastUnlockTime", Date.now().toString());
-            
-            // RESETEAMOS LA NOTIFICACIÓN PARA EL PRÓXIMO CICLO
             localStorage.setItem("amiiboNotificationSent", "false"); 
-            
             setRemainingTime(COOLDOWN_TIME);
 
             const amiiboToSave = { 
@@ -136,9 +123,7 @@ export const useUnlockLogic = () => {
 
             unlockAmiibo(amiiboToSave);
             setUnlockedAmiibo(amiiboToSave);
-            
             triggerConfetti();
-            
             setIsLoading(false);
         } else {
             setIsLoading(false);

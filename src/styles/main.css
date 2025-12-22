@@ -29,11 +29,11 @@ body {
 	padding: 0;
 	background-color: var(--bg-color);
 	color: var(--text-color);
-	transition: background-color 0.3s, color 0.3s; 
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 main {
-	min-height: 70.4vh;
+	min-height: 70.8vh;
 }
 
 h1,
