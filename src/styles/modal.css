@@ -2,114 +2,119 @@
    Modal Container
 ------------------------------- */
 .modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0);
-  pointer-events: none;
-  z-index: 9999;
-  transition: background-color 0.3s ease;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0);
+	pointer-events: none;
+	z-index: 9999;
+	transition: background-color 0.3s ease;
 }
 
 .modal.show {
-  pointer-events: auto;
-  background-color: rgba(0, 0, 0, 0.6);
-  /* Un backdrop-filter ayuda a que destaque más */
-  backdrop-filter: blur(2px);
+	pointer-events: auto;
+	background-color: rgba(0, 0, 0, 0.6);
+	/* Un backdrop-filter ayuda a que destaque más */
+	backdrop-filter: blur(2px);
 }
 
 /* -------------------------------
    Animación de Rebote (Bounce)
 ------------------------------- */
 @keyframes modalBounce {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) translateY(50px);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05) translateY(-10px); /* Se pasa un poco (rebote) */
-  }
-  70% {
-    transform: scale(0.95); /* Se encoge un poco */
-  }
-  100% {
-    transform: scale(1); /* Se asienta */
-  }
+	0% {
+		opacity: 0;
+		transform: scale(0.3) translateY(50px);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.05) translateY(-10px); /* Se pasa un poco (rebote) */
+	}
+	70% {
+		transform: scale(0.95); /* Se encoge un poco */
+	}
+	100% {
+		transform: scale(1); /* Se asienta */
+	}
 }
 
 /* -------------------------------
    Modal Content Box
 ------------------------------- */
 .modal-content {
-  background: var(--card-bg); /* CAMBIO */
-  color: var(--text-color); /* CAMBIO: Asegura texto visible */
-  
-  padding: 20px;
-  border-radius: 12px;
-  width: 350px;
-  text-align: center;
-  
-  opacity: 0;
-  transform: scale(0.8);
-  transition: transform 0.2s ease-in, opacity 0.2s ease-in;
-  
-  /* Sombra más sutil en oscuro */
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+	background: var(--card-bg); /* CAMBIO */
+	color: var(--text-color); /* CAMBIO: Asegura texto visible */
+
+	padding: 20px;
+	border-radius: 12px;
+	width: 350px;
+	text-align: center;
+
+	opacity: 0;
+	transform: scale(0.8);
+	transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+
+	/* Sombra más sutil en oscuro */
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* Cuando tiene la clase .show, ejecutamos la animación de entrada */
 .modal.show .modal-content {
-  opacity: 1;
-  /* El cubic-bezier acentúa el efecto elástico */
-  animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+	opacity: 1;
+	/* El cubic-bezier acentúa el efecto elástico */
+	animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* -------------------------------
    Close Button
 ------------------------------- */
 .close {
-  float: right;
-  font-size: 32px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #ff4d4d; 
-  /* Nota: En modo oscuro el rojo sigue viéndose bien, no hace falta cambiar */
-  transition: transform 0.2s;
-  line-height: 20px;
+	float: right;
+	font-size: 32px;
+	font-weight: bold;
+	cursor: pointer;
+	color: #ff4d4d;
+	/* Nota: En modo oscuro el rojo sigue viéndose bien, no hace falta cambiar */
+	transition: transform 0.2s;
+	line-height: 20px;
 }
 
 .close:hover {
-  transform: scale(1.2) rotate(90deg); /* Pequeño giro al hover */
+	transform: scale(1.2) rotate(90deg); /* Pequeño giro al hover */
 }
 
 /* -------------------------------
    Modal Images
 ------------------------------- */
 .modal img {
-  max-width: 294px;
-  max-height: 216px;
-  margin-top: 10px;
-  
-  /* Un pequeño zoom in para la imagen también */
-  transform: scale(0.9);
-  transition: transform 0.3s ease;
+	max-width: 294px;
+	max-height: 216px;
+	margin-top: 10px;
+
+	/* Un pequeño zoom in para la imagen también */
+	transform: scale(0.9);
+	transition: transform 0.3s ease;
 }
 
 /* Al abrir, la imagen crece un poquito para dar profundidad */
 .modal.show img {
-  transform: scale(1);
-  transition-delay: 0.2s; /* Espera un poco a que el modal se abra */
+	transform: scale(1);
+	transition-delay: 0.2s; /* Espera un poco a que el modal se abra */
+	user-select: none; /* Estándar: No permite seleccionar la imagen */
+	-webkit-user-select: none; /* Safari/Chrome antiguo */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE/Edge */
+	-webkit-user-drag: none;
 }
 
 @media (max-width: 780px) {
-  .modal img {
-    max-width: 194px;
-    max-height: 116px;
-  }
+	.modal img {
+		max-width: 194px;
+		max-height: 116px;
+	}
 }

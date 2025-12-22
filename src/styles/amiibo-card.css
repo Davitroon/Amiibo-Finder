@@ -53,6 +53,13 @@ body.dark-mode .amiibo-card-container {
   object-fit: contain;
   filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.2));
   transition: transform 0.3s ease;
+
+  /* --- NUEVO: Bloquear selección y arrastre --- */
+  user-select: none;          /* Estándar: No permite seleccionar la imagen */
+  -webkit-user-select: none;  /* Safari/Chrome antiguo */
+  -moz-user-select: none;     /* Firefox */
+  -ms-user-select: none;      /* IE/Edge */
+  -webkit-user-drag: none; 
 }
 
 /* Texto en la cara principal */
