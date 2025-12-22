@@ -11,7 +11,12 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid transparent;
 
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease;
+  /* CAMBIO: Añadido 'background-color' a la transición para el modo oscuro */
+  transition: 
+    transform 0.2s ease, 
+    box-shadow 0.2s ease, 
+    border-color 0.3s ease, 
+    background-color 0.3s ease; 
 }
 
 .amiibo-card-container:hover {
@@ -28,24 +33,21 @@ body.dark-mode .amiibo-card-container {
 ------------------------------------------------ */
 .card-image-layer {
   display: flex;
-  /* CAMBIO: Columna para poner la imagen encima del texto */
   flex-direction: column; 
-  /* CAMBIO: Space-between empuja la imagen arriba y texto abajo */
   justify-content: space-between; 
   align-items: center;
-  
-  /* CAMBIO: Reducimos padding vertical a 1rem para ganar espacio para el texto */
   padding: 1rem 1.5rem; 
   
   background-color: var(--card-bg);
-  transition: transform 0.4s ease, filter 0.4s ease;
+  
+  /* CAMBIO: Añadido 'background-color' a la transición */
+  transition: transform 0.4s ease, filter 0.4s ease, background-color 0.3s ease;
   
   height: 100%;
   box-sizing: border-box;
 }
 
 .card-image-layer img {
-  /* Tus dimensiones fijas */
   width: 146.672px;
   height: 244.656px;
   object-fit: contain;
@@ -53,12 +55,11 @@ body.dark-mode .amiibo-card-container {
   transition: transform 0.3s ease;
 }
 
-/* NUEVO: Estilos para el texto en la cara principal */
+/* Texto en la cara principal */
 .card-front-info {
   text-align: center;
   width: 100%;
   margin-top: 5px;
-  /* El texto no debe crecer demasiado */
   overflow: hidden; 
 }
 
@@ -69,6 +70,8 @@ body.dark-mode .amiibo-card-container {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* CAMBIO: Transición suave de color de texto */
+  transition: color 0.3s ease;
 }
 
 .card-front-info span {
@@ -79,6 +82,8 @@ body.dark-mode .amiibo-card-container {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* CAMBIO: Transición suave de color de texto */
+  transition: color 0.3s ease;
 }
 
 .amiibo-card-container.details-active .card-image-layer {
@@ -96,6 +101,8 @@ body.dark-mode .amiibo-card-container {
   width: 100%;
   height: 100%;
   box-sizing: border-box;
+  
+  /* Fondo casi opaco */
   background: rgba(255, 255, 255, 0.96);
 
   display: flex;
@@ -104,7 +111,9 @@ body.dark-mode .amiibo-card-container {
   padding: 1.2rem;
 
   transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* CAMBIO: Añadido background-color a la transición */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
 }
 
 body.dark-mode .card-info-layer {
@@ -136,18 +145,24 @@ body.dark-mode .card-info-layer {
   border: 0;
   border-top: 1px solid var(--border-color);
   margin-bottom: 12px;
+  /* Transición para el color de la línea */
+  transition: border-color 0.3s ease;
 }
 
+/* CAMBIO: Rediseño completo de la fila de información */
 .info-row {
-  align-items: center;
+  display: flex;
+  flex-direction: column; /* Apilar en columna: Etiqueta arriba, Valor abajo */
+  align-items: flex-start; /* Alinear a la izquierda */
+  justify-content: center;
+  
   margin-bottom: 8px;
   padding-bottom: 4px;
   font-size: 0.85rem;
+  
   border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
-}
-
-.info-row:last-of-type {
-  border-bottom: none;
+  /* Transición para el borde punteado */
+  transition: border-color 0.3s ease;
 }
 
 body.dark-mode .info-row {
@@ -159,15 +174,22 @@ body.dark-mode .info-row {
   opacity: 0.7;
   font-size: 0.7rem;
   text-transform: uppercase;
+  margin-bottom: 2px; /* Pequeño espacio entre etiqueta y valor */
+  /* Transición color */
+  transition: color 0.3s ease;
 }
 
 .value {
   font-weight: 500;
-  text-align: right;
-  max-width: 65%;
+  text-align: left; /* Alineado a la izquierda */
+  width: 100%;      /* Ocupa todo el ancho disponible */
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
+  /* Transición color */
+  transition: color 0.3s ease;
 }
 
 .value.highlight {
@@ -182,4 +204,5 @@ body.dark-mode .info-row {
   opacity: 0.5;
   font-style: italic;
   margin-top: 5px;
+  transition: color 0.3s ease;
 }

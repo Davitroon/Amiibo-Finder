@@ -1,0 +1,152 @@
+/* Contenedor animado (Acordeón) */
+.filter-panel-container {
+    background-color: var(--card-bg);
+    
+    /* CAMBIO: Definimos un borde base transparente para animarlo */
+    border: 1px solid transparent; 
+    border-top: none; /* Sin borde arriba para que parezca salir del header */
+    
+    overflow: hidden;
+    
+    /* Animación de altura */
+    max-height: 0;
+    opacity: 0;
+    
+    /* CAMBIO: Añadimos transform para mejorar el efecto de aparición */
+    transform: translateY(-10px); 
+
+    transition: 
+        max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s ease,
+        border-color 0.3s ease,
+        background-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease; /* Animamos también la sombra */
+    
+    margin-inline: 10rem;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Estado ABIERTO */
+.filter-panel-container.open {
+    max-height: 150px;
+    opacity: 1;
+    transform: translateY(0); /* Vuelve a su sitio */
+
+    /* CAMBIO: Borde visible usando tu variable (lados y abajo) */
+    border-color: var(--border-color);
+
+    /* CAMBIO: Sombra mucho más pronunciada para separarlo del fondo */
+    /* En modo claro da profundidad, en modo oscuro da resplandor sutil */
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15), 
+                0 0 5px rgba(0,0,0,0.05);
+    
+    margin-bottom: 20px;
+}
+
+/* Ajuste específico para modo oscuro para que destaque más */
+body.dark-mode .filter-panel-container.open {
+    /* Un borde un poco más claro en modo oscuro ayuda a delimitar */
+    border-color: #555; 
+    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4);
+}
+
+/* ... (Estilos del contenedor y estados open se mantienen igual) ... */
+
+/* Wrapper interno para dar padding */
+.filter-content-wrapper {
+    padding: 20px;
+}
+
+/* Disposición horizontal de los filtros */
+.filter-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    width: 100%; /* Aseguramos que ocupe todo el ancho */
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* NUEVO: Empuja el elemento hacia la derecha del todo */
+.push-right {
+    margin-left: auto;
+}
+
+.filter-group label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    opacity: 0.9;
+    transition: color 0.3s ease;
+}
+
+/* Inputs y Selects */
+.filter-group input,
+.filter-group select {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    min-width: 150px; /* Ancho mínimo para que no se vean muy pequeños */
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #E60012;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(230, 0, 18, 0.1); 
+}
+
+/* Botón Clean */
+.clean-filters-btn {
+    padding: 10px 20px;
+    height: 40px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.clean-filters-btn:hover {
+    background-color: #E60012;
+    color: white;
+    border-color: #E60012;
+}
+
+/* --- RESPONSIVE (Móvil) --- */
+@media (max-width: 1000px) {
+    .filter-panel-container {
+        margin-inline: 1rem;
+    }
+
+    .filter-panel-container.open {
+        max-height: 400px;
+    }
+
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* En móvil quitamos el margen automático para que se apilen normal */
+    .push-right {
+        margin-left: 0;
+    }
+    
+    .clean-filters-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}

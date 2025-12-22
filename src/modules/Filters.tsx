@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/filters.css";
 
 interface FilterState {
   name: string;
@@ -8,46 +9,29 @@ interface FilterState {
 
 interface Props {
   isOpen: boolean;
-  onClose: () => void;
   filters: FilterState;
   setFilters: (filters: FilterState) => void;
   availableSeries: string[];
 }
 
-const FilterSidebar: React.FC<Props> = ({
+const Filters: React.FC<Props> = ({
   isOpen,
-  onClose,
   filters,
   setFilters,
   availableSeries,
 }) => {
   
-  // Resetear filtros
   const handleClean = () => {
-    setFilters({
-      name: "",
-      series: "",
-      sortBy: "date_new",
-    });
+    setFilters({ name: "", series: "", sortBy: "date_new" });
   };
 
   return (
-    <>
-      {/* Overlay oscuro (hacer clic fuera cierra el menú) */}
-      <div 
-        className={`filter-overlay ${isOpen ? "open" : ""}`} 
-        onClick={onClose} 
-      />
-
-      {/* El Sidebar en sí */}
-      <div className={`filter-sidebar ${isOpen ? "open" : ""}`}>
-        <div className="filter-header">
-          <h3>Filters</h3>
-          <button className="close-filter-btn" onClick={onClose}>&times;</button>
-        </div>
-
-        <div className="filter-content">
-          {/* 1. Nombre */}
+    <div className={`filter-panel-container ${isOpen ? "open" : ""}`}>
+      <div className="filter-content-wrapper">
+        
+        <div className="filter-row">
+            
+          {/* 1. Nombre (Quitamos 'grow') */}
           <div className="filter-group">
             <label>Name</label>
             <input
@@ -58,7 +42,7 @@ const FilterSidebar: React.FC<Props> = ({
             />
           </div>
 
-          {/* 2. Saga (Game Series) */}
+          {/* 2. Saga (Quitamos 'grow') */}
           <div className="filter-group">
             <label>Game Series</label>
             <select
@@ -74,29 +58,32 @@ const FilterSidebar: React.FC<Props> = ({
             </select>
           </div>
 
-          {/* 3. Ordenar por */}
+          {/* 3. Ordenar */}
           <div className="filter-group">
             <label>Sort By</label>
             <select
               value={filters.sortBy}
               onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as any })}
             >
-              <option value="date_new">Date Obtained (Newest)</option>
-              <option value="date_old">Date Obtained (Oldest)</option>
+              <option value="date_new">Newest</option>
+              <option value="date_old">Oldest</option>
               <option value="name_asc">Name (A-Z)</option>
               <option value="name_desc">Name (Z-A)</option>
               <option value="series">Series</option>
             </select>
           </div>
 
-          {/* Botón Clean */}
-          <button className="clean-filters-btn" onClick={handleClean}>
-            Clean filters
-          </button>
+          {/* Botón Clean (AÑADIDO: 'push-right' para empujarlo al final) */}
+          <div className="filter-group push-right">
+             <button className="clean-filters-btn" onClick={handleClean}>
+                Clean
+             </button>
+          </div>
         </div>
+
       </div>
-    </>
+    </div>
   );
 };
 
-export default FilterSidebar;
+export default Filters;

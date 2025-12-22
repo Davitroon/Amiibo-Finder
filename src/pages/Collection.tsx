@@ -2,19 +2,28 @@ import { useState, useMemo } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
 import AmiiboList from "../modules/AmiiboList";
 import DeleteCollectionModal from "../modules/DeleteModal";
+import Filters from "../modules/Filters"; 
+import { IoFilter } from "react-icons/io5"; 
 import "../styles/collection.css";
+
+interface FilterState {
+  name: string;
+  series: string;
+  sortBy: "date_new" | "date_old" | "name_asc" | "name_desc" | "series";
+}
 
 const Collection = () => {
     const { userAmiibos, clearStorage } = useAmiibos();
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-    // Estado para mostrar/ocultar el panel de filtros
-    const [showFilters, setShowFilters] = useState(false);
+    // Estado para abrir/cerrar el panel de filtros
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-    // Estados para los filtros
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedSeries, setSelectedSeries] = useState("All");
-    const [sortOrder, setSortOrder] = useState("newest");
+    const [filters, setFilters] = useState<FilterState>({
+        name: "",
+        series: "",
+        sortBy: "date_new"
+    });
 
     const handleConfirmDelete = () => {
         clearStorage();
@@ -24,40 +33,40 @@ const Collection = () => {
     // --- LÓGICA DE FILTRADO ---
     const uniqueSeries = useMemo(() => {
         const series = userAmiibos.map((a) => a.gameSeries);
-        return ["All", ...Array.from(new Set(series)).sort()];
+        return Array.from(new Set(series)).sort();
     }, [userAmiibos]);
 
     const filteredAmiibos = useMemo(() => {
         let result = [...userAmiibos];
 
         // 1. Filtro por texto
-        if (searchTerm) {
+        if (filters.name) {
             result = result.filter((a) =>
-                a.name.toLowerCase().includes(searchTerm.toLowerCase())
+                a.name.toLowerCase().includes(filters.name.toLowerCase())
             );
         }
 
         // 2. Filtro por serie
-        if (selectedSeries !== "All") {
-            result = result.filter((a) => a.gameSeries === selectedSeries);
+        if (filters.series) {
+            result = result.filter((a) => a.gameSeries === filters.series);
         }
 
         // 3. Ordenamiento
         result.sort((a, b) => {
-            if (sortOrder === "newest") return -1;
-            if (sortOrder === "oldest") return 1;
-            if (sortOrder === "az") return a.name.localeCompare(b.name);
-            if (sortOrder === "za") return b.name.localeCompare(a.name);
-            if (sortOrder === "series") {
-                const seriesComparison = a.gameSeries.localeCompare(b.gameSeries);
-                if (seriesComparison !== 0) return seriesComparison;
-                return a.name.localeCompare(b.name);
+            switch (filters.sortBy) {
+                case "date_new": return -1;
+                case "date_old": return 1;
+                case "name_asc": return a.name.localeCompare(b.name);
+                case "name_desc": return b.name.localeCompare(a.name);
+                case "series":
+                    const seriesComp = a.gameSeries.localeCompare(b.gameSeries);
+                    return seriesComp !== 0 ? seriesComp : a.name.localeCompare(b.name);
+                default: return 0;
             }
-            return 0;
         });
 
         return result;
-    }, [userAmiibos, searchTerm, selectedSeries, sortOrder]);
+    }, [userAmiibos, filters]);
 
     return (
         <>
@@ -67,10 +76,11 @@ const Collection = () => {
             {/* HEADER CON BOTÓN Y CONTADOR */}
             <div className="collection-header">
                 <button
-                    className={`filter-toggle-btn ${showFilters ? "active" : ""}`}
-                    onClick={() => setShowFilters(!showFilters)}
+                    className={`filter-toggle-btn ${isFilterOpen ? "active" : ""}`}
+                    onClick={() => setIsFilterOpen(!isFilterOpen)}
                 >
-                    {showFilters ? "Hide Filters" : "Show Filters"}
+                    <IoFilter style={{ marginRight: '5px' }} /> 
+                    {isFilterOpen ? "Hide Filters" : "Show Filters"}
                 </button>
                 
                 <span className="results-count">
@@ -78,48 +88,13 @@ const Collection = () => {
                 </span>
             </div>
 
-            {/* PANEL DE FILTROS */}
-            <div className={`filter-panel ${showFilters ? "open" : ""}`}>
-                <div className="filter-content">
-                    <div className="filter-group">
-                        <label>Search:</label>
-                        <input
-                            type="text"
-                            placeholder="Mario, Link..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="filter-group">
-                        <label>Filter by Series:</label>
-                        <select
-                            value={selectedSeries}
-                            onChange={(e) => setSelectedSeries(e.target.value)}
-                        >
-                            {uniqueSeries.map((series) => (
-                                <option key={series} value={series}>
-                                    {series}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="filter-group">
-                        <label>Sort by:</label>
-                        <select
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                        >
-                            <option value="newest">Newest first</option>
-                            <option value="oldest">Oldest first</option>
-                            <option value="az">Name (A-Z)</option>
-                            <option value="za">Name (Z-A)</option>
-                            <option value="series">Series</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+            {/* COMPONENTE DE FILTROS (PANEL DESPLEGABLE) */}
+            <Filters 
+                isOpen={isFilterOpen}
+                filters={filters}
+                setFilters={setFilters}
+                availableSeries={uniqueSeries}
+            />
 
             <section className="collection-body">
                 <div className="collection-frame">
