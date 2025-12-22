@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAmiibos } from "../context/AmiiboContext";
+import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
 import "../styles/amiibo-card.css";
 
 interface Props {
@@ -6,11 +8,18 @@ interface Props {
 }
 
 const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
+  const { toggleFavorite } = useAmiibos();
   const [showDetails, setShowDetails] = useState(false);
 
+  // ESTA ES LA FUNCIÓN QUE ESTABA "HUÉRFANA"
   const getReleaseDate = () => {
     if (!amiibo.release) return "N/A";
     return amiibo.release.eu || amiibo.release.na || amiibo.release.jp || "Unknown";
+  };
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFavorite(amiibo.head);
   };
 
   return (
@@ -19,24 +28,30 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
       onClick={() => setShowDetails(!showDetails)}
       title={showDetails ? "Click to see image" : "Click to see details"}
     >
-        {/* --- CAPA DE IMAGEN (Ahora incluye texto) --- */}
+        {/* --- CAPA DE IMAGEN --- */}
         <div className="card-image-layer">
+          <button 
+            className={`favorite-btn ${amiibo.isFavorite ? "active" : ""}`} 
+            onClick={handleFavoriteClick}
+            title={amiibo.isFavorite ? "Remove from favorites" : "Add to favorites"}
+          >
+             {amiibo.isFavorite ? <IoBookmark /> : <IoBookmarkOutline />}
+          </button>
+
           <img 
             src={amiibo.image} 
             alt={amiibo.name} 
             loading="lazy" 
           />
           
-          {/* NUEVO: Información básica visible en la cara principal */}
           <div className="card-front-info">
             <h4>{amiibo.name}</h4>
             <span>{amiibo.gameSeries}</span>
           </div>
         </div>
 
-        {/* --- CAPA DE DETALLES (Overlay) --- */}
+        {/* --- CAPA DE DETALLES --- */}
         <div className="card-info-layer">
-            
             <div className="info-content-top">
                 <h3>{amiibo.name}</h3>
                 <hr />
@@ -53,12 +68,13 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
                   </div>
                 )}
 
+                {/* --- RECUPERAMOS EL USO AQUÍ --- */}
                 <div className="info-row">
                   <p className="label">Released</p>
                   <span className="value">{getReleaseDate()}</span>
                 </div>
-            </div>
 
+            </div>
             <small className="tap-hint">Tap to close</small>
         </div>
     </article>

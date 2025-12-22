@@ -1,10 +1,14 @@
 import React from "react";
 import "../styles/filters.css";
 
-interface FilterState {
+// Actualizamos el tipo para incluir los nuevos campos
+export interface FilterState {
   name: string;
   series: string;
-  sortBy: "date_new" | "date_old" | "name_asc" | "name_desc" | "series";
+  // Añadimos 'favorites_first' al tipo de ordenación
+  sortBy: "date_new" | "date_old" | "name_asc" | "name_desc" | "series" | "favorites_first"; 
+  // Nuevo filtro booleano
+  showFavoritesOnly: boolean;
 }
 
 interface Props {
@@ -22,17 +26,19 @@ const Filters: React.FC<Props> = ({
 }) => {
   
   const handleClean = () => {
-    setFilters({ name: "", series: "", sortBy: "date_new" });
+    setFilters({ 
+        name: "", 
+        series: "", 
+        sortBy: "date_new", 
+        showFavoritesOnly: false 
+    });
   };
 
   return (
     <div className={`filter-panel-container ${isOpen ? "open" : ""}`}>
       <div className="filter-content-wrapper">
-        
-        {/* Usaremos justify-content: space-between aquí */}
         <div className="filter-row">
             
-          {/* GRUPO IZQUIERDO: Inputs de Filtro */}
           <div className="filter-left-group">
               <div className="filter-group">
                 <label>Name</label>
@@ -70,11 +76,25 @@ const Filters: React.FC<Props> = ({
                   <option value="name_asc">Name (A-Z)</option>
                   <option value="name_desc">Name (Z-A)</option>
                   <option value="series">Series</option>
+                  <option value="favorites_first">Favorites</option>
                 </select>
+              </div>
+
+              {/* NUEVO: Checkbox para solo favoritos */}
+              <div className="filter-group" style={{ flexDirection: 'row', alignItems: 'center', marginTop: '25px', gap: '8px' }}>
+                <input 
+                    type="checkbox" 
+                    id="favCheck"
+                    checked={filters.showFavoritesOnly}
+                    onChange={(e) => setFilters({...filters, showFavoritesOnly: e.target.checked})}
+                    style={{ width: '20px', minWidth: '20px', height: '20px' }}
+                />
+                <label htmlFor="favCheck" style={{ cursor: 'pointer', marginBottom: 0 }}>
+                    Favorites Only
+                </label>
               </div>
           </div>
 
-          {/* GRUPO DERECHO: Botón Clean */}
           <div className="filter-right-group">
              <button className="clean-filters-btn" onClick={handleClean}>
                 Clean
@@ -82,7 +102,6 @@ const Filters: React.FC<Props> = ({
           </div>
           
         </div>
-
       </div>
     </div>
   );

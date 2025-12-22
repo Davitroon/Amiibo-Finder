@@ -1,24 +1,29 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 
 // Tipos
-interface Amiibo {
+export interface Amiibo {
 	amiiboSeries: string;
 	character: string;
 	gameSeries: string;
-	head: string;
+	head: string; // Usaremos 'head' como ID único para el favorito
 	image: string;
 	name: string;
 	release: { au?: string; eu?: string; jp?: string; na?: string };
 	tail: string;
-	type?: string; // Lo hago opcional porque a veces lo borramos
-	unlockedAt?: string; // Añadido opcionalmente por si lo usas
+	type?: string;
+	unlockedAt?: string;
+	// NUEVO: Propiedad para favorito
+	isFavorite?: boolean;
 }
 
 interface AmiiboContextType {
 	userAmiibos: Amiibo[];
 	unlockAmiibo: (amiibo: Amiibo) => void;
 	clearStorage: () => void;
-	// --- NUEVO: Propiedades para el Confeti ---
+	// NUEVO: Función para alternar favorito
+	toggleFavorite: (head: string) => void;
+
+	// Confeti
 	isConfettiActive: boolean;
 	triggerConfetti: () => void;
 	stopConfetti: () => void;
@@ -30,11 +35,8 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [userAmiibos, setUserAmiibos] = useState<Amiibo[]>([]);
-
-	// NUEVO: Estado para controlar el confeti globalmente
 	const [isConfettiActive, setIsConfettiActive] = useState(false);
 
-	// Cargar desde localStorage al iniciar
 	useEffect(() => {
 		const stored = localStorage.getItem("amiiboFinderUserList");
 		if (stored) {
@@ -42,20 +44,31 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}, []);
 
-	// Función para desbloquear uno nuevo
 	const unlockAmiibo = (amiibo: Amiibo) => {
-		const newList = [...userAmiibos, amiibo];
+		// Al desbloquear, nos aseguramos que isFavorite sea false o undefined
+		const newList = [...userAmiibos, { ...amiibo, isFavorite: false }];
 		setUserAmiibos(newList);
 		localStorage.setItem("amiiboFinderUserList", JSON.stringify(newList));
 	};
 
-	// Función para borrar datos
+	// NUEVO: Toggle Favorito
+	const toggleFavorite = (head: string) => {
+		const updatedList = userAmiibos.map((amiibo) => {
+			if (amiibo.head === head) {
+				return { ...amiibo, isFavorite: !amiibo.isFavorite };
+			}
+			return amiibo;
+		});
+
+		setUserAmiibos(updatedList);
+		localStorage.setItem("amiiboFinderUserList", JSON.stringify(updatedList));
+	};
+
 	const clearStorage = () => {
 		localStorage.removeItem("amiiboFinderUserList");
 		setUserAmiibos([]);
 	};
 
-	// NUEVO: Funciones para controlar el confeti
 	const triggerConfetti = () => setIsConfettiActive(true);
 	const stopConfetti = () => setIsConfettiActive(false);
 
@@ -65,7 +78,7 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 				userAmiibos,
 				unlockAmiibo,
 				clearStorage,
-				// Exportamos las cosas del confeti
+				toggleFavorite, // Exportamos la nueva función
 				isConfettiActive,
 				triggerConfetti,
 				stopConfetti,
