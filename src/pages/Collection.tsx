@@ -1,13 +1,11 @@
 import { useState, useMemo } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
-import Modal from "../modules/Modal";
 import AmiiboList from "../modules/AmiiboList";
-import DeleteCollectionModal from "../modules/DeleteCollectionModal";
+import DeleteCollectionModal from "../modules/DeleteModal";
 import "../styles/collection.css";
 
 const Collection = () => {
     const { userAmiibos, clearStorage } = useAmiibos();
-    const [selectedAmiibo, setSelectedAmiibo] = useState<any>(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     // Estado para mostrar/ocultar el panel de filtros
@@ -24,14 +22,11 @@ const Collection = () => {
     };
 
     // --- LÓGICA DE FILTRADO ---
-    // Obtenemos las series únicas para el select
     const uniqueSeries = useMemo(() => {
         const series = userAmiibos.map((a) => a.gameSeries);
-        // Ordenamos las series alfabéticamente para el dropdown
         return ["All", ...Array.from(new Set(series)).sort()];
     }, [userAmiibos]);
 
-    // Filtramos y ordenamos la lista
     const filteredAmiibos = useMemo(() => {
         let result = [...userAmiibos];
 
@@ -42,24 +37,18 @@ const Collection = () => {
             );
         }
 
-        // 2. Filtro por serie (Dropdown de filtrado)
+        // 2. Filtro por serie
         if (selectedSeries !== "All") {
             result = result.filter((a) => a.gameSeries === selectedSeries);
         }
 
         // 3. Ordenamiento
         result.sort((a, b) => {
-            if (sortOrder === "newest") {
-                return -1; // Asumiendo orden de inserción invertido
-            } else if (sortOrder === "oldest") {
-                return 1;
-            } else if (sortOrder === "az") {
-                return a.name.localeCompare(b.name);
-            } else if (sortOrder === "za") {
-                return b.name.localeCompare(a.name);
-            } else if (sortOrder === "series") {
-                // NUEVO: Lógica para ordenar por Serie alfabéticamente
-                // Si la serie es igual, ordena por nombre secundariamente
+            if (sortOrder === "newest") return -1;
+            if (sortOrder === "oldest") return 1;
+            if (sortOrder === "az") return a.name.localeCompare(b.name);
+            if (sortOrder === "za") return b.name.localeCompare(a.name);
+            if (sortOrder === "series") {
                 const seriesComparison = a.gameSeries.localeCompare(b.gameSeries);
                 if (seriesComparison !== 0) return seriesComparison;
                 return a.name.localeCompare(b.name);
@@ -73,7 +62,6 @@ const Collection = () => {
     return (
         <>
             <h2>My Collection</h2>
-
             <hr />
 
             {/* HEADER CON BOTÓN Y CONTADOR */}
@@ -85,16 +73,14 @@ const Collection = () => {
                     {showFilters ? "Hide Filters" : "Show Filters"}
                 </button>
                 
-                {/* Contador de resultados */}
                 <span className="results-count">
                     Showing <strong>{filteredAmiibos.length}</strong> of {userAmiibos.length} Amiibos
                 </span>
             </div>
 
-            {/* PANEL DE FILTROS EXPANDIBLE */}
+            {/* PANEL DE FILTROS */}
             <div className={`filter-panel ${showFilters ? "open" : ""}`}>
                 <div className="filter-content">
-                    {/* 1. Buscador */}
                     <div className="filter-group">
                         <label>Search:</label>
                         <input
@@ -105,7 +91,6 @@ const Collection = () => {
                         />
                     </div>
 
-                    {/* 2. Series (Filtrado) */}
                     <div className="filter-group">
                         <label>Filter by Series:</label>
                         <select
@@ -120,7 +105,6 @@ const Collection = () => {
                         </select>
                     </div>
 
-                    {/* 3. Ordenar (Sorting) */}
                     <div className="filter-group">
                         <label>Sort by:</label>
                         <select
@@ -142,10 +126,7 @@ const Collection = () => {
                     {userAmiibos.length > 0 ? (
                         <>
                             {filteredAmiibos.length > 0 ? (
-                                <AmiiboList
-                                    amiibos={filteredAmiibos}
-                                    setSelectedAmiibo={setSelectedAmiibo}
-                                />
+                                <AmiiboList amiibos={filteredAmiibos} />
                             ) : (
                                 <div className="empty-content" style={{ minHeight: '200px' }}>
                                     <p>No amiibos found matching your filters.</p>
@@ -173,12 +154,7 @@ const Collection = () => {
                 </div>
             </section>
 
-            <Modal
-                isOpen={!!selectedAmiibo}
-                onClose={() => setSelectedAmiibo(null)}
-                amiibo={selectedAmiibo}
-            />
-
+            {/* Modal de Confirmación de Borrado */}
             {showDeleteConfirm && (
                 <DeleteCollectionModal
                     setShowDeleteConfirm={setShowDeleteConfirm}
