@@ -10,7 +10,7 @@
     transition: background 0.3s, color 0.3s;
     
     /* CAMBIO 1: Altura flexible para evitar cortes de texto */
-    min-height: 80px; 
+    min-height: 81px; 
     
     /* CAMBIO 2: Usamos GRID para un centrado perfecto real */
     display: grid;

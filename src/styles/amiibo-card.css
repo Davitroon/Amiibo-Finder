@@ -53,6 +53,13 @@ body.dark-mode .amiibo-card-container {
   object-fit: contain;
   filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.2));
   transition: transform 0.3s ease;
+
+  /* --- NUEVO: Bloquear selección y arrastre --- */
+  user-select: none;          /* Estándar: No permite seleccionar la imagen */
+  -webkit-user-select: none;  /* Safari/Chrome antiguo */
+  -moz-user-select: none;     /* Firefox */
+  -ms-user-select: none;      /* IE/Edge */
+  -webkit-user-drag: none; 
 }
 
 /* Texto en la cara principal */
@@ -136,9 +143,12 @@ body.dark-mode .card-info-layer {
   font-size: 1.1rem;
   color: #e60012;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+  white-space: normal;
+  overflow: visible;
+  
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 
 .card-info-layer hr {
@@ -210,8 +220,8 @@ body.dark-mode .info-row {
 /* NUEVO: Botón de Favorito (Marcador) */
 .favorite-btn {
   position: absolute;
-  top: 10px;
-  right: 15px; /* Ajustado para que quede en la esquina derecha */
+  top: 5px;
+  right: 5px; /* Ajustado para que quede en la esquina derecha */
   background: none;
   border: none;
   font-size: 1.8rem;

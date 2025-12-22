@@ -1,0 +1,84 @@
+/* -------------------------------
+   Unlock Modal Specifics
+------------------------------- */
+
+/* Ancho específico para este diseño */
+.modal-box.unlock-content {
+    width: 350px;
+    padding-top: 10px; /* Ajuste fino */
+}
+
+/* Botón de cerrar (X) */
+.unlock-close-btn {
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ff4d4d;
+    transition: transform 0.2s;
+    line-height: 20px;
+}
+
+.unlock-close-btn:hover {
+    transform: scale(1.2) rotate(90deg);
+}
+
+/* Imágenes dentro del modal */
+.modal-box.unlock-content img {
+    max-width: 294px;
+    max-height: 216px;
+    margin-top: 10px;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    
+    /* Evitar selección */
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Efecto zoom al abrir (usando el selector base .show) */
+.modal-overlay.show .modal-box.unlock-content img {
+    transform: scale(1);
+    transition-delay: 0.2s;
+}
+
+/* Responsive específico */
+@media (max-width: 780px) {
+    .modal-box.unlock-content img {
+        max-width: 194px;
+        max-height: 116px;
+    }
+}
+
+/* "You unlocked..." */
+.unlock-subtitle {
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: var(--text-color);
+    opacity: 0.7; /* En lugar de gris fijo, usamos opacidad */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Nombre del Amiibo (Mario, Link...) */
+.unlock-name {
+    margin: 15px 0 5px;
+    color: #E60012; /* Rojo Nintendo */
+    font-size: 1.8rem; /* Un poco más grande para impactar */
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+/* Ajuste del nombre para Modo Oscuro (Brillo extra) */
+body.dark-mode .unlock-name {
+    color: #ff4d4d; /* Un rojo un poco más brillante */
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); /* Efecto neón sutil */
+}
+
+/* Serie del juego (Super Mario Series...) */
+.unlock-series {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-color);
+    opacity: 0.9;
+}
