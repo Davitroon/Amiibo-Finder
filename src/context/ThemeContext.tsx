@@ -15,13 +15,13 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 	// 1. Inicializamos estado
 	const [theme, setTheme] = useState<Theme>(() => {
 		// Leemos el mismo valor que leyó el index.html
-		const savedTheme = localStorage.getItem("siteTheme");
+		const savedTheme = localStorage.getItem("amiiboFinderSiteTheme");
 		return (savedTheme as Theme) || "light";
 	});
 
 	useEffect(() => {
 		// 2. Sincronización
-		localStorage.setItem("siteTheme", theme);
+		localStorage.setItem("amiiboFinderSiteTheme", theme);
 
 		// React se encargará de añadir/quitar la clase cuando cambies el tema en vivo.
 		// Aunque el script del HTML ya lo hizo al inicio, esto asegura que
