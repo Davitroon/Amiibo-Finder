@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAmiibos } from "../context/AmiiboContext";
-import { IoBookmark, IoBookmarkOutline } from "react-icons/io5";
+import { IoBookmark } from "react-icons/io5";
 import "../styles/amiibo-card.css";
 
 interface Props {
@@ -35,7 +35,7 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
             onClick={handleFavoriteClick}
             title={amiibo.isFavorite ? "Remove from favorites" : "Add to favorites"}
           >
-             {amiibo.isFavorite ? <IoBookmark /> : <IoBookmarkOutline />}
+             <IoBookmark />
           </button>
 
           <img 
