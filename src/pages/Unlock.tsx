@@ -1,6 +1,6 @@
 import ModalUnlocked from "../modules/ModalUnlocked";
 import GiftBox from "../modules/GiftBox";
-import { useUnlockLogic } from "../hooks/useUnlockLogic";
+import { useUnlockLogic } from "../logic/useUnlockLogic";
 import "../styles/unlock.css";
 
 const Unlock = () => {

@@ -89,9 +89,9 @@ export const AmiiboProvider: React.FC<{ children: React.ReactNode }> = ({
 	);
 };
 
-export const useAmiibos = () => {
+export const useAmiiboContext = () => {
 	const context = useContext(AmiiboContext);
 	if (!context)
-		throw new Error("useAmiibos debe usarse dentro de AmiiboProvider");
+		throw new Error("useAmiiboContext debe usarse dentro de AmiiboProvider");
 	return context;
 };

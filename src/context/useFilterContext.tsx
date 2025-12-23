@@ -1,6 +1,12 @@
 import React, { createContext, useState, useContext } from "react";
-// Importamos el tipo FilterState
-import type { FilterState } from "../modules/Filters";
+
+// 1. DEFINICIÓN DEL TIPO (Movido aquí para evitar círculos)
+export interface FilterState {
+  name: string;
+  series: string;
+  sortBy: "date_new" | "date_old" | "name_asc" | "name_desc" | "series" | "favorites_first"; 
+  showFavoritesOnly: boolean;
+}
 
 interface FilterContextType {
     isFilterPanelOpen: boolean;
@@ -13,11 +19,8 @@ interface FilterContextType {
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
 
 export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    // 1. Estado del Panel (Visible/Oculto)
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
     
-    // 2. Estado de los Filtros
-    // Se mantiene en memoria durante la sesión. Se borra al recargar (F5).
     const [filters, setFilters] = useState<FilterState>({
         name: "",
         series: "",
@@ -49,8 +52,9 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     );
 };
 
-export const useFilters = () => {
+// 2. RENOMBRADO: De 'filterContext' a 'useFilterContext' (Estándar React)
+export const useFilterContext = () => {
     const context = useContext(FilterContext);
-    if (!context) throw new Error("useFilters debe usarse dentro de FilterProvider");
+    if (!context) throw new Error("useFilterContext debe usarse dentro de FilterProvider");
     return context;
 };

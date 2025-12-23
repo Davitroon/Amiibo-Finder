@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext";
+import { useThemeContext } from "../context/useThemeContext";
 import { IoMoon, IoSunny, IoNotifications, IoNotificationsOff } from "react-icons/io5"; // Iconos bonitos
 import "../styles/header.css";
 
 const Header = () => {
-    const { theme, toggleTheme } = useTheme();
+    const { theme, toggleTheme } = useThemeContext();
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
     // Comprobar estado inicial del permiso
@@ -22,10 +22,6 @@ const Header = () => {
         }
 
         if (Notification.permission === "granted") {
-            // No se puede "revocar" el permiso programáticamente en JS, 
-            // pero podemos simularlo visualmente o decirle al usuario cómo hacerlo.
-            // Para simplificar, aquí solo mostramos el estado.
-            // Lo ideal en una app real es guardar un estado local 'userMutedNotifications'
             alert("To disable notifications completely, please reset permissions in your browser settings (click the lock icon in the address bar).");
         } else if (Notification.permission !== "denied") {
             const permission = await Notification.requestPermission();
