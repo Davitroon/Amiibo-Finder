@@ -1,41 +1,32 @@
-import { useState } from "react";
-import { useAmiiboContext } from "../context/useAmiiboContext"; // Asegúrate de que este nombre sea correcto (amiiboContext vs useAmiibos)
-import { useFilterContext } from "../context/useFilterContext"; // Corregido path si es necesario
-// SOLUCIÓN ERROR 3: Importar el nombre correcto del hook de lógica
+import { useAmiibo } from "../context/AmiiboContext";
+import { useFilter } from "../context/FilterContext";
 import { useFilteredCollection } from "../logic/useFilteredCollection"; 
 
 import AmiiboList from "../modules/AmiiboList";
-import DeleteCollectionModal from "../modules/DeleteModal";
 import Filters from "../modules/Filters";
 import { IoFilter } from "react-icons/io5";
 import "../styles/collection.css";
 
 const Collection = () => {
     // 1. Datos Globales
-    const { userAmiibos, clearStorage } = useAmiiboContext();
+    const { userAmiibos } = useAmiibo(); // Ya no necesitamos clearStorage aquí
     
-    // SOLUCIÓN ERROR 4 (parte A): Extraer 'resetFilters' del contexto
     const { 
         filters, 
         setFilters, 
-        resetFilters, // <--- NECESARIO
+        resetFilters, 
         isFilterPanelOpen, 
         toggleFilterPanel 
-    } = useFilterContext();
+    } = useFilter();
 
-    // 2. Estado Local de UI
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-    // 3. Lógica compleja (Nombre corregido)
+    // 2. Lógica de Filtrado
     const { filteredAmiibos, uniqueSeries } = useFilteredCollection(
         userAmiibos,
         filters
     );
 
-    const handleConfirmDelete = () => {
-        clearStorage();
-        setShowDeleteConfirm(false);
-    };
+    // NOTA: Hemos eliminado el estado 'showDeleteConfirm' y el 'handleConfirmDelete'
+    // porque esa funcionalidad se ha movido al Header.
 
     return (
         <>
@@ -62,13 +53,11 @@ const Collection = () => {
                 filters={filters}
                 setFilters={setFilters}
                 availableSeries={uniqueSeries}
-                // SOLUCIÓN ERROR 4 (parte B): Pasar la función al componente
                 onReset={resetFilters} 
             />
 
             <section className="collection-body">
-                {/* ... resto del código igual ... */}
-                 <div className="collection-frame">
+                <div className="collection-frame">
                     {userAmiibos.length > 0 ? (
                         <>
                             {filteredAmiibos.length > 0 ? (
@@ -78,31 +67,21 @@ const Collection = () => {
                                     <p>No amiibos found matching your filters.</p>
                                 </div>
                             )}
-                            {/* Botón borrar */}
-                             <div style={{ display: "flex", justifyContent: "center" }}>
-                                <button
-                                    onClick={() => setShowDeleteConfirm(true)}
-                                    className="delete-collection"
-                                    title="Delete my Amiibos collection"
-                                >
-                                    Delete collection
-                                </button>
-                            </div>
+                            
+                            {/* AQUÍ ANTES ESTABA EL BOTÓN DELETE. LO HEMOS ELIMINADO. */}
                         </>
                     ) : (
                         <div className="empty-content">
                              <p className="empty-title">Your collection is empty</p>
+                             <p className="empty-subtitle">
+                                Go to the Unlock page to get your first Amiibo!
+                            </p>
                         </div>
                     )}
                 </div>
             </section>
-
-            {showDeleteConfirm && (
-                <DeleteCollectionModal
-                    setShowDeleteConfirm={setShowDeleteConfirm}
-                    handleConfirmDelete={handleConfirmDelete}
-                />
-            )}
+            
+            {/* EL MODAL TAMBIÉN SE HA MOVIDO AL HEADER */}
         </>
     );
 };

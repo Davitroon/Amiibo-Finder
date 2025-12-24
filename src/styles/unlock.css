@@ -14,6 +14,18 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	background: none;
+    border: none;
+}
+
+.gift-box:focus-visible {
+    outline: 3px solid #007bff; /* Color de contraste alto */
+    outline-offset: 4px;
+}
+
+.gift-box:disabled {
+    cursor: not-allowed;
+    opacity: 0.7; /* Visualmente indicar que está inactivo */
 }
 
 /* Efecto hover: SOLO si NO tiene la clase .locked y NO está abriendo */
@@ -132,3 +144,4 @@
 	pointer-events: none;
 	cursor: default;
 }
+

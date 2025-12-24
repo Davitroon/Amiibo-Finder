@@ -1,86 +1,92 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useThemeContext } from "../context/useThemeContext";
-import { IoMoon, IoSunny, IoNotifications, IoNotificationsOff } from "react-icons/io5"; // Iconos bonitos
+import { useTheme } from "../context/ThemeContext";
+// Iconos solo de UI básica
+import {
+	IoMoon,
+	IoSunny,
+	IoNotifications,
+	IoNotificationsOff,
+} from "react-icons/io5";
+import { useToast } from "../context/ToastContext";
+import UserMenu from "./UserMenu"; // <--- Importamos el nuevo componente
 import "../styles/header.css";
 
 const Header = () => {
-    const { theme, toggleTheme } = useThemeContext();
-    const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+	const { theme, toggleTheme } = useTheme();
+	const { showToast } = useToast();
+	const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-    // Comprobar estado inicial del permiso
-    useEffect(() => {
-        if ("Notification" in window && Notification.permission === "granted") {
-            setNotificationsEnabled(true);
-        }
-    }, []);
+	// --- LÓGICA DE NOTIFICACIONES ---
+	useEffect(() => {
+		if ("Notification" in window && Notification.permission === "granted") {
+			setNotificationsEnabled(true);
+		}
+	}, []);
 
-    const toggleNotifications = async () => {
-        if (!("Notification" in window)) {
-            alert("This browser does not support desktop notifications");
-            return;
-        }
+	const toggleNotifications = async () => {
+		if (!("Notification" in window)) return;
 
-        if (Notification.permission === "granted") {
-            alert("To disable notifications completely, please reset permissions in your browser settings (click the lock icon in the address bar).");
-        } else if (Notification.permission !== "denied") {
-            const permission = await Notification.requestPermission();
-            if (permission === "granted") {
-                setNotificationsEnabled(true);
-                new Notification("Notifications Enabled", {
-                    body: "You will be notified when your next Amiibo is ready!",
-                    icon: "/favicon.ico"
-                });
-            }
-        } else {
-            // Permiso denegado previamente
-            alert("Notifications are blocked. Please enable them in your browser settings.");
-        }
-    };
+		if (Notification.permission === "granted") {
+			showToast("ℹ️ To disable notifications, reset browser permissions."); // Cambio de alert
+		} else if (Notification.permission !== "denied") {
+			const permission = await Notification.requestPermission();
+			if (permission === "granted") {
+				setNotificationsEnabled(true);
+				showToast("🔔 Notifications enabled!"); // Feedback visual
+			}
+		} else {
+			showToast("🚫 Notifications are blocked by browser.");
+		}
+	};
 
-    return (
-        <header id="header">
+	return (
+        <header id="header"> {/* role="banner" es buena práctica */}
             <div className="header-main">
                 <h1>Amiibo Finder</h1>
-                <div id="header-links">
-                    <NavLink
-                        to="/"
-                        title="See my Amiibos"
-                        end
+                {/* role="navigation" ayuda a identificar la zona de links */}
+                <nav id="header-links" aria-label="Main navigation">
+                    <NavLink 
+                        to="/" 
+                        end 
                         className={({ isActive }) => (isActive ? "active" : "")}
+						title="See your Amiibo collection"
+                        // NavLink ya gestiona aria-current="page" automáticamente
                     >
                         Collection
                     </NavLink>
-
-                    <NavLink
-                        to="/unlock"
-                        title="Unlock new Amiibos"
+                    <NavLink 
+                        to="/unlock" 
                         className={({ isActive }) => (isActive ? "active" : "")}
+						title="Unlock new Amiibos"
                     >
                         Unlock
                     </NavLink>
-                </div>
+                </nav>
             </div>
 
-            {/* Contenedor de Botones (Derecha) */}
             <div className="header-actions">
-                {/* Botón Notificaciones */}
                 <button
-                    onClick={toggleNotifications}
+                    onClick={toggleNotifications} // Asumo que esta función la tienes definida arriba
                     className={`icon-btn ${notificationsEnabled ? "active-notify" : ""}`}
-                    title={notificationsEnabled ? "Notifications enabled" : "Enable notifications"}
+                    // Usamos aria-label dinámico para describir la ACCIÓN, no el estado actual
+                    aria-label={notificationsEnabled ? "Disable notifications" : "Enable notifications"}
+                    title={notificationsEnabled ? "Disable notifications" : "Enable notifications"}
                 >
-                    {notificationsEnabled ? <IoNotifications /> : <IoNotificationsOff />}
+                    {/* aria-hidden en iconos decorativos */}
+                    {notificationsEnabled ? <IoNotifications aria-hidden="true"/> : <IoNotificationsOff aria-hidden="true"/>}
                 </button>
 
-                {/* Botón Tema */}
-                <button
-                    onClick={toggleTheme}
-                    className="icon-btn"
-                    title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
+                <button 
+                    onClick={toggleTheme} 
+                    className="icon-btn" 
+                    aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+                    title={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
                 >
-                    {theme === "light" ? <IoMoon /> : <IoSunny />}
+                    {theme === "light" ? <IoMoon aria-hidden="true"/> : <IoSunny aria-hidden="true"/>}
                 </button>
+
+                <UserMenu />
             </div>
         </header>
     );

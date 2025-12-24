@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useAmiiboContext } from "../context/useAmiiboContext";
+import { useAmiibo } from "../context/AmiiboContext";
 // Importamos las funciones del archivo de al lado (punto para referenciar misma carpeta)
 import {
 	getFullAmiiboList,
@@ -12,7 +12,7 @@ const COOLDOWN_TIME = 2 * 60 * 60 * 1000;
 
 export const useUnlockLogic = () => {
 	// Conexión con el Contexto Global
-	const { unlockAmiibo, triggerConfetti, userAmiibos } = useAmiiboContext();
+	const { unlockAmiibo, triggerConfetti, userAmiibos } = useAmiibo();
 
 	// Estados locales de la UI
 	const [unlockedAmiibo, setUnlockedAmiibo] = useState<any>(null);
