@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/filters.css";
 
 // CORRECCIÓN DEL ERROR TS(1484): Añadimos 'type' a la importación
@@ -19,8 +19,18 @@ const Filters: React.FC<Props> = ({
   availableSeries,
   onReset,
 }) => {
+
+  useEffect(() => {
+  if (isOpen) {
+    document.getElementById("filter-name")?.focus();
+  }
+}, [isOpen]);
+
   return (
-    <div className={`filter-panel-container ${isOpen ? "open" : ""}`}>
+    <div 
+      className={`filter-panel-container ${isOpen ? "open" : ""}`} 
+      hidden={!isOpen}
+    >
       <div className="filter-content-wrapper">
         <div className="filter-row">
           
@@ -28,8 +38,10 @@ const Filters: React.FC<Props> = ({
               
               {/* 1. FILTRO: NOMBRE */}
               <div className="filter-group">
-                <label>Name</label>
+                {/* ACCESIBILIDAD: Vinculamos label con input usando htmlFor e id */}
+                <label htmlFor="filter-name">Name</label>
                 <input
+                  id="filter-name"
                   type="text"
                   placeholder="Mario, Link..."
                   value={filters.name}
@@ -39,8 +51,9 @@ const Filters: React.FC<Props> = ({
 
               {/* 2. FILTRO: SERIE */}
               <div className="filter-group">
-                <label>Game Series</label>
+                <label htmlFor="filter-series">Game Series</label>
                 <select
+                  id="filter-series"
                   value={filters.series}
                   onChange={(e) => setFilters({ ...filters, series: e.target.value })}
                 >
@@ -53,12 +66,12 @@ const Filters: React.FC<Props> = ({
                 </select>
               </div>
 
-              {/* 3. FILTRO: ORDENAR POR (Restaurado) */}
+              {/* 3. FILTRO: ORDENAR POR */}
               <div className="filter-group">
-                <label>Sort By</label>
+                <label htmlFor="filter-sort">Sort By</label>
                 <select
+                  id="filter-sort"
                   value={filters.sortBy}
-                  // TypeScript a veces pide castear el value si es muy estricto
                   onChange={(e) => setFilters({ ...filters, sortBy: e.target.value as any })}
                 >
                   <option value="date_new">Newest</option>
@@ -70,7 +83,7 @@ const Filters: React.FC<Props> = ({
                 </select>
               </div>
 
-              {/* 4. FILTRO: SOLO FAVORITOS (Restaurado) */}
+              {/* 4. FILTRO: SOLO FAVORITOS */}
               <div className="filter-group" style={{ flexDirection: 'row', alignItems: 'center', marginTop: '25px', gap: '8px' }}>
                 <input 
                     type="checkbox" 
@@ -79,6 +92,7 @@ const Filters: React.FC<Props> = ({
                     onChange={(e) => setFilters({...filters, showFavoritesOnly: e.target.checked})}
                     style={{ width: '20px', minWidth: '20px', height: '20px' }}
                 />
+                {/* Este ya lo tenías bien, ¡genial! */}
                 <label htmlFor="favCheck" style={{ cursor: 'pointer', marginBottom: 0 }}>
                     Favorites Only
                 </label>
@@ -88,7 +102,12 @@ const Filters: React.FC<Props> = ({
 
           <div className="filter-right-group">
              {/* Botón Clean */}
-             <button className="clean-filters-btn" onClick={onReset}>
+             <button 
+                className="clean-filters-btn" 
+                onClick={onReset}
+                title="Reset all filters"
+                aria-label="Reset all filters"
+             >
                 Clean
              </button>
           </div>
