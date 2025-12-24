@@ -8,38 +8,29 @@
     z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background 0.3s, color 0.3s;
-    
-    /* CAMBIO 1: Altura flexible para evitar cortes de texto */
     min-height: 81px; 
-    
-    /* CAMBIO 2: Usamos GRID para un centrado perfecto real */
     display: grid;
-    /* Columna 1 (Espacio vacío/Menú), Columna 2 (Título/Links), Columna 3 (Acciones) */
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
 }
 
-/* El contenido central */
 .header-main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Ya no necesitamos margin-left ni flex-grow gracias al Grid */
-    grid-column: 2; /* Se sitúa en el centro */
+    grid-column: 2; 
 }
 
-/* Las acciones a la derecha */
 .header-actions {
     display: flex;
     gap: 10px;
     align-items: center;
-    justify-content: flex-end; /* Alineamos a la derecha de su celda */
-    grid-column: 3; /* Se sitúa en la columna derecha */
+    justify-content: flex-end; 
+    grid-column: 3; 
 }
 
 #header h1 {
     margin: 0 0 10px 0;
-    /* Evita que el título rompa el diseño en pantallas muy estrechas */
     font-size: 1.5rem; 
     text-align: center;
     line-height: 1.2;
@@ -48,8 +39,8 @@
 #header-links {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Usar px suele ser más seguro que vw para textos pequeños */
-    flex-wrap: wrap; /* Permite que los links bajen si no caben */
+    gap: 20px; 
+    flex-wrap: wrap; 
 }
 
 #header-links a {
@@ -59,7 +50,7 @@
     transition: 0.1s;
     border-bottom: 2px solid transparent;
     padding-bottom: 2px;
-    white-space: nowrap; /* Evita que "Collection" se parta en dos líneas */
+    white-space: nowrap; 
 }
 
 #header-links a:hover {
@@ -75,7 +66,7 @@
     cursor: default;
 }
 
-/* ESTILOS DE LOS BOTONES DE ICONO (Se mantienen igual) */
+/* --- BOTONES ICONO --- */
 .icon-btn {
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -89,10 +80,10 @@
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex-shrink: 0; /* Evita que los botones se aplasten */
+    flex-shrink: 0; 
 }
 
-.icon-btn:hover {
+.icon-btn:hover, .icon-btn.active {
     background: rgba(0, 0, 0, 0.3);
     transform: scale(1.1);
 }
@@ -103,25 +94,87 @@
     color: rgb(253, 255, 121);
 }
 
-/* --- RESPONSIVE OPTIMIZADO --- */
+/* --- NUEVO: ESTILOS DEL MENÚ DESPLEGABLE --- */
+.user-menu-container {
+    position: relative; /* Para que el dropdown se posicione respecto a este botón */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%; /* Justo debajo del botón */
+    right: 0;
+    background-color: var(--card-bg); /* Usa el color de fondo de tus tarjetas */
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    width: 160px;
+    overflow: hidden;
+    z-index: 200;
+    animation: fadeIn 0.2s ease;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    background: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Ajuste para modo oscuro en hover */
+body.dark-mode .dropdown-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 4px 0;
+    opacity: 0.5;
+}
+
+.dropdown-item.danger {
+    color: #ff4d4d;
+}
+
+.dropdown-item.danger:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- RESPONSIVE --- */
 @media (max-width: 600px) {
     #header {
         padding: 10px 15px;
-        /* En móvil cambiamos a Flex para tener más control del flujo */
         display: flex; 
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
 
-    /* En móvil, alineamos el texto a la izquierda y botones a la derecha */
     .header-main {
         align-items: flex-start; 
         width: 100%;
     }
 
     #header h1 {
-        font-size: 1.2rem; /* Título más pequeño */
+        font-size: 1.2rem; 
         margin-bottom: 5px;
         text-align: left;
     }
@@ -133,12 +186,11 @@
     }
 
     .header-actions {
-        /* Aseguramos que los botones no se peguen demasiado al texto */
         margin-left: 10px; 
     }
     
     .icon-btn {
-        width: 36px; /* Botones un pelín más pequeños para dedos */
+        width: 36px;
         height: 36px;
         font-size: 1.1rem;
     }

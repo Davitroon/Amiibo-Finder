@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useThemeContext } from "../context/useThemeContext";
-import { IoMoon, IoSunny, IoNotifications, IoNotificationsOff } from "react-icons/io5"; // Iconos bonitos
+// Iconos solo de UI básica
+import { IoMoon, IoSunny, IoNotifications, IoNotificationsOff } from "react-icons/io5"; 
+import UserMenu from "./UserMenu"; // <--- Importamos el nuevo componente
 import "../styles/header.css";
 
 const Header = () => {
     const { theme, toggleTheme } = useThemeContext();
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
-    // Comprobar estado inicial del permiso
+    // --- LÓGICA DE NOTIFICACIONES ---
     useEffect(() => {
         if ("Notification" in window && Notification.permission === "granted") {
             setNotificationsEnabled(true);
@@ -16,25 +18,17 @@ const Header = () => {
     }, []);
 
     const toggleNotifications = async () => {
-        if (!("Notification" in window)) {
-            alert("This browser does not support desktop notifications");
-            return;
-        }
-
+        if (!("Notification" in window)) return;
         if (Notification.permission === "granted") {
-            alert("To disable notifications completely, please reset permissions in your browser settings (click the lock icon in the address bar).");
+            alert("To disable notifications, reset browser permissions.");
         } else if (Notification.permission !== "denied") {
             const permission = await Notification.requestPermission();
             if (permission === "granted") {
                 setNotificationsEnabled(true);
-                new Notification("Notifications Enabled", {
-                    body: "You will be notified when your next Amiibo is ready!",
-                    icon: "/favicon.ico"
-                });
+                new Notification("Notifications Enabled", { body: "Ready!" });
             }
         } else {
-            // Permiso denegado previamente
-            alert("Notifications are blocked. Please enable them in your browser settings.");
+            alert("Notifications are blocked.");
         }
     };
 
@@ -43,44 +37,31 @@ const Header = () => {
             <div className="header-main">
                 <h1>Amiibo Finder</h1>
                 <div id="header-links">
-                    <NavLink
-                        to="/"
-                        title="See my Amiibos"
-                        end
-                        className={({ isActive }) => (isActive ? "active" : "")}
-                    >
+                    <NavLink to="/" title="See my Amiibos" end className={({ isActive }) => (isActive ? "active" : "")}>
                         Collection
                     </NavLink>
-
-                    <NavLink
-                        to="/unlock"
-                        title="Unlock new Amiibos"
-                        className={({ isActive }) => (isActive ? "active" : "")}
-                    >
+                    <NavLink to="/unlock" title="Unlock new Amiibos" className={({ isActive }) => (isActive ? "active" : "")}>
                         Unlock
                     </NavLink>
                 </div>
             </div>
 
-            {/* Contenedor de Botones (Derecha) */}
+            {/* Contenedor de Acciones */}
             <div className="header-actions">
-                {/* Botón Notificaciones */}
                 <button
                     onClick={toggleNotifications}
                     className={`icon-btn ${notificationsEnabled ? "active-notify" : ""}`}
-                    title={notificationsEnabled ? "Notifications enabled" : "Enable notifications"}
+                    title="Toggle Notifications"
                 >
                     {notificationsEnabled ? <IoNotifications /> : <IoNotificationsOff />}
                 </button>
 
-                {/* Botón Tema */}
-                <button
-                    onClick={toggleTheme}
-                    className="icon-btn"
-                    title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
-                >
+                <button onClick={toggleTheme} className="icon-btn" title="Toggle Theme">
                     {theme === "light" ? <IoMoon /> : <IoSunny />}
                 </button>
+
+                {/* AQUÍ ESTÁ EL COMPONENTE SEPARADO */}
+                <UserMenu />
             </div>
         </header>
     );
