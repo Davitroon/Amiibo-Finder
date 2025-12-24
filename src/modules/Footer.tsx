@@ -8,7 +8,8 @@ const Footer: React.FC = () => {
 				Data obtained from{" "}
 				<a
 					href="https://amiiboapi.com/"
-					title="Amiibo API documentation"
+					title="See Amiibo API documentation"
+					aria-label="See Amiibo API documentation"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
