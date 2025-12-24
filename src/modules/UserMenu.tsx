@@ -20,18 +20,27 @@ const UserMenu = () => {
 
 	// Referencia para el input oculto
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const menuButtonRef = useRef<HTMLButtonElement>(null);
 
 	// Cerrar menú al hacer clic fuera
 	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape" && isMenuOpen) {
+				setIsMenuOpen(false);
+				menuButtonRef.current?.focus(); // Devolver foco al botón al cerrar
+			}
+		};
+
 		const handleClickOutside = (event: MouseEvent) => {
 			const target = event.target as HTMLElement;
 			if (!target.closest(".user-menu-container")) {
 				setIsMenuOpen(false);
 			}
 		};
+
 		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, []);
+		document.addEventListener("keydown", handleKeyDown); // Escuchar teclado
+	}, [isMenuOpen]);
 
 	// --- FUNCIONES DE LÓGICA (Movidas desde Header) ---
 
@@ -52,7 +61,7 @@ const UserMenu = () => {
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
-        showToast("✅ Collection exported successfully!");
+		showToast("✅ Collection exported successfully!");
 		setIsMenuOpen(false);
 	};
 
@@ -87,37 +96,64 @@ const UserMenu = () => {
 	const handleConfirmDelete = () => {
 		clearStorage();
 		setShowDeleteConfirm(false);
-		setIsMenuOpen(false);
-        showToast("🗑️ Collection deleted.");
+		setIsMenuOpen(false); // Cerramos menú también
+		showToast("🗑️ Collection deleted.");
+		// Importante: Devolver foco al botón principal tras la acción
+		menuButtonRef.current?.focus();
 	};
+
+	// Cuando el modal de borrar se cierra (por Cancelar), queremos que el foco
+	// vuelva al menú si sigue abierto, o al botón principal si se cerró.
+	useEffect(() => {
+		if (!showDeleteConfirm && isMenuOpen) {
+			// Opcional: devolver foco a un elemento dentro del menú
+		} else if (!showDeleteConfirm && !isMenuOpen) {
+			// Si todo se cerró, foco al botón principal
+			menuButtonRef.current?.focus();
+		}
+	}, [showDeleteConfirm, isMenuOpen]);
 
 	return (
 		<div className="user-menu-container">
 			<button
+				ref={menuButtonRef}
 				className={`icon-btn ${isMenuOpen ? "active" : ""}`}
 				onClick={() => setIsMenuOpen(!isMenuOpen)}
-				title="User Options"
+				// --- ACCESIBILIDAD ---
+				aria-label="User data options menu" // Etiqueta para lector de pantalla
+				title="User data options" // Tooltip visual
+				aria-haspopup="true" // Indica que abre un menú
+				aria-expanded={isMenuOpen} // Dice si está abierto o cerrado
+				aria-controls="user-dropdown" // Vincula con el ID del menú
 			>
-				<IoPerson />
+				<IoPerson aria-hidden="true" />{" "}
+				{/* Ocultar icono decorativo al lector */}
 			</button>
 
 			{/* Menú Desplegable */}
 			{isMenuOpen && (
-				<div className="dropdown-menu">
+				<div
+					id="user-dropdown"
+					className="dropdown-menu"
+					role="menu" // Semántica de menú
+					aria-label="User options"
+				>
 					<button
 						className="dropdown-item"
 						onClick={handleExport}
-						title="Save your collection data as a JSON file"
+						role="menuitem" // Semántica de ítem
 					>
-						<IoCloudDownload /> Export data
+						<IoCloudDownload aria-hidden="true" />
+						<span>Export data</span>
 					</button>
 
 					<button
 						className="dropdown-item"
 						onClick={triggerImport}
-						title="Load a collection data as a JSON file"
+						role="menuitem"
 					>
-						<IoCloudUpload /> Import data
+						<IoCloudUpload aria-hidden="true" />
+						<span>Import data</span>
 					</button>
 
 					<input
@@ -126,21 +162,26 @@ const UserMenu = () => {
 						style={{ display: "none" }}
 						accept=".json"
 						onChange={handleFileChange}
+						aria-hidden="true" // Oculto porque usamos el botón trigger
+						tabIndex={-1}
 					/>
 
-					<div className="dropdown-divider"></div>
+					<div className="dropdown-divider" role="separator"></div>
 
 					<button
 						className="dropdown-item danger"
-						onClick={() => setShowDeleteConfirm(true)}
-						title="Delete your current collection"
+						onClick={() => {
+							setShowDeleteConfirm(true);
+							setIsMenuOpen(false); // <--- AÑADIR ESTO
+						}}
+						role="menuitem"
 					>
-						<IoTrash /> Delete Data
+						<IoTrash aria-hidden="true" />
+						<span>Delete Data</span>
 					</button>
 				</div>
 			)}
 
-			{/* Modal de Borrado */}
 			{showDeleteConfirm && (
 				<DeleteCollectionModal
 					setShowDeleteConfirm={setShowDeleteConfirm}
