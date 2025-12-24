@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAmiiboContext } from "../context/useAmiiboContext";
+import { useAmiibo } from "../context/AmiiboContext";
 import { IoBookmark } from "react-icons/io5";
 import "../styles/amiibo-card.css";
 
@@ -8,7 +8,7 @@ interface Props {
 }
 
 const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
-  const { toggleFavorite } = useAmiiboContext();
+  const { toggleFavorite } = useAmiibo();
   const [showDetails, setShowDetails] = useState(false);
 
   // ESTA ES LA FUNCIÓN QUE ESTABA "HUÉRFANA"

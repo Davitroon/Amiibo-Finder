@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import Confetti from "react-confetti"; // Importamos la librería
 import Header from "../modules/Header";
 import Footer from "../modules/Footer";
-import { useAmiiboContext } from "../context/useAmiiboContext"; // Importamos el contexto
+import { useAmiibo } from "../context/AmiiboContext"; // Importamos el contexto
 import "../styles/main.css";
 
 const BaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	// Obtenemos el estado y la función para detener el confeti
-	const { isConfettiActive, stopConfetti } = useAmiiboContext();
+	const { isConfettiActive, stopConfetti } = useAmiibo();
 
 	// Estado para manejar el tamaño de la ventana (para que el confeti cubra todo)
 	const [windowSize, setWindowSize] = useState({

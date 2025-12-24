@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/filters.css";
 
 // CORRECCIÓN DEL ERROR TS(1484): Añadimos 'type' a la importación
-import type { FilterState } from "../context/useFilterContext";
+import type { FilterState } from "../context/FilterContext";
 
 interface Props {
   isOpen: boolean;

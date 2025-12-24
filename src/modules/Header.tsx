@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useThemeContext } from "../context/useThemeContext";
+import { useTheme } from "../context/ThemeContext";
 // Iconos solo de UI básica
 import {
 	IoMoon,
@@ -13,7 +13,7 @@ import UserMenu from "./UserMenu"; // <--- Importamos el nuevo componente
 import "../styles/header.css";
 
 const Header = () => {
-	const { theme, toggleTheme } = useThemeContext();
+	const { theme, toggleTheme } = useTheme();
 	const { showToast } = useToast();
 	const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 

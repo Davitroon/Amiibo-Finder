@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AmiiboProvider } from "./context/useAmiiboContext";
-import { ThemeProvider } from "./context/useThemeContext";
-import { FilterProvider } from "./context/useFilterContext"; // <--- IMPORTAR
+import { AmiiboProvider } from "./context/AmiiboContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import { FilterProvider } from "./context/FilterContext"; // <--- IMPORTAR
 import BaseLayout from "./layouts/BaseLayout";
 import Home from "./pages/Collection";
 import Unlock from "./pages/Unlock";

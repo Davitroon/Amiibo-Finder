@@ -1,5 +1,5 @@
-import { useAmiiboContext } from "../context/useAmiiboContext";
-import { useFilterContext } from "../context/useFilterContext";
+import { useAmiibo } from "../context/AmiiboContext";
+import { useFilter } from "../context/FilterContext";
 import { useFilteredCollection } from "../logic/useFilteredCollection"; 
 
 import AmiiboList from "../modules/AmiiboList";
@@ -9,7 +9,7 @@ import "../styles/collection.css";
 
 const Collection = () => {
     // 1. Datos Globales
-    const { userAmiibos } = useAmiiboContext(); // Ya no necesitamos clearStorage aquí
+    const { userAmiibos } = useAmiibo(); // Ya no necesitamos clearStorage aquí
     
     const { 
         filters, 
@@ -17,7 +17,7 @@ const Collection = () => {
         resetFilters, 
         isFilterPanelOpen, 
         toggleFilterPanel 
-    } = useFilterContext();
+    } = useFilter();
 
     // 2. Lógica de Filtrado
     const { filteredAmiibos, uniqueSeries } = useFilteredCollection(

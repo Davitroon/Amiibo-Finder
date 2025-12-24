@@ -53,7 +53,7 @@ export const FilterProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 };
 
 // 2. RENOMBRADO: De 'filterContext' a 'useFilterContext' (Estándar React)
-export const useFilterContext = () => {
+export const useFilter = () => {
     const context = useContext(FilterContext);
     if (!context) throw new Error("useFilterContext debe usarse dentro de FilterProvider");
     return context;

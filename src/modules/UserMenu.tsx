@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useAmiiboContext } from "../context/useAmiiboContext";
+import { useAmiibo } from "../context/AmiiboContext";
 import {
 	IoPerson,
 	IoCloudUpload,
@@ -11,7 +11,7 @@ import { useToast } from "../context/ToastContext";
 
 const UserMenu = () => {
 	// Solo este componente necesita acceder a los datos de los Amiibos
-	const { userAmiibos, importData, clearStorage } = useAmiiboContext();
+	const { userAmiibos, importData, clearStorage } = useAmiibo();
 	const { showToast } = useToast();
 
 	// Estados

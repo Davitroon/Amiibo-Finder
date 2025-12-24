@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 // Asegúrate de que los imports coinciden con tus nombres de archivo
-import type { FilterState } from "../context/useFilterContext";
-import type { Amiibo } from "../context/useAmiiboContext";
+import type { FilterState } from "../context/FilterContext";
+import type { Amiibo } from "../context/AmiiboContext";
 
 export const useFilteredCollection = (userAmiibos: Amiibo[], filters: FilterState) => {
 
