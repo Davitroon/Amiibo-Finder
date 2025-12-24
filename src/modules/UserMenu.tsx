@@ -96,9 +96,22 @@ const UserMenu = () => {
 	const handleConfirmDelete = () => {
 		clearStorage();
 		setShowDeleteConfirm(false);
-		setIsMenuOpen(false);
+		setIsMenuOpen(false); // Cerramos menú también
 		showToast("🗑️ Collection deleted.");
+		// Importante: Devolver foco al botón principal tras la acción
+		menuButtonRef.current?.focus();
 	};
+
+	// Cuando el modal de borrar se cierra (por Cancelar), queremos que el foco
+	// vuelva al menú si sigue abierto, o al botón principal si se cerró.
+	useEffect(() => {
+		if (!showDeleteConfirm && isMenuOpen) {
+			// Opcional: devolver foco a un elemento dentro del menú
+		} else if (!showDeleteConfirm && !isMenuOpen) {
+			// Si todo se cerró, foco al botón principal
+			menuButtonRef.current?.focus();
+		}
+	}, [showDeleteConfirm, isMenuOpen]);
 
 	return (
 		<div className="user-menu-container">
@@ -157,7 +170,10 @@ const UserMenu = () => {
 
 					<button
 						className="dropdown-item danger"
-						onClick={() => setShowDeleteConfirm(true)}
+						onClick={() => {
+							setShowDeleteConfirm(true);
+							setIsMenuOpen(false); // <--- AÑADIR ESTO
+						}}
 						role="menuitem"
 					>
 						<IoTrash aria-hidden="true" />
