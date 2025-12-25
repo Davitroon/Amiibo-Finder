@@ -88,9 +88,11 @@ const Filters: React.FC<Props> = ({
 						</div>
 
 						{/* 4. FILTRO: SOLO FAVORITOS */}
+						{/* 4. FILTRO: SOLO FAVORITOS */}
 						<div
 							className="filter-group"
 							style={{
+								display: "flex", // Asegúrate de tener display flex para que flexDirection funcione
 								flexDirection: "row",
 								alignItems: "center",
 								marginTop: "25px",
@@ -107,12 +109,33 @@ const Filters: React.FC<Props> = ({
 										showFavoritesOnly: e.target.checked,
 									})
 								}
-								style={{ width: "20px", minWidth: "20px", height: "20px" }}
+								// --- AGREGA ESTO PARA SOPORTAR ENTER ---
+								onKeyDown={(e) => {
+									if (e.key === "Enter") {
+										e.preventDefault(); // Evita que envíe un formulario si está dentro de uno
+										setFilters({
+											...filters,
+											// Invertimos el valor manualmente
+											showFavoritesOnly: !filters.showFavoritesOnly,
+										});
+									}
+								}}
+								// ---------------------------------------
+								style={{
+									width: "20px",
+									minWidth: "20px",
+									height: "20px",
+									cursor: "pointer",
+								}}
 							/>
-							{/* Este ya lo tenías bien, ¡genial! */}
+
 							<label
 								htmlFor="favCheck"
-								style={{ cursor: "pointer", marginBottom: 0 }}
+								style={{
+									cursor: "pointer",
+									marginBottom: 0,
+									userSelect: "none",
+								}}
 							>
 								Favorites Only
 							</label>

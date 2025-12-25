@@ -107,10 +107,7 @@ const UserMenu = () => {
 	useEffect(() => {
 		if (!showDeleteConfirm && isMenuOpen) {
 			// Opcional: devolver foco a un elemento dentro del menú
-		} else if (!showDeleteConfirm && !isMenuOpen) {
-			// Si todo se cerró, foco al botón principal
-			menuButtonRef.current?.focus();
-		}
+		} 
 	}, [showDeleteConfirm, isMenuOpen]);
 
 	return (
