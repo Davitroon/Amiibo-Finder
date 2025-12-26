@@ -1,54 +1,58 @@
 import { useMemo } from "react";
-// Asegúrate de que los imports coinciden con tus nombres de archivo
 import type { FilterState } from "../context/FilterContext";
 import type { Amiibo } from "../context/AmiiboContext";
 
+/**
+ * Custom hook to filter and sort the Amiibo collection efficiently.
+ * * @param userAmiibos - The raw list of Amiibos owned by the user.
+ * @param filters - The current state of active filters and sorting preferences.
+ * @returns An object containing the filtered list and available unique game series.
+ */
 export const useFilteredCollection = (userAmiibos: Amiibo[], filters: FilterState) => {
 
-    // 1. Extraer Series Únicas (Para el desplegable)
+    // 1. Extract Unique Series (for the dropdown menu)
     const uniqueSeries = useMemo(() => {
         const series = userAmiibos.map((a) => a.gameSeries);
         return Array.from(new Set(series)).sort();
     }, [userAmiibos]);
 
-    // 2. Lógica principal de Filtrado y Ordenamiento
+    // 2. Main Filtering and Sorting Logic
     const filteredAmiibos = useMemo(() => {
-        // Creamos una copia para no modificar el array original
+        // Create a shallow copy to avoid mutating the original array
         let result = [...userAmiibos];
 
-        // --- A. FILTROS ---
+        // --- A. FILTERS ---
 
-        // A.1 Solo Favoritos
+        // A.1 Filter by Favorites
         if (filters.showFavoritesOnly) {
             result = result.filter((a) => a.isFavorite);
         }
 
-        // A.2 Por Nombre (CORREGIDO: "starts with")
+        // A.2 Filter by Name (Prefix Match)
         if (filters.name) {
             result = result.filter((a) =>
-                // Usamos startsWith en lugar de includes.
-                // "Mario" aparecerá si escribes "Mar", pero NO si escribes "ario".
+                // Using startsWith ensures "Mario" is found by "Mar", but not "ario"
                 a.name.toLowerCase().startsWith(filters.name.toLowerCase())
             );
         }
 
-        // A.3 Por Serie
+        // A.3 Filter by Series
         if (filters.series) {
             result = result.filter((a) => a.gameSeries === filters.series);
         }
 
-        // --- B. ORDENAMIENTO (CORREGIDO: Lógica completa) ---
+        // --- B. SORTING ---
 
-        // Caso 1: FECHAS (Usamos el orden natural del array)
+        // Case 1: DATES (Relying on the natural array order of insertion)
         if (filters.sortBy === "date_new") {
-            // Invertimos el array: los últimos añadidos aparecen primero
+            // Reverse the array: newest additions appear first
             result.reverse();
         } 
         else if (filters.sortBy === "date_old") {
-            // No hacemos nada: ya vienen ordenados por fecha de llegada
+            // Do nothing: items are already sorted by arrival/unlock time
         } 
         else {
-            // Caso 2: RESTO DE OPCIONES (Usamos .sort)
+            // Case 2: OTHER OPTIONS (Using .sort)
             result.sort((a, b) => {
                 switch (filters.sortBy) {
                     case "name_asc":
@@ -58,15 +62,16 @@ export const useFilteredCollection = (userAmiibos: Amiibo[], filters: FilterStat
                         return b.name.localeCompare(a.name);
                     
                     case "series":
-                        // Primero por serie, luego por nombre
+                        // Primary sort by Series, secondary sort by Name
                         const seriesComp = a.gameSeries.localeCompare(b.gameSeries);
                         return seriesComp !== 0 ? seriesComp : a.name.localeCompare(b.name);
                     
                     case "favorites_first":
-                        // Si 'a' es fav y 'b' no, 'a' va primero (-1)
+                        // If 'a' is favorite and 'b' is not, 'a' comes first (-1)
                         if (a.isFavorite && !b.isFavorite) return -1;
                         if (!a.isFavorite && b.isFavorite) return 1;
-                        // Si ambos son iguales (los dos fav o los dos no fav), alfabético
+                        
+                        // If both have the same status, sort alphabetically
                         return a.name.localeCompare(b.name);
                     
                     default:

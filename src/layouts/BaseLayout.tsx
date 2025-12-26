@@ -1,54 +1,61 @@
 import React, { useState, useEffect } from "react";
-import Confetti from "react-confetti"; // Importamos la librería
+import Confetti from "react-confetti";
 import Header from "../modules/Header";
 import Footer from "../modules/Footer";
-import { useAmiibo } from "../context/AmiiboContext"; // Importamos el contexto
+import { useAmiibo } from "../context/AmiiboContext";
 import "../styles/main.css";
 
+/**
+ * Base layout component that wraps the application pages.
+ * It provides the common structure (Header, Main Content, Footer)
+ * and manages the global confetti celebration effect overlay.
+ */
 const BaseLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	// Obtenemos el estado y la función para detener el confeti
-	const { isConfettiActive, stopConfetti } = useAmiibo();
+    // Access global state for the confetti effect
+    const { isConfettiActive, stopConfetti } = useAmiibo();
 
-	// Estado para manejar el tamaño de la ventana (para que el confeti cubra todo)
-	const [windowSize, setWindowSize] = useState({
-		width: window.innerWidth,
-		height: window.innerHeight,
-	});
+    // Track window size to ensure confetti covers the entire viewport
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+    });
 
-	useEffect(() => {
-		const handleResize = () => {
-			setWindowSize({
-				width: window.innerWidth,
-				height: window.innerHeight,
-			});
-		};
-		window.addEventListener("resize", handleResize);
-		return () => window.removeEventListener("resize", handleResize);
-	}, []);
+    // Update dimensions on window resize
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight,
+            });
+        };
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
-	return (
-		<div className="app-container">
-			{/* RENDERIZADO CONDICIONAL DEL CONFETI 
-               Se muestra encima de todo gracias al zIndex alto.
-               Cuando termina la animación (recycle={false}), llama a stopConfetti.
+    return (
+        <div className="app-container">
+            {/* Conditional rendering of the Confetti effect.
+                - Z-index ensures it overlays all content.
+                - recycle={false} ensures it runs once and stops.
+                - onConfettiComplete resets the global state.
             */}
-			{isConfettiActive && (
-				<Confetti
-					width={windowSize.width}
-					height={windowSize.height}
-					recycle={false}
-					numberOfPieces={600}
-					gravity={0.15}
-					onConfettiComplete={stopConfetti}
-					style={{ zIndex: 99999, pointerEvents: "none" }}
-				/>
-			)}
+            {isConfettiActive && (
+                <Confetti
+                    width={windowSize.width}
+                    height={windowSize.height}
+                    recycle={false}
+                    numberOfPieces={600}
+                    gravity={0.15}
+                    onConfettiComplete={stopConfetti}
+                    style={{ zIndex: 99999, pointerEvents: "none" }}
+                />
+            )}
 
-			<Header />
-			<main>{children}</main>
-			<Footer />
-		</div>
-	);
+            <Header />
+            <main>{children}</main>
+            <Footer />
+        </div>
+    );
 };
 
 export default BaseLayout;

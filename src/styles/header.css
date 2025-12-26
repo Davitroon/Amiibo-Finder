@@ -1,19 +1,28 @@
-/* header.css */
+/* =========================================
+   1. MAIN HEADER LAYOUT
+   ========================================= */
+
 #header {
+    /* Positioning & Layering */
     position: sticky;
     top: 0;
+    z-index: 100;
+    min-height: 81px; 
+    
+    /* Visual Styles */
     background: var(--header-bg);
     color: var(--header-text);
-    padding: 10px 20px;
-    z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background 0.3s, color 0.3s;
-    min-height: 81px; 
+    
+    /* Layout: 3-Column Grid (Left, Center-Content, Right-Actions) */
+    padding: 10px 20px;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
 }
 
+/* Center Column (Title & Nav) */
 .header-main {
     display: flex;
     flex-direction: column;
@@ -21,6 +30,7 @@
     grid-column: 2; 
 }
 
+/* Right Column (Theme/Notify/User Actions) */
 .header-actions {
     display: flex;
     gap: 10px;
@@ -29,12 +39,18 @@
     grid-column: 3; 
 }
 
+/* Application Title */
 #header h1 {
     margin: 0 0 10px 0;
     font-size: 1.5rem; 
     text-align: center;
     line-height: 1.2;
 }
+
+
+/* =========================================
+   2. NAVIGATION LINKS
+   ========================================= */
 
 #header-links {
     display: flex;
@@ -47,18 +63,21 @@
     text-decoration: none;
     color: inherit;
     font-weight: bold;
-    transition: 0.1s;
+    white-space: nowrap; 
+    
+    /* Underline animation prep */
     border-bottom: 2px solid transparent;
     padding-bottom: 2px;
-    white-space: nowrap; 
+    transition: 0.1s;
 }
 
 #header-links a:hover {
-    color: rgb(253, 255, 121);
+    color: rgb(253, 255, 121); /* Highlight Yellow */
     transform: scale(1.03);
     text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Active Page State */
 #header-links a.active {
     color: rgb(253, 255, 121);
     border-bottom: 2px solid rgb(253, 255, 121);
@@ -66,66 +85,89 @@
     cursor: default;
 }
 
-/* --- BOTONES ICONO --- */
+
+/* =========================================
+   3. ACTION BUTTONS (Icons)
+   ========================================= */
+
 .icon-btn {
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: inherit;
-    border-radius: 50%;
+    /* Structure & Size */
     width: 40px;
     height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0; 
+    
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    /* Visuals */
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: inherit;
     font-size: 1.2rem;
+    
     cursor: pointer;
     transition: all 0.2s ease;
-    flex-shrink: 0; 
 }
 
-.icon-btn:hover, .icon-btn.active {
+.icon-btn:hover, 
+.icon-btn.active {
     background: rgba(0, 0, 0, 0.3);
     transform: scale(1.1);
 }
 
+/* Special state for Active Notifications */
 .icon-btn.active-notify {
     background: rgba(255, 255, 255, 0.25);
     border-color: rgba(255, 255, 255, 0.5);
     color: rgb(253, 255, 121);
 }
 
-/* --- NUEVO: ESTILOS DEL MENÚ DESPLEGABLE --- */
+
+/* =========================================
+   4. USER MENU & DROPDOWN
+   ========================================= */
+
+/* Wrapper to position the absolute menu correctly */
 .user-menu-container {
-    position: relative; /* Para que el dropdown se posicione respecto a este botón */
+    position: relative; 
 }
 
+/* Dropdown Panel */
 .dropdown-menu {
     position: absolute;
-    top: 120%; /* Justo debajo del botón */
+    top: 120%; /* Pushes it slightly below the button */
     right: 0;
-    background-color: var(--card-bg); /* Usa el color de fondo de tus tarjetas */
+    z-index: 200;
+    
+    width: 160px;
+    background-color: var(--card-bg); 
     color: var(--text-color);
+    
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    width: 160px;
     overflow: hidden;
-    z-index: 200;
+    
     animation: fadeIn 0.2s ease;
 }
 
+/* Dropdown Menu Item */
 .dropdown-item {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
     padding: 12px 15px;
+    
     border: none;
     background: none;
     color: inherit;
     text-align: left;
-    cursor: pointer;
     font-size: 0.9rem;
+    
+    cursor: pointer;
     transition: background 0.2s;
 }
 
@@ -133,11 +175,12 @@
     background-color: rgba(0,0,0,0.05);
 }
 
-/* Ajuste para modo oscuro en hover */
+/* Dark Mode Hover Adjustment */
 body.dark-mode .dropdown-item:hover {
     background-color: rgba(255,255,255,0.1);
 }
 
+/* Separator Line */
 .dropdown-divider {
     height: 1px;
     background-color: var(--border-color);
@@ -145,6 +188,7 @@ body.dark-mode .dropdown-item:hover {
     opacity: 0.5;
 }
 
+/* Danger Action (e.g., Delete) */
 .dropdown-item.danger {
     color: #ff4d4d;
 }
@@ -153,15 +197,21 @@ body.dark-mode .dropdown-item:hover {
     background-color: rgba(255, 77, 77, 0.1);
 }
 
+/* Animation */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- RESPONSIVE --- */
+
+/* =========================================
+   5. RESPONSIVE DESIGN (Mobile)
+   ========================================= */
+
 @media (max-width: 600px) {
     #header {
         padding: 10px 15px;
+        /* Switch from Grid to Flex for simpler mobile layout */
         display: flex; 
         flex-direction: row;
         justify-content: space-between;

@@ -1,147 +1,185 @@
+/* =========================================
+   1. LAYOUT & CONTAINER
+   ========================================= */
+
+/* * Main Stage
+ * Centers the gift box within the available space.
+ */
 .gift-stage {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	margin-top: 50px;
-	height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    height: 350px;
 }
 
-/* El área clickable del regalo */
+
+/* =========================================
+   2. INTERACTIVE COMPONENT (The Button)
+   ========================================= */
+
+/* * Main Interactive Element
+ * Resets default button styles to act as a container.
+ */
 .gift-box {
-	cursor: pointer;
-	position: relative;
-	transition: transform 0.2s ease;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	background: none;
+    cursor: pointer;
+    position: relative;
+    
+    /* Layout: Stacks Timer, Gift, and Text vertically */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    background: none;
     border: none;
+    transition: transform 0.2s ease;
 }
 
+/* * Accessibility: Focus State
+ * High contrast outline for keyboard navigation.
+ */
 .gift-box:focus-visible {
-    outline: 3px solid #007bff; /* Color de contraste alto */
+    outline: 3px solid #007bff;
     outline-offset: 4px;
 }
 
+/* * Disabled State
+ * Used when the API is loading or interaction is blocked.
+ */
 .gift-box:disabled {
     cursor: not-allowed;
-    opacity: 0.7; /* Visualmente indicar que está inactivo */
+    opacity: 0.7; 
 }
 
-/* Efecto hover: SOLO si NO tiene la clase .locked y NO está abriendo */
-.gift-box:not(.locked):not(.opening):hover {
-	transform: scale(1.05);
-}
-
-/* Estado Bloqueado (Cooldown) */
+/* * Locked State (Cooldown)
+ * specific styling when the user must wait.
+ */
 .gift-box.locked {
-	cursor: default;
-	transform: none;
-	opacity: 0.8;
+    cursor: default;
+    transform: none;
+    opacity: 0.8;
 }
 
-/* Tamaños de imagen */
+/* * Loading/Opening State
+ * Prevents clicking while the opening animation plays.
+ */
+.gift-box.opening {
+    pointer-events: none;
+    cursor: default;
+}
+
+/* * Hover Effect
+ * Only applies if the box is NOT locked and NOT currently opening.
+ */
+.gift-box:not(.locked):not(.opening):hover {
+    transform: scale(1.05);
+}
+
+
+/* =========================================
+   3. VISUAL ELEMENTS
+   ========================================= */
+
+/* * Gift Image
+ * Handles sizing, shadows, and prevents dragging the image.
+ */
 .gift {
-	width: 450px;
-	height: auto;
-	filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
-	transition: all 0.3s ease;
-	user-select: none; /* Estándar: No permite seleccionar la imagen */
-	-webkit-user-select: none; /* Safari/Chrome antiguo */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE/Edge */
-	-webkit-user-drag: none;
+    width: 450px;
+    height: auto;
+    filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s ease;
+
+    /* Prevent user selection and dragging (UI Polish) */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
 }
 
+/* * Status Text
+ * The text below the gift ("Ready", "Wait", etc.)
+ */
 .gift-text {
-	margin-top: 15px;
-	font-weight: bold;
-	color: var(--text-color);
-	opacity: 0.8;
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--text-color);
+    opacity: 0.8;
 
-	/* NUEVO: Añadida transición para que el color cambie suavemente */
-	transition: color 0.3s ease;
+    /* Smooth color transition for theme switching */
+    transition: color 0.3s ease;
 }
 
-/* ------------------------------------------------
-   TIMER STYLES
------------------------------------------------- */
+
+/* =========================================
+   4. TIMER DISPLAY
+   ========================================= */
+
+/* * Countdown Timer
+ * Appears above the gift when locked.
+ */
 .timer-display {
-	/* Opcional: Si quieres que el timer también cambie con el tema, usa variables aquí */
-	background-color: #333;
-	color: #fff;
+    background-color: #333;
+    color: #fff;
 
-	padding: 5px 12px;
-	border-radius: 20px;
-	font-family: monospace;
-	font-size: 1.2rem;
-	font-weight: bold;
-	margin-bottom: 20px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
 
-	opacity: 0;
-	transform: translateY(10px);
+    /* Hidden State: Displaced slightly down and invisible */
+    opacity: 0;
+    transform: translateY(10px);
 
-	/* Mantenemos las transiciones existentes */
-	transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+/* * Active Timer State
+ * Fades in and moves to correct position.
+ */
 .timer-display.visible {
-	opacity: 1;
-	transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
 }
 
-/* ------------------------------------------------
-   ANIMACIONES
------------------------------------------------- */
+
+/* =========================================
+   5. ANIMATIONS
+   ========================================= */
+
+/* * IDLE ANIMATION: "Wobble"
+ * A gentle rocking motion to indicate the gift is ready to be opened.
+ * Rotates slightly left and right from the bottom center.
+ */
 
 @keyframes wobble {
-	0% {
-		transform: rotate(0deg);
-	}
-	15% {
-		transform: rotate(-3deg);
-	}
-	30% {
-		transform: rotate(2deg);
-	}
-	45% {
-		transform: rotate(-3deg);
-	}
-	60% {
-		transform: rotate(2deg);
-	}
-	75% {
-		transform: rotate(-1deg);
-	}
-	100% {
-		transform: rotate(0deg);
-	}
+    0%   { transform: rotate(0deg); }
+    15%  { transform: rotate(-3deg); }
+    30%  { transform: rotate(2deg); }
+    45%  { transform: rotate(-3deg); }
+    60%  { transform: rotate(2deg); }
+    75%  { transform: rotate(-1deg); }
+    100% { transform: rotate(0deg); }
 }
 
 .wobble-anim {
-	animation: wobble 2.5s infinite ease-in-out;
-	transform-origin: bottom center;
+    animation: wobble 2.5s infinite ease-in-out;
+    transform-origin: bottom center; /* Pivot point at the bottom */
 }
 
+
+/* * INTERACTION ANIMATION: "Pop Open"
+ * A quick expansion and jump effect when clicked.
+ */
 @keyframes popOpen {
-	0% {
-		transform: scale(1);
-	}
-	50% {
-		transform: scale(1.2) translateY(-10px);
-	}
-	100% {
-		transform: scale(1);
-	}
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.2) translateY(-10px); }
+    100% { transform: scale(1); }
 }
 
 .pop-anim {
-	animation: popOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* cubic-bezier adds a "bouncy" feel to the pop */
+    animation: popOpen 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
-/* Deshabilitar interacción mientras se abre (loading) */
-.gift-box.opening {
-	pointer-events: none;
-	cursor: default;
-}
-

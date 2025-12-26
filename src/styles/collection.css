@@ -1,46 +1,215 @@
-/* -------------------------------
-   Body Content
-------------------------------- */
+/* =========================================
+   1. MAIN LAYOUT & BODY
+   ========================================= */
+
+/* Main Container */
 .collection-body {
     padding-inline: 10rem;
     min-height: 50vh;
 }
 
-/* MARCO PRINCIPAL */
+/* Collection Frame (The box containing the grid) */
 .collection-frame {
     margin-top: 20px;
     
-    /* CAMBIO: Usamos var(--bg-color) o un color base, pero necesitamos la transición */
+    /* Base background with transparency for visual effect */
     background-color: var(--bg-color); 
-    /* Sobreescribimos con transparencia para el efecto visual */
     background-color: rgba(0,0,0,0.03); 
     
     border: 2px dashed var(--border-color);
     border-radius: 12px;
     padding: 2rem;
     min-height: 400px;
+    
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
     
-    /* NUEVO: Animación suave al cambiar de tema */
+    /* Smooth transition for theme switching */
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Ajuste específico para modo oscuro */
+/* Dark Mode Adjustment for Frame */
 body.dark-mode .collection-frame {
     background-color: rgba(255,255,255,0.05);
 }
 
+/* Grid Layout for Amiibo Cards */
 .amiibo-grid {
     display: grid;
+    /* Responsive columns: auto-fill ensures cards wrap cleanly */
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 1.5rem;
 }
 
-/* -------------------------------
-   Botón Delete
-------------------------------- */
+
+/* =========================================
+   2. HEADER CONTROLS (Filters & Count)
+   ========================================= */
+
+.collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Vertically centered */
+    padding-inline: 10rem;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    flex-wrap: wrap; /* Wraps on smaller screens */
+    gap: 15px; 
+}
+
+/* Results Counter Text */
+.results-count {
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    white-space: nowrap; /* Prevents awkward text breaking */
+}
+
+/* Filter Toggle Button */
+.filter-toggle-btn {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    min-width: 120px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.1s;
+}
+
+.filter-toggle-btn:hover {
+    filter: brightness(0.9);
+}
+
+body.dark-mode .filter-toggle-btn:hover {
+    filter: brightness(1.2);
+}
+
+/* Active State for Filter Button */
+.filter-toggle-btn.active {
+    background-color: #E60012; 
+    color: white;
+    border-color: #E60012;
+}
+
+
+/* =========================================
+   3. FILTER PANEL (Expandable)
+   ========================================= */
+
+/* Filter Container (Handles animation) */
+.filter-panel {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden; 
+    transition: all 0.4s ease-in-out;
+    padding-inline: 10rem;
+}
+
+/* Open State */
+.filter-panel.open {
+    max-height: 120px;
+    opacity: 1;
+    margin-bottom: 20px;
+}
+
+/* Inner Filter Content */
+.filter-content {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    align-items: center;
+
+    /* Theme transitions */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Input Groups */
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+/* Inputs and Selects Styling */
+.filter-group input,
+.filter-group select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    
+    /* Theme transitions */
+    transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #E60012;
+    outline: none;
+}
+
+
+/* =========================================
+   4. EMPTY STATE & UTILITIES
+   ========================================= */
+
+/* Empty Content Placeholder */
+.empty-content {
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    color: var(--text-color);
+    opacity: 0.7;
+    transition: color 0.3s ease;
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.empty-subtitle {
+    font-size: 1rem;
+    color: var(--text-color);
+    opacity: 0.6;
+    transition: color 0.3s ease;
+}
+
+/* Delete Button (Legacy / If needed elsewhere) */
 .delete-collection {
     background-color: #ff4d4d;
     color: white;
@@ -65,165 +234,13 @@ body.dark-mode .collection-frame {
     transform: translateY(0);
 }
 
-/* -------------------------------
-   Contenido Vacío
-------------------------------- */
-.empty-content {
-    flex-grow: 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: var(--text-color);
-    opacity: 0.7;
-    /* NUEVO: Transición de color */
-    transition: color 0.3s ease;
-}
 
-.empty-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: var(--text-color);
-    /* NUEVO: Transición de color */
-    transition: color 0.3s ease;
-}
+/* =========================================
+   5. RESPONSIVE DESIGN (Mobile)
+   ========================================= */
 
-.empty-subtitle {
-    font-size: 1rem;
-    color: var(--text-color);
-    opacity: 0.6;
-    /* NUEVO: Transición de color */
-    transition: color 0.3s ease;
-}
-
-/* -------------------------------
-   HEADER DE FILTROS Y CONTADOR
-------------------------------- */
-.collection-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Alineación vertical CENTRADA */
-    padding-inline: 10rem;
-    margin-top: 40px;
-    margin-bottom: 10px;
-    flex-wrap: wrap; /* Permitir que baje si la pantalla es muy pequeña */
-    gap: 15px; 
-}
-
-.results-count {
-    color: var(--text-color);
-    opacity: 0.8;
-    font-size: 0.95rem;
-    transition: color 0.3s ease;
-    white-space: nowrap; /* Evitar que el texto se rompa raro */
-}
-
-.filter-toggle-btn {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    /* width: 159.73px;  <-- ELIMINADO para que se adapte al contenido */
-    min-width: 120px; /* Ancho mínimo razonable */
-    padding: 8px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centrar contenido horizontalmente */
-    gap: 8px;
-    
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.1s;
-}
-
-.filter-toggle-btn:hover {
-    filter: brightness(0.9);
-}
-body.dark-mode .filter-toggle-btn:hover {
-    filter: brightness(1.2);
-}
-
-.filter-toggle-btn.active {
-    background-color: #E60012; 
-    color: white;
-    border-color: #E60012;
-}
-
-/* -------------------------------
-   PANEL DE FILTROS (Animado)
-------------------------------- */
-.filter-panel {
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden; 
-    transition: all 0.4s ease-in-out;
-    padding-inline: 10rem;
-}
-
-.filter-panel.open {
-    max-height: 120px;
-    opacity: 1;
-    margin-bottom: 20px;
-}
-
-.filter-content {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 15px 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-    
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
-    align-items: center;
-
-    /* NUEVO: Transición suave para el fondo y el borde del panel */
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.filter-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.filter-group label {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text-color);
-    /* NUEVO: Transición de color */
-    transition: color 0.3s ease;
-}
-
-/* Inputs y Selects estilizados */
-.filter-group input,
-.filter-group select {
-    padding: 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 0.9rem;
-    
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    
-    /* CAMBIO: Añadimos background-color y color a la transición */
-    transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
-}
-
-.filter-group input:focus,
-.filter-group select:focus {
-    border-color: #E60012;
-    outline: none;
-}
-
-/* -------------------------------
-   RESPONSIVE
-------------------------------- */
 @media (max-width: 1000px) {
+    /* Reduce side padding on smaller screens */
     .collection-body,
     .collection-header,
     .filter-panel {
@@ -235,10 +252,12 @@ body.dark-mode .filter-toggle-btn:hover {
         font-size: 0.85rem;
     }
     
+    /* Expand filter panel height for stacked content */
     .filter-panel.open {
         max-height: 400px;
     }
 
+    /* Stack filters vertically */
     .filter-content {
         flex-direction: column;
         align-items: stretch;

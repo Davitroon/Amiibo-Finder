@@ -1,45 +1,76 @@
-/* -------------------------------
-   Delete Modal Specifics
-------------------------------- */
+/* =========================================
+   DELETE MODAL SPECIFICS
+   ========================================= */
 
-/* Es un poco más estrecho que el de unlock */
+/* * Modal Container Modifier
+ * This makes the delete box narrower than the unlock modal
+ * to create a more focused, alert-like appearance.
+ */
 .modal-box.delete-content {
     max-width: 300px;
     padding: 2rem;
 }
 
+/* Modal Heading */
 .delete-title {
     margin-top: 0;
     font-size: 1.2rem;
+    /* Often centers text if inherited, but specific alignment can be added here if needed */
 }
 
-/* Contenedor de botones */
+
+/* =========================================
+   ACTION BUTTONS LAYOUT
+   ========================================= */
+
+/* * Button Container
+ * Uses Flexbox to center the Cancel and Delete buttons
+ * with consistent spacing between them.
+ */
+
 .delete-actions {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
+    gap: 1rem; /* Space between buttons */
+    justify-content: center; /* Center buttons horizontally */
     margin-top: 1.5rem;
 }
 
-/* Estilos de botones */
+
+/* =========================================
+   BUTTON STYLES
+   ========================================= */
+
+/* * Base Button Style
+ * Shared properties for all buttons within the modal.
+ */
 .modal-btn {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
+    
     cursor: pointer;
     color: white;
     font-weight: bold;
+    
+    /* Smooth transition for hover effects */
     transition: opacity 0.2s;
 }
 
+/* Hover Effect: Slightly transparent to indicate interactivity */
 .modal-btn:hover {
     opacity: 0.9;
 }
 
+/* * Cancel Button Variant
+ * Neutral gray color to indicate a non-destructive action.
+ */
 .modal-btn.cancel {
     background-color: #777;
 }
 
+/* * Delete Button Variant
+ * Bright red color to indicate a destructive/dangerous action.
+ */
 .modal-btn.delete {
     background-color: #d32f2f;
 }

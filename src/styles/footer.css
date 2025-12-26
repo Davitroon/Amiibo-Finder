@@ -1,36 +1,44 @@
-/* -------------------------------
-   Footer Classes
-------------------------------- */
+/* =========================================
+   FOOTER LAYOUT & THEME
+   ========================================= */
 
+/* Main Footer Container */
 .site-footer {
-  background-color: #1a1a1a; 
-  color: #f0f0f0;
-  
-  text-align: center;
-  padding: 11px 20px;
-  font-size: 0.9rem;
-  margin-top: 40px;
-  padding-bottom: 3rem;
-  
-  border-top: 1px solid transparent;
+    /* Visual Appearance */
+    background-color: #1a1a1a; 
+    color: #f0f0f0;
+    border-top: 1px solid transparent; /* Transparent by default, visible in dark mode */
 
-  /* NUEVO: Añadimos la transición para fondo y borde */
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+    /* Layout & Spacing */
+    text-align: center;
+    padding: 11px 20px;
+    padding-bottom: 3rem; /* Extra padding at bottom for visual balance */
+    margin-top: 40px;
+    font-size: 0.9rem;
+
+    /* Smooth transitions for theme switching (Background & Border) */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Ajuste para modo oscuro */
+/* Dark Mode Overrides */
 body.dark-mode .site-footer {
-    border-top: 1px solid #333;
-    background-color: #111; 
+    background-color: #111; /* Slightly darker than default */
+    border-top: 1px solid #333; /* Subtle separator line */
 }
+
+
+/* =========================================
+   FOOTER LINKS
+   ========================================= */
 
 .site-footer a {
-  color: #4db5ff;
-  text-decoration: none;
-  /* Opcional: transición para el color del link también */
-  transition: color 0.2s ease;
+    color: #4db5ff; /* Light blue accent color */
+    text-decoration: none;
+    
+    /* Smooth color transition on hover */
+    transition: color 0.2s ease;
 }
 
 .site-footer a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
