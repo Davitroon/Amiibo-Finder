@@ -1,76 +1,131 @@
-/* -------------------------------
-   BASE: Overlay (Fondo oscuro)
-------------------------------- */
+/* =========================================
+   1. BASE: OVERLAY (Backdrop)
+   ========================================= */
+
+/* * The Overlay acts as the background shield.
+ * It covers the whole screen, dims the background, and centers the modal.
+ */
 .modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	z-index: 9999;
+    /* Positioning: Fix to viewport to cover everything */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+    /* High Z-Index ensures it sits on top of all other UI elements */
+    z-index: 9999;
 
-	/* Flexbox para centrar cualquier modal */
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    /* Layout: Uses Flexbox to perfectly center the modal box */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-	/* Estado inicial (Oculto/Transparente) */
-	background-color: rgba(0, 0, 0, 0);
-
-	backdrop-filter: blur(0px);
-	pointer-events: none; /* Click traspasa */
-	transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+    /* Initial State: Transparent & blurred */
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    
+    /* Interaction: 'none' allows clicks to pass through when hidden */
+    pointer-events: none; 
+    
+    /* Smooth transition for the "Fade In" effect */
+    transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 }
 
-/* Estado VISIBLE (.show) */
+/* * Active State (.show)
+ * Applied via React state. Makes the overlay visible and interactive.
+ */
 .modal-overlay.show {
-	background-color: rgba(0, 0, 0, 0.6);
-	backdrop-filter: blur(2px);
+    /* Dimmed background */
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
 
-	pointer-events: auto; /* Click bloqueado */
+    /* Interaction: Blocks clicks to the underlying page */
+    pointer-events: auto; 
 }
 
-/* -------------------------------
-   BASE: Content Box (La caja)
-------------------------------- */
+
+/* =========================================
+   2. BASE: CONTENT BOX (The Card)
+   ========================================= */
+
+/* * The generic container for any modal content.
+ * Specific modals (delete, unlock) extend this class.
+ */
 .modal-box {
-	background: var(--card-bg);
-	color: var(--text-color);
-	border-radius: 12px;
-	padding: 20px;
-	text-align: center;
-	box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    /* Appearance: Adapts to current theme variables */
+    background: var(--card-bg);
+    color: var(--text-color);
+    
+    /* Shape & Spacing */
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    
+    /* Responsive safety: prevent it from touching screen edges on mobile */
+    max-width: 90vw; 
+    
+    /* Deep shadow creates a "floating" effect */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
 
-	/* Estado inicial para animación */
-	opacity: 0;
-	transform: scale(0.8);
-	transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+    /* Initial State for Animation (Small & Invisible) */
+    opacity: 0;
+    transform: scale(0.8);
+    transition: transform 0.2s ease-in, opacity 0.2s ease-in;
 }
 
-/* Animación de entrada cuando el padre tiene .show */
+/* * Entrance Animation
+ * Triggers when the parent overlay becomes visible.
+ */
 .modal-overlay.show .modal-box {
-	opacity: 1;
-	transform: scale(1);
-	/* Aplicamos el rebote a TODOS los modales por defecto */
-	animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 1;
+    transform: scale(1);
+    
+    /* cubic-bezier(0.34, 1.56, 0.64, 1) creates a "spring" overshoot effect */
+    animation: modalBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* -------------------------------
-   Animación de Rebote (Reutilizable)
-------------------------------- */
+
+/* =========================================
+   3. ANIMATIONS
+   ========================================= */
+
+/* * Keyframes: "Pop & Bounce"
+ * 0%   : Start small and slightly lower.
+ * 50%  : Grow larger than 100% (overshoot).
+ * 70%  : Shrink slightly below 100%.
+ * 100% : Settle at final size.
+ */
+
 @keyframes modalBounce {
-	0% {
-		opacity: 0;
-		transform: scale(0.3) translateY(50px);
-	}
-	50% {
-		opacity: 1;
-		transform: scale(1.05) translateY(-10px);
-	}
-	70% {
-		transform: scale(0.95);
-	}
-	100% {
-		transform: scale(1);
-	}
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(50px);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05) translateY(-10px);
+    }
+    70% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================
+   4. ACCESSIBILITY (Reduced Motion)
+   ========================================= */
+
+/* * Respects user settings for reduced motion (OS level).
+ * Disables the bounce animation to prevent motion sickness.
+ */
+@media (prefers-reduced-motion: reduce) {
+    .modal-overlay.show .modal-box {
+        animation: none; /* Disable bounce */
+        transform: none;
+        transition: opacity 0.2s ease; /* Simple fade instead */
+    }
 }

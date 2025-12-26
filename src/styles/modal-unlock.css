@@ -1,84 +1,127 @@
-/* -------------------------------
-   Unlock Modal Specifics
-------------------------------- */
+/* =========================================
+   UNLOCK MODAL LAYOUT
+   ========================================= */
 
-/* Ancho específico para este diseño */
+/* * Modal Container Modifier
+ * Sets a specific width for the unlock card to ensure 
+ * the Amiibo image fits perfectly without too much whitespace.
+ */
 .modal-box.unlock-content {
     width: 350px;
-    padding-top: 10px; /* Ajuste fino */
+    padding-top: 10px; /* Fine-tuning top spacing */
 }
 
-/* Botón de cerrar (X) */
+
+/* =========================================
+   CONTROLS (Close Button)
+   ========================================= */
+
+/* * Close Button (X)
+ * Styled to look prominent with a red hue.
+ */
 .unlock-close-btn {
     float: right;
     font-size: 32px;
     font-weight: bold;
+    line-height: 20px;
+    
     cursor: pointer;
     color: #ff4d4d;
+    
+    /* Prepare for hover animation */
     transition: transform 0.2s;
-    line-height: 20px;
 }
 
+/* * Hover Effect
+ * Scales up and rotates slightly for a playful feel.
+ */
 .unlock-close-btn:hover {
     transform: scale(1.2) rotate(90deg);
 }
 
-/* Imágenes dentro del modal */
+
+/* =========================================
+   VISUAL ASSETS (Images & Animation)
+   ========================================= */
+
+/* * Amiibo Image Styling
+ * Constrains the image size and prepares the "Pop" animation.
+ */
 .modal-box.unlock-content img {
     max-width: 294px;
     max-height: 216px;
     margin-top: 10px;
+    
+    /* Initial state: Scaled down (0.9) to allow for the pop-in effect */
     transform: scale(0.9);
     transition: transform 0.3s ease;
     
-    /* Evitar selección */
+    /* Prevent user selection/dragging for a cleaner app-like feel */
     user-select: none;
     -webkit-user-drag: none;
 }
 
-/* Efecto zoom al abrir (usando el selector base .show) */
+/* * Active Animation State
+ * When the modal has the class '.show', the image scales to full size (1).
+ * The delay adds a sense of timing after the modal opens.
+ */
 .modal-overlay.show .modal-box.unlock-content img {
     transform: scale(1);
     transition-delay: 0.2s;
 }
 
-/* Responsive específico */
-@media (max-width: 780px) {
-    .modal-box.unlock-content img {
-        max-width: 194px;
-        max-height: 116px;
-    }
-}
 
-/* "You unlocked..." */
+/* =========================================
+   TYPOGRAPHY
+   ========================================= */
+
+/* * Subtitle ("You unlocked...")
+ * Uses opacity for a subtle look instead of a hard gray color.
+ */
 .unlock-subtitle {
     margin-bottom: 5px;
     font-size: 1rem;
     color: var(--text-color);
-    opacity: 0.7; /* En lugar de gris fijo, usamos opacidad */
+    opacity: 0.7;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* Nombre del Amiibo (Mario, Link...) */
+/* * Main Character Name (e.g., "Mario")
+ * Large, bold text using the signature Nintendo Red.
+ */
 .unlock-name {
     margin: 15px 0 5px;
-    color: #E60012; /* Rojo Nintendo */
-    font-size: 1.8rem; /* Un poco más grande para impactar */
+    color: #E60012; 
+    font-size: 1.8rem; 
     font-weight: 800;
     line-height: 1.1;
 }
 
-/* Ajuste del nombre para Modo Oscuro (Brillo extra) */
+/* Dark Mode override for the name: Brighter red + Neon Glow */
 body.dark-mode .unlock-name {
-    color: #ff4d4d; /* Un rojo un poco más brillante */
-    text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); /* Efecto neón sutil */
+    color: #ff4d4d; 
+    text-shadow: 0 0 10px rgba(255, 77, 77, 0.4); 
 }
 
-/* Serie del juego (Super Mario Series...) */
+/* * Game Series (e.g., "Super Mario Series")
+ */
 .unlock-series {
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--text-color);
     opacity: 0.9;
+}
+
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* Adjust image size for smaller screens/phones */
+@media (max-width: 780px) {
+    .modal-box.unlock-content img {
+        max-width: 194px;
+        max-height: 116px;
+    }
 }

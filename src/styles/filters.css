@@ -1,14 +1,22 @@
-/* Contenedor animado (Acordeón) */
+/* =========================================
+   1. MAIN CONTAINER (Accordion Animation)
+   ========================================= */
+
+/* * The main container acts as an accordion.
+ * It animates height, opacity, and transform to slide down when opened.
+ */
 .filter-panel-container {
     background-color: var(--card-bg);
     border: 1px solid transparent; 
     border-top: none;
     overflow: hidden;
     
+    /* Initial State: Closed (Hidden) */
     max-height: 0;
     opacity: 0;
     transform: translateY(-10px); 
 
+    /* Smooth transitions for all changing properties */
     transition: 
         max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
         opacity 0.3s ease,
@@ -17,70 +25,92 @@
         transform 0.3s ease,
         box-shadow 0.3s ease;
     
+    /* Formatting */
     margin-inline: 10rem;
     border-radius: 0 0 12px 12px;
 }
 
-/* Estado ABIERTO */
+/* * Active State: Open
+ * Applied when the user toggles the filter button.
+ */
 .filter-panel-container.open {
     max-height: 150px;
     opacity: 1;
     transform: translateY(0);
     border-color: var(--border-color);
+    
+    /* Soft shadow to lift the panel */
     box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15), 
                 0 0 5px rgba(0,0,0,0.05);
     margin-bottom: 20px;
 }
 
+/* Dark Mode Adjustments for the Container */
 body.dark-mode .filter-panel-container.open {
     border-color: #555; 
     box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.4);
 }
 
+
+/* =========================================
+   2. LAYOUT & GROUPING
+   ========================================= */
+
 .filter-content-wrapper {
     padding: 20px;
 }
 
-/* LA CLAVE: Separar los dos grandes grupos */
+/* * Main Layout Row
+ * Uses Flexbox to push the Filter Inputs to the left
+ * and the Action Buttons (Reset) to the right.
+ */
+
 .filter-row {
     display: flex;
-    justify-content: space-between; /* Izquierda <--- Espacio ---> Derecha */
-    align-items: flex-end; /* Alinear abajo para que coincidan con los inputs */
+    justify-content: space-between; /* Pushes groups to edges */
+    align-items: flex-end; /* Aligns items to the bottom (matching input baselines) */
     width: 100%;
     flex-wrap: wrap; 
-    gap: 20px; /* Espacio mínimo si se juntan mucho */
+    gap: 20px; /* Minimum spacing */
 }
 
-/* GRUPO IZQUIERDO: Donde están los inputs */
+/* Left Group: Contains the Inputs/Selects */
 .filter-left-group {
     display: flex;
     gap: 20px;
-    flex-wrap: wrap; /* Permitir que los inputs bajen si no caben */
+    flex-wrap: wrap; /* Allows inputs to wrap if screen is narrow */
     align-items: flex-end;
 }
 
+/* =========================================
+   3. FORM ELEMENTS (Inputs & Selects)
+   ========================================= */
+
+/* Individual Filter Item Wrapper (Label + Input) */
 .filter-group {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-/* Inputs y Selects */
+/* Shared styling for Inputs and Selects */
 .filter-group input,
 .filter-group select {
     padding: 10px 12px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: 0.9rem;
+    
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: all 0.3s ease;
     
     width: 100%; 
-    min-width: 150px; /* Ancho mínimo para legibilidad */
+    min-width: 150px; /* Ensures readability */
     box-sizing: border-box; 
 }
 
+/* Focus State: Nintendo Red Highlight */
 .filter-group input:focus,
 .filter-group select:focus {
     border-color: #E60012;
@@ -88,9 +118,15 @@ body.dark-mode .filter-panel-container.open {
     box-shadow: 0 0 0 2px rgba(230, 0, 18, 0.1); 
 }
 
+
+/* =========================================
+   4. ACTION BUTTONS
+   ========================================= */
+
+/* "Clean Filters" Button */
 .clean-filters-btn {
     padding: 10px 20px;
-    height: 40px;
+    height: 40px; /* Fixed height to match inputs */
     background-color: transparent;
     border: 1px solid var(--border-color);
     color: var(--text-color);
@@ -100,8 +136,7 @@ body.dark-mode .filter-panel-container.open {
     transition: all 0.2s ease;
     white-space: nowrap;
 
-    /* --- CORRECCIÓN TAMBIÉN AQUÍ --- */
-    /* Para cuando esté en móvil al 100% de ancho */
+    /* Ensures correct sizing on mobile */
     box-sizing: border-box; 
 }
 
@@ -111,25 +146,32 @@ body.dark-mode .filter-panel-container.open {
     border-color: #E60012;
 }
 
-/* --- RESPONSIVE (Móvil y Tablets) --- */
+
+/* =========================================
+   5. RESPONSIVE DESIGN (Tablets & Mobile)
+   ========================================= */
+
 @media (max-width: 1000px) {
+    /* Reduce side margins */
     .filter-panel-container {
         margin-inline: 1rem;
     }
 
-    /* Aumentamos la altura máxima porque ahora se apilan */
+    /* Increase max-height to accommodate stacked elements */
     .filter-panel-container.open {
         max-height: 500px; 
     }
 
-.filter-row {
-        flex-direction: column; /* Cambiar a columna */
-        align-items: stretch; /* Estirar todo */
+    /* Switch to Column Layout */
+    .filter-row {
+        flex-direction: column; 
+        align-items: stretch; /* Stretch items to full width */
         gap: 15px;
     }
 
+    /* Stack inputs vertically */
     .filter-left-group {
-        flex-direction: column; /* Los inputs uno debajo de otro */
+        flex-direction: column;
         align-items: stretch;
         width: 100%;
     }
@@ -139,6 +181,7 @@ body.dark-mode .filter-panel-container.open {
         margin-top: 5px;
     }
     
+    /* Full width button on mobile */
     .clean-filters-btn {
         width: 100%;
     }

@@ -1,41 +1,60 @@
-/* -------------------------------
-   CSS Variables (Theme Logic)
-------------------------------- */
+/* =========================================
+   1. CSS VARIABLES & THEME CONFIGURATION
+   ========================================= */
+
+/* * Root Variables: Define the default color scheme (Light Mode).
+ * These variables are used throughout the application to ensure consistency.
+ */
 :root {
-	/* Colores MODO CLARO (Default) */
-	--bg-color: #ffffff;
-	--text-color: #333333;
-	--card-bg: #ffffff;
-	--header-bg: rgb(211, 59, 59);
-	--header-text: white;
-	--border-color: #ddd;
+    /* Backgrounds */
+    --bg-color: #ffffff;
+    --card-bg: #ffffff;
+    --header-bg: rgb(211, 59, 59);
+
+    /* Text & Borders */
+    --text-color: #333333;
+    --header-text: white;
+    --border-color: #ddd;
 }
 
-/* Colores MODO OSCURO */
+/* * Dark Mode Overrides:
+ * These values are applied when the 'dark-mode' class is added to the body tag.
+ */
 body.dark-mode {
-	--bg-color: #1a1a1a;
-	--text-color: #f0f0f0;
-	--card-bg: #2d2d2d;
-	--header-bg: #8b0000; /* Rojo más oscuro */
-	--header-text: #ddd;
-	--border-color: #444;
+    /* Backgrounds */
+    --bg-color: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --header-bg: #8b0000; /* Darker red for better contrast */
+
+    /* Text & Borders */
+    --text-color: #f0f0f0;
+    --header-text: #ddd;
+    --border-color: #444;
 }
 
-/* -------------------------------
-   Global Styles
-------------------------------- */
+
+/* =========================================
+   2. GLOBAL RESET & TYPOGRAPHY
+   ========================================= */
+
+/* * Body Styles:
+ * Sets the global background and text color based on the active theme variables.
+ * Includes a transition for smooth theme switching.
+ */
 body {
-	margin: 0;
-	padding: 0;
-	background-color: var(--bg-color);
-	color: var(--text-color);
-	transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Main Layout Container */
 main {
-	min-height: 70.8vh;
+    min-height: 70.8vh; /* Ensures footer stays at the bottom on short pages */
 }
 
+/* Global Typography Settings */
 h1,
 h2,
 h3,
@@ -44,47 +63,63 @@ p,
 button,
 input,
 select {
-	font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 h2 {
-	text-align: center;
+    text-align: center;
 }
 
-/* -------------------------------
-   Modal Styles
-------------------------------- */
+
+/* =========================================
+   3. SHARED MODAL STYLES
+   ========================================= */
+
+/* * Modal Overlay:
+ * The semi-transparent background that covers the screen behind the modal.
+ */
 .modal-overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.5); /* Esto se queda igual en ambos */
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Fixed opacity regardless of theme for focus */
+    background: rgba(0, 0, 0, 0.5); 
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
 }
 
+/* * Modal Content Box:
+ * The actual dialog window. It adapts to the theme using CSS variables.
+ */
 .modal-content {
-	background: var(--card-bg); /* Variable para fondo de modal */
-	color: var(--text-color);
-	padding: 2rem;
-	border-radius: 12px;
-	max-width: 400px;
-	width: 90%;
-	position: relative;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 2rem;
+    border-radius: 12px;
+    
+    max-width: 400px;
+    width: 90%; /* Responsive width */
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* * Modal Close Button (X):
+ * Positioned in the top-right corner.
+ */
 .modal-close {
-	position: absolute;
-	top: 0.5rem;
-	right: 0.5rem;
-	border: none;
-	background: none;
-	font-size: 1.2rem;
-	cursor: pointer;
-	color: var(--text-color); /* La X se adapta al color de texto */
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    
+    color: var(--text-color); /* Adapts to light/dark mode automatically */
 }

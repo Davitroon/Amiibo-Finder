@@ -1,300 +1,324 @@
-/* Contenedor Principal */
+/* =========================================
+   1. MAIN CONTAINER & BASIC STATES
+   ========================================= */
+
+/* Main Card Container */
 .amiibo-card-container {
-	position: relative;
-	width: 100%;
-	height: 340px;
-	border-radius: 12px;
-	overflow: hidden;
-	cursor: pointer;
+    position: relative;
+    width: 100%;
+    height: 340px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
 
-	background-color: var(--card-bg);
-	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	border: 1px solid transparent;
+    /* Visual Styles */
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
 
-	/* CAMBIO: Añadido 'background-color' a la transición para el modo oscuro */
-	transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease,
-		background-color 0.3s ease;
+    /* Transitions for hover effects and theme switching */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease,
+        background-color 0.3s ease;
 }
 
-/* Para la tarjeta completa cuando se navega con teclado */
-.amiibo-card-container:focus-visible {
-	outline: 3px solid #007bff; /* Azul estándar de foco */
-	outline-offset: 4px;
-	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* Mismo efecto que hover */
-	transform: translateY(-5px); /* Mismo efecto que hover */
-}
-
-/* Para el botón de favorito */
-.favorite-btn:focus-visible {
-	outline: 3px solid #007bff;
-	outline-offset: 2px;
-	border-radius: 10px;
-	color: #888; /* Un poco más oscuro para que se vea */
-	/* transform: scale(1.2); */
-}
-
+/* Hover Effect: Lifts the card slightly */
 .amiibo-card-container:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
+/* Focus Visible: Accessibility style for keyboard navigation */
+.amiibo-card-container:focus-visible {
+    outline: 3px solid #007bff; /* Standard focus blue */
+    outline-offset: 4px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* Match hover effect */
+    transform: translateY(-5px); /* Match hover effect */
+}
+
+/* Dark Mode Adjustment for Border */
 body.dark-mode .amiibo-card-container {
-	border-color: #444;
+    border-color: #444;
 }
 
-/* ------------------------------------------------
-   CAPA 1: IMAGEN Y TEXTO FRONTAL
------------------------------------------------- */
+
+/* =========================================
+   2. LAYER 1: FRONT (Image & Summary)
+   ========================================= */
+
 .card-image-layer {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-	padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
 
-	background-color: var(--card-bg);
+    background-color: var(--card-bg);
 
-	/* CAMBIO: Añadido 'background-color' a la transición */
-	transition: transform 0.4s ease, filter 0.4s ease, background-color 0.3s ease;
+    height: 100%;
+    box-sizing: border-box;
 
-	height: 100%;
-	box-sizing: border-box;
+    /* Transitions for scaling effect when details open */
+    transition: transform 0.4s ease, filter 0.4s ease, background-color 0.3s ease;
 }
 
+/* Effect when details overlay is active (Blur background) */
+.amiibo-card-container.details-active .card-image-layer {
+    transform: scale(0.85);
+    filter: blur(3px) opacity(0.4);
+}
+
+/* Amiibo Image Styling */
 .card-image-layer img {
-	width: 146.672px;
-	height: 244.656px;
-	object-fit: contain;
-	filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.2));
-	transition: transform 0.3s ease;
+    width: 146.672px;
+    height: 244.656px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s ease;
 
-	/* --- NUEVO: Bloquear selección y arrastre --- */
-	user-select: none; /* Estándar: No permite seleccionar la imagen */
-	-webkit-user-select: none; /* Safari/Chrome antiguo */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE/Edge */
-	-webkit-user-drag: none;
+    /* Prevent user selection and dragging (UI Polish) */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
 }
 
-/* Texto en la cara principal */
+/* Summary Text Container (Front) */
 .card-front-info {
-	text-align: center;
-	width: 100%;
-	margin-top: 5px;
-	overflow: hidden;
+    text-align: center;
+    width: 100%;
+    margin-top: 5px;
+    overflow: hidden;
 }
 
 .card-front-info h4 {
-	margin: 0;
-	font-size: 0.9rem;
-	color: var(--text-color);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	/* CAMBIO: Transición suave de color de texto */
-	transition: color 0.3s ease;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
 }
 
 .card-front-info span {
-	display: block;
-	font-size: 0.75rem;
-	opacity: 0.6;
-	color: var(--text-color);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	/* CAMBIO: Transición suave de color de texto */
-	transition: color 0.3s ease;
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
 }
 
-.amiibo-card-container.details-active .card-image-layer {
-	transform: scale(0.85);
-	filter: blur(3px) opacity(0.4);
-}
 
-/* ------------------------------------------------
-   CAPA 2: INFORMACIÓN (Overlay)
------------------------------------------------- */
+/* =========================================
+   3. LAYER 2: BACK (Details Overlay)
+   ========================================= */
+
 .card-info-layer {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 
-	/* Fondo casi opaco */
-	background: rgba(255, 255, 255, 0.96);
+    /* Background: Almost opaque white/dark */
+    background: rgba(255, 255, 255, 0.96);
 
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.2rem;
 
-	transform: translateY(100%);
-	visibility: hidden;
-	opacity: 0;
+    /* Hidden State: Pushed down and invisible */
+    transform: translateY(100%);
+    visibility: hidden;
+    opacity: 0;
 
-	/* CAMBIO: Añadido background-color a la transición */
-	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-		background-color 0.3s ease, opacity 0.3s ease, visibility 0s linear 0.3s; /* Delay para visibility */
+    /* Complex transition: transform happens first, visibility delayed on close */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.3s ease, opacity 0.3s ease, visibility 0s linear 0.3s;
 }
 
+/* Dark Mode Background for Info Layer */
 body.dark-mode .card-info-layer {
-	background: rgba(40, 40, 40, 0.96);
+    background: rgba(40, 40, 40, 0.96);
 }
 
+/* Active State: Slide up and reveal */
 .amiibo-card-container.details-active .card-info-layer {
-	/* ESTADO ABIERTO: */
-	transform: translateY(0);
-	visibility: visible;
-	opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    opacity: 1;
 
-	/* Quitamos el delay para que aparezca inmediatamente */
-	transition-delay: 0s;
+    /* Remove delay so it appears immediately */
+    transition-delay: 0s;
 }
 
-/* ------------------------------------------------
-   ESTILO DEL CONTENIDO TRASERO
------------------------------------------------- */
+/* Content Layout */
 .info-content-top {
-	width: 100%;
+    width: 100%;
 }
 
+/* Detail Title (Amiibo Name) */
 .card-info-layer h3 {
-	margin: 0 0 8px 0;
-	font-size: 1.1rem;
-	color: #e60012;
-	text-align: center;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #e60012; /* Nintendo Red */
+    text-align: center;
 
-	white-space: normal;
-	overflow: visible;
-
-	line-height: 1.2;
-	word-wrap: break-word;
+    /* Allow wrapping for long names */
+    white-space: normal;
+    overflow: visible;
+    line-height: 1.2;
+    word-wrap: break-word;
 }
 
+/* Divider Line */
 .card-info-layer hr {
-	border: 0;
-	border-top: 1px solid var(--border-color);
-	margin-bottom: 12px;
-	/* Transición para el color de la línea */
-	transition: border-color 0.3s ease;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+    margin-bottom: 12px;
+    transition: border-color 0.3s ease;
 }
 
-/* CAMBIO: Rediseño completo de la fila de información */
+/* Info Data Row */
 .info-row {
-	display: flex;
-	flex-direction: column; /* Apilar en columna: Etiqueta arriba, Valor abajo */
-	align-items: flex-start; /* Alinear a la izquierda */
-	justify-content: center;
+    display: flex;
+    flex-direction: column; /* Label on top, value below */
+    align-items: flex-start;
+    justify-content: center;
 
-	margin-bottom: 8px;
-	padding-bottom: 4px;
-	font-size: 0.85rem;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    font-size: 0.85rem;
 
-	border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
-	/* Transición para el borde punteado */
-	transition: border-color 0.3s ease;
+    /* Dotted separator line */
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
 }
 
 body.dark-mode .info-row {
-	border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
+/* Data Label (e.g., "Series") */
 .label {
-	font-weight: bold;
-	opacity: 0.7;
-	font-size: 0.7rem;
-	text-transform: uppercase;
-	margin-bottom: 2px; /* Pequeño espacio entre etiqueta y valor */
-	/* Transición color */
-	transition: color 0.3s ease;
+    font-weight: bold;
+    opacity: 0.7;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    transition: color 0.3s ease;
 }
 
+/* Data Value */
 .value {
-	font-weight: 500;
-	text-align: left; /* Alineado a la izquierda */
-	width: 100%; /* Ocupa todo el ancho disponible */
+    font-weight: 500;
+    text-align: left;
+    width: 100%;
 
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-
-	/* Transición color */
-	transition: color 0.3s ease;
+    /* Truncate if too long */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
 }
 
 .value.highlight {
-	color: #4db5ff;
-	font-weight: bold;
+    color: #4db5ff; /* Highlight color for unlocked status */
+    font-weight: bold;
 }
 
+/* Hint text ("Tap to close") */
 .tap-hint {
-	display: block;
-	text-align: center;
-	font-size: 0.7rem;
-	opacity: 0.5;
-	font-style: italic;
-	margin-top: 5px;
-	transition: color 0.3s ease;
+    display: block;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.5;
+    font-style: italic;
+    margin-top: 5px;
+    transition: color 0.3s ease;
 }
 
-/* NUEVO: Botón de Favorito (Marcador) */
-.favorite-btn {
-	position: absolute;
-	top: 5px;
-	right: 5px; /* Ajustado para que quede en la esquina derecha */
-	background: none;
-	border: none;
-	font-size: 1.8rem;
-	color: #767676;
-	cursor: pointer;
-	z-index: 10; /* Por encima de la imagen */
-	transition: transform 0.2s ease, color 0.3s ease;
-	padding: 0;
 
-	/* Sombra suave para que se vea sobre fondos blancos */
-	filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+/* =========================================
+   4. FAVORITE BUTTON (Bookmark)
+   ========================================= */
+
+.favorite-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #767676; /* Default gray */
+    
+    cursor: pointer;
+    z-index: 10; /* Ensure it stays on top of images */
+    padding: 0;
+
+    transition: transform 0.2s ease, color 0.3s ease;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
 }
 
 .favorite-btn:hover {
-	transform: scale(1.2);
-	color: #aaa;
+    transform: scale(1.2);
+    color: #aaa;
 }
 
-/* Estado activo (Favorito marcado) */
+/* Focus Visible for Accessibility */
+.favorite-btn:focus-visible {
+    outline: 3px solid #007bff;
+    outline-offset: 2px;
+    border-radius: 10px;
+    color: #888;
+}
+
+/* Active State (Is Favorite) */
 .favorite-btn.active {
-	color: #e60012; /* Rojo Nintendo o Gold (#FFD700) si prefieres */
+    color: #e60012; /* Nintendo Red */
 }
 
-/* Asegura que el botón se vea bien en modo oscuro */
+/* Dark Mode Adjustments */
 body.dark-mode .favorite-btn {
-	color: #aaa;
+    color: #aaa;
 }
+
 body.dark-mode .favorite-btn.active {
-	color: #ff4d4d; /* Un rojo más brillante para fondo oscuro */
+    color: #ff4d4d; /* Brighter red for dark backgrounds */
 }
+
+
+/* =========================================
+   5. ACCESSIBILITY: REDUCED MOTION
+   ========================================= */
 
 @media (prefers-reduced-motion: reduce) {
-	.amiibo-card-container,
-	.card-image-layer,
-	.card-info-layer,
-	.favorite-btn,
-	.card-front-info h4,
-	.card-front-info span {
-		transition: none !important;
-		transform: none !important;
-		animation: none !important;
-	}
+    .amiibo-card-container,
+    .card-image-layer,
+    .card-info-layer,
+    .favorite-btn,
+    .card-front-info h4,
+    .card-front-info span {
+        transition: none !important;
+        transform: none !important;
+        animation: none !important;
+    }
 
-	/* En lugar de animar movimiento, usamos opacidad simple */
-	.amiibo-card-container:hover {
-		transform: none;
-		box-shadow: none; /* O una sombra sutil fija */
-	}
+    /* Disable hover movement */
+    .amiibo-card-container:hover {
+        transform: none;
+        box-shadow: none; 
+    }
 
-	.amiibo-card-container.details-active .card-info-layer {
-		transform: none; /* Simplemente aparece encima */
-	}
+    /* Instant appearance for details instead of sliding */
+    .amiibo-card-container.details-active .card-info-layer {
+        transform: none; 
+    }
 }
