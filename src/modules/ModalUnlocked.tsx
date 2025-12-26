@@ -1,38 +1,54 @@
 import React, { useEffect, useRef } from "react";
-import { createPortal } from "react-dom"; // <--- 1. Importar Portal
+import { createPortal } from "react-dom"; // Essential for rendering outside the current DOM hierarchy
 import "../styles/modal.css";
 import "../styles/modal-unlock.css";
 
+/**
+ * Props definition for the ModalUnlocked component.
+ */
 interface Props {
+    /** Controls the visibility of the modal. */
     isOpen: boolean;
+    /** Callback function to close the modal. */
     onClose: () => void;
+    /** The Amiibo data to display in the modal. */
     amiibo: any | null;
 }
 
+/**
+ * A modal component that displays the newly unlocked Amiibo.
+ * * Accessibility Features:
+ * - Uses `createPortal` to render at the document body level.
+ * - Implements a "Focus Trap" to keep keyboard navigation inside the modal.
+ * - Locks body scroll when open.
+ * - Closes on 'Escape' key press.
+ * - Manages initial focus on the close button.
+ */
 const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
-    // Referencias
+    // Refs for focus management
     const modalRef = useRef<HTMLDivElement>(null);
     const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-    // Efecto: Foco, Scroll Lock y Teclado
+    // Effect: Handle Body Scroll Lock, Initial Focus, and Keyboard Events
     useEffect(() => {
         if (isOpen) {
-            // 2. Bloquear Scroll del fondo
+            // 1. Lock body scroll to prevent background scrolling
             document.body.style.overflow = "hidden";
             
-            // 3. Foco inicial (con pequeño delay para asegurar renderizado)
+            // 2. Set initial focus to the close button (with a small delay for rendering)
             setTimeout(() => {
                 closeBtnRef.current?.focus();
             }, 50);
 
             const handleKeyDown = (e: KeyboardEvent) => {
-                // Cerrar con ESC
+                // Close on Escape key
                 if (e.key === "Escape") {
                     onClose();
                     return;
                 }
 
-                // 4. TRAMPA DE FOCO (Focus Trap)
+                // 3. FOCUS TRAP LOGIC
+                // If Tab is pressed, ensure focus remains strictly within the modal
                 if (e.key === "Tab" && modalRef.current) {
                     const focusableElements = modalRef.current.querySelectorAll(
                         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -43,14 +59,14 @@ const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
                     const firstElement = focusableElements[0] as HTMLElement;
                     const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-                    // Si Shift + Tab (hacia atrás)
+                    // Shift + Tab (Moving backwards)
                     if (e.shiftKey) {
                         if (document.activeElement === firstElement) {
                             e.preventDefault();
                             lastElement.focus();
                         }
                     } 
-                    // Si Tab normal (hacia adelante)
+                    // Tab (Moving forwards)
                     else {
                         if (document.activeElement === lastElement) {
                             e.preventDefault();
@@ -62,9 +78,9 @@ const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
 
             document.addEventListener("keydown", handleKeyDown);
             
-            // Limpieza al cerrar
+            // Cleanup: Restore scroll and remove listeners
             return () => {
-                document.body.style.overflow = "auto"; // Restaurar scroll
+                document.body.style.overflow = "auto";
                 document.removeEventListener("keydown", handleKeyDown);
             };
         }
@@ -72,15 +88,16 @@ const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
 
     if (!isOpen || !amiibo) return null;
 
-    // Contenido del modal
+    // Modal UI Content
     const modalContent = (
         <div 
             className={`modal-overlay ${isOpen ? "show" : ""}`}
             onClick={onClose}
-            style={{ zIndex: 9999 }} // Asegurar que esté encima de todo
+            // High Z-Index to ensure it sits on top of everything
+            style={{ zIndex: 9999 }} 
         >
             <div 
-                ref={modalRef} // Referencia para buscar elementos focusables
+                ref={modalRef} // Ref needed for the Focus Trap
                 className="modal-box unlock-content"
                 role="dialog"
                 aria-modal="true"
@@ -88,12 +105,12 @@ const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <button 
-                    ref={closeBtnRef} // Referencia para foco inicial
+                    ref={closeBtnRef} // Ref for initial focus
                     className="unlock-close-btn" 
                     onClick={onClose}
                     aria-label="Close modal"
                     type="button"
-                    // Estilos inline para asegurar reset, o muévelos a tu CSS
+                    // Inline styles to reset default button appearance (or move to CSS)
                     style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.5rem'}} 
                 >
                     &times;
@@ -101,7 +118,7 @@ const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
 
                 <h3 className="unlock-subtitle">You unlocked...</h3>
 
-                {/* aria-hidden en la imagen porque es redundante con el texto de abajo */}
+                {/* aria-hidden="true" because the image is redundant with the text below */}
                 <img id="modal-img" src={amiibo.image} alt="" aria-hidden="true" />
 
                 <h2 id="unlock-title" className="unlock-name">{amiibo.name}!</h2>
@@ -111,7 +128,7 @@ const ModalUnlocked: React.FC<Props> = ({ isOpen, onClose, amiibo }) => {
         </div>
     );
 
-    // 5. Usar Portal al final del body
+    // 4. Render using a Portal attached to document.body
     return createPortal(modalContent, document.body);
 };
 

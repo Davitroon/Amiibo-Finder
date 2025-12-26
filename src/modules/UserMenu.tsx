@@ -9,25 +9,33 @@ import {
 import DeleteCollectionModal from "./DeleteModal";
 import { useToast } from "../context/ToastContext";
 
+/**
+ * UserMenu Component.
+ * Handles the User Interface (Menus, Clicks, Toasts).
+ * Delegates heavy data logic to AmiiboContext.
+ */
 const UserMenu = () => {
-	// Solo este componente necesita acceder a los datos de los Amiibos
-	const { userAmiibos, importData, clearStorage } = useAmiibo();
+	// Access data logic methods from Context
+	const { userAmiibos, exportCollection, importFromFile, clearStorage } =
+		useAmiibo();
 	const { showToast } = useToast();
 
-	// Estados
+	// Local UI State
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-	// Referencia para el input oculto
+	// Refs for Focus Management
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-	// Cerrar menú al hacer clic fuera
+	/**
+	 * Effect: Closes menu on 'Escape' or Click Outside.
+	 */
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape" && isMenuOpen) {
 				setIsMenuOpen(false);
-				menuButtonRef.current?.focus(); // Devolver foco al botón al cerrar
+				menuButtonRef.current?.focus(); // Restore focus to trigger
 			}
 		};
 
@@ -39,75 +47,75 @@ const UserMenu = () => {
 		};
 
 		document.addEventListener("mousedown", handleClickOutside);
-		document.addEventListener("keydown", handleKeyDown); // Escuchar teclado
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener("keydown", handleKeyDown);
+		};
 	}, [isMenuOpen]);
 
-	// --- FUNCIONES DE LÓGICA (Movidas desde Header) ---
-
-	const handleExport = () => {
+	/**
+	 * Handles the Export button click.
+	 * Calls logic -> Shows feedback.
+	 */
+	const onExportClick = () => {
 		if (userAmiibos.length === 0) {
 			showToast("⚠️ No data to export!");
 			return;
 		}
-		const dataStr = JSON.stringify(userAmiibos, null, 2);
-		const blob = new Blob([dataStr], { type: "application/json" });
-		const url = URL.createObjectURL(blob);
 
-		const link = document.createElement("a");
-		link.href = url;
-		link.download = `amiibo-collection-${new Date()
-			.toISOString()
-			.slice(0, 10)}.json`;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-		showToast("✅ Collection exported successfully!");
-		setIsMenuOpen(false);
+		const success = exportCollection();
+		if (success) {
+			showToast("✅ Collection exported successfully!");
+			setIsMenuOpen(false);
+		}
 	};
 
-	const triggerImport = () => {
+	/**
+	 * Triggers the hidden file input.
+	 */
+	const onImportClick = () => {
 		fileInputRef.current?.click();
 	};
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	/**
+	 * Handles file selection.
+	 * Calls async logic -> Waits for result -> Shows feedback.
+	 */
+	const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			try {
-				const json = JSON.parse(event.target?.result as string);
-				if (Array.isArray(json)) {
-					importData(json);
-					showToast("✅ Collection imported successfully!");
-				} else {
-					showToast("❌ Invalid file format.");
-				}
-			} catch (error) {
-				console.error(error);
-				showToast("❌ Error reading file.");
-			}
-		};
-		reader.readAsText(file);
+		const success = await importFromFile(file);
+
+		if (success) {
+			showToast("✅ Collection imported successfully!");
+		} else {
+			showToast("❌ Error importing file. Check format.");
+		}
+
 		setIsMenuOpen(false);
-		e.target.value = "";
+		e.target.value = ""; // Reset input
 	};
 
-	const handleConfirmDelete = () => {
+	/**
+	 * Finalizes the deletion process after Modal confirmation.
+	 */
+	const onConfirmDelete = () => {
 		clearStorage();
 		setShowDeleteConfirm(false);
-		setIsMenuOpen(false); // Cerramos menú también
+		setIsMenuOpen(false);
 		showToast("🗑️ Collection deleted.");
-		// Importante: Devolver foco al botón principal tras la acción
+
+		// Return focus to the main menu button
 		menuButtonRef.current?.focus();
 	};
 
-	// Cuando el modal de borrar se cierra (por Cancelar), queremos que el foco
-	// vuelva al menú si sigue abierto, o al botón principal si se cerró.
+	// Ensure focus is returned if the delete modal is cancelled
 	useEffect(() => {
-		if (!showDeleteConfirm && isMenuOpen) {
-			// Opcional: devolver foco a un elemento dentro del menú
-		} 
+		if (!showDeleteConfirm && !isMenuOpen) {
+			menuButtonRef.current?.focus();
+		}
 	}, [showDeleteConfirm, isMenuOpen]);
 
 	return (
@@ -116,29 +124,26 @@ const UserMenu = () => {
 				ref={menuButtonRef}
 				className={`icon-btn ${isMenuOpen ? "active" : ""}`}
 				onClick={() => setIsMenuOpen(!isMenuOpen)}
-				// --- ACCESIBILIDAD ---
-				aria-label="User data options menu" // Etiqueta para lector de pantalla
-				title="User data options" // Tooltip visual
-				aria-haspopup="true" // Indica que abre un menú
-				aria-expanded={isMenuOpen} // Dice si está abierto o cerrado
-				aria-controls="user-dropdown" // Vincula con el ID del menú
+				aria-label="User data options menu"
+				title="User data options"
+				aria-haspopup="true"
+				aria-expanded={isMenuOpen}
+				aria-controls="user-dropdown"
 			>
-				<IoPerson aria-hidden="true" />{" "}
-				{/* Ocultar icono decorativo al lector */}
+				<IoPerson aria-hidden="true" />
 			</button>
 
-			{/* Menú Desplegable */}
 			{isMenuOpen && (
 				<div
 					id="user-dropdown"
 					className="dropdown-menu"
-					role="menu" // Semántica de menú
+					role="menu"
 					aria-label="User options"
 				>
 					<button
 						className="dropdown-item"
-						onClick={handleExport}
-						role="menuitem" // Semántica de ítem
+						onClick={onExportClick}
+						role="menuitem"
 					>
 						<IoCloudDownload aria-hidden="true" />
 						<span>Export data</span>
@@ -146,20 +151,21 @@ const UserMenu = () => {
 
 					<button
 						className="dropdown-item"
-						onClick={triggerImport}
+						onClick={onImportClick}
 						role="menuitem"
 					>
 						<IoCloudUpload aria-hidden="true" />
 						<span>Import data</span>
 					</button>
 
+					{/* Hidden Input for Import */}
 					<input
 						type="file"
 						ref={fileInputRef}
 						style={{ display: "none" }}
 						accept=".json"
-						onChange={handleFileChange}
-						aria-hidden="true" // Oculto porque usamos el botón trigger
+						onChange={onFileSelected}
+						aria-hidden="true"
 						tabIndex={-1}
 					/>
 
@@ -169,7 +175,7 @@ const UserMenu = () => {
 						className="dropdown-item danger"
 						onClick={() => {
 							setShowDeleteConfirm(true);
-							setIsMenuOpen(false); // <--- AÑADIR ESTO
+							setIsMenuOpen(false); // Close menu immediately
 						}}
 						role="menuitem"
 					>
@@ -182,7 +188,7 @@ const UserMenu = () => {
 			{showDeleteConfirm && (
 				<DeleteCollectionModal
 					setShowDeleteConfirm={setShowDeleteConfirm}
-					handleConfirmDelete={handleConfirmDelete}
+					handleConfirmDelete={onConfirmDelete}
 				/>
 			)}
 		</div>

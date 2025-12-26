@@ -4,13 +4,24 @@ import { IoBookmark } from "react-icons/io5";
 import "../styles/amiibo-card.css";
 
 interface Props {
+	/** The Amiibo data object containing name, image, series, and status. */
 	amiibo: any;
 }
 
+/**
+ * Interactive card component representing a single Amiibo.
+ * Features:
+ * - Click/Enter to toggle details (flip effect).
+ * - Separate favorite button with event bubbling prevention.
+ * - ARIA attributes for full screen reader accessibility.
+ */
 const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
 	const { toggleFavorite } = useAmiibo();
 	const [showDetails, setShowDetails] = useState(false);
 
+	/**
+	 * Helper to determine the release date string based on region availability.
+	 */
 	const getReleaseDate = () => {
 		if (!amiibo.release) return "N/A";
 		return (
@@ -18,6 +29,10 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
 		);
 	};
 
+	/**
+	 * Handles the favorite toggle action.
+	 * Stops propagation to prevent the card from flipping when clicking the heart.
+	 */
 	const handleFavorite = (e: React.MouseEvent) => {
 		e.stopPropagation();
 		toggleFavorite(amiibo.head);
@@ -31,10 +46,10 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
 		<div
 			className={`amiibo-card-container ${showDetails ? "details-active" : ""}`}
 			onClick={() => setShowDetails(!showDetails)}
-			title={showDetails ? `Close details` : `See details for ${amiibo.name}`} // Título actualizado
+			title={showDetails ? `Close details` : `See details for ${amiibo.name}`}
 			tabIndex={0}
 			role="button"
-			// Usamos aria-expanded para indicar que esto despliega info
+			// Indicates to screen readers if the "expandable" content is currently visible
 			aria-expanded={showDetails}
 			onKeyDown={(e) => {
 				if (e.key === "Enter" || e.key === " ") {
@@ -43,35 +58,36 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
 				}
 			}}
 		>
+			{/* Favorite Button
+              Placed here visually but logic ensures it doesn't trigger the parent click.
+            */}
+
 			<button
 				className={`favorite-btn ${amiibo.isFavorite ? "active" : ""}`}
 				onClick={handleFavorite}
-				onKeyDown={(e) => e.stopPropagation()} // Tu fix anterior
+				onKeyDown={(e) => e.stopPropagation()} // Prevents "Enter" from bubbling up and flipping the card
 				aria-label={favoriteLabel}
 				title={favoriteLabel}
 			>
 				<IoBookmark />
 			</button>
 
-			{/* --- CAPA DE IMAGEN (FRONTAL) --- */}
-			{/* ACCESIBILIDAD:
-          Si los detalles están abiertos (showDetails = true), ocultamos la cara frontal 
-          al lector de pantalla con aria-hidden={true}.
-      */}
+			{/* --- FRONT LAYER (IMAGE) --- */}
+			{/* Accessibility: When details are shown, hide this layer from screen readers
+               to prevent reading overlapping content.
+            */}
 			<div className="card-image-layer" aria-hidden={showDetails}>
 				<img src={amiibo.image} alt="" />{" "}
-				{/* alt vacío es mejor si el nombre está abajo */}
+				{/* Empty alt because the name is rendered immediately below as text */}
 				<div className="card-front-info">
 					<h4>{amiibo.name}</h4>
 					<span>{amiibo.gameSeries}</span>
 				</div>
 			</div>
 
-			{/* --- CAPA DE DETALLES (TRASERA) --- */}
-			{/* ACCESIBILIDAD:
-          Si los detalles NO están abiertos (!showDetails), ocultamos esta capa 
-          al lector de pantalla.
-      */}
+			{/* --- BACK LAYER (DETAILS) --- */}
+			{/* Accessibility: When details are closed, hide this layer from screen readers.
+			 */}
 			<div className="card-info-layer" aria-hidden={!showDetails}>
 				<div className="info-content-top">
 					<h3>{amiibo.name}</h3>
@@ -95,7 +111,7 @@ const AmiiboCard: React.FC<Props> = ({ amiibo }) => {
 					</div>
 				</div>
 
-				{/* aria-hidden aquí porque es una pista visual solo */}
+				{/* Hidden from screen readers as it is a visual-only hint */}
 				<small className="tap-hint" aria-hidden="true">
 					Tap to close
 				</small>
