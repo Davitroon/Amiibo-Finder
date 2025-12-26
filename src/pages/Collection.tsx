@@ -7,10 +7,15 @@ import Filters from "../modules/Filters";
 import { IoFilter } from "react-icons/io5";
 import "../styles/collection.css";
 
+/**
+ * Main Collection Page Component.
+ * Displays the user's Amiibo collection with filtering and sorting capabilities.
+ */
 const Collection = () => {
-    // 1. Datos Globales
-    const { userAmiibos } = useAmiibo(); // Ya no necesitamos clearStorage aquí
+    // 1. Global Data Access
+    const { userAmiibos } = useAmiibo();
     
+    // 2. Filter Context Access
     const { 
         filters, 
         setFilters, 
@@ -19,35 +24,36 @@ const Collection = () => {
         toggleFilterPanel 
     } = useFilter();
 
-    // 2. Lógica de Filtrado
+    // 3. Filtering Logic Hook
     const { filteredAmiibos, uniqueSeries } = useFilteredCollection(
         userAmiibos,
         filters
     );
-
-    // NOTA: Hemos eliminado el estado 'showDeleteConfirm' y el 'handleConfirmDelete'
-    // porque esa funcionalidad se ha movido al Header.
 
     return (
         <>
             <h2>My Collection</h2>
             <hr />
 
+            {/* Collection Controls Header */}
             <div className="collection-header">
                 <button
                     className={`filter-toggle-btn ${isFilterPanelOpen ? "active" : ""}`}
                     onClick={toggleFilterPanel}
+                    aria-expanded={isFilterPanelOpen}
+                    aria-controls="filter-panel"
                 >
-                    <IoFilter style={{ marginRight: "5px" }} />
+                    <IoFilter style={{ marginRight: "5px" }} aria-hidden="true" />
                     {isFilterPanelOpen ? "Hide Filters" : "Filters"}
                 </button>
 
-                <span className="results-count">
+                <span className="results-count" role="status">
                     Showing <strong>{filteredAmiibos.length}</strong> of{" "}
                     {userAmiibos.length} Amiibos
                 </span>
             </div>
 
+            {/* Filter Panel Component */}
             <Filters
                 isOpen={isFilterPanelOpen}
                 filters={filters}
@@ -67,21 +73,17 @@ const Collection = () => {
                                     <p>No amiibos found matching your filters.</p>
                                 </div>
                             )}
-                            
-                            {/* AQUÍ ANTES ESTABA EL BOTÓN DELETE. LO HEMOS ELIMINADO. */}
                         </>
                     ) : (
                         <div className="empty-content">
                              <p className="empty-title">Your collection is empty</p>
                              <p className="empty-subtitle">
                                 Go to the Unlock page to get your first Amiibo!
-                            </p>
+                             </p>
                         </div>
                     )}
                 </div>
             </section>
-            
-            {/* EL MODAL TAMBIÉN SE HA MOVIDO AL HEADER */}
         </>
     );
 };
