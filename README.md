@@ -68,6 +68,8 @@ npm run dev
 ## 🕹️ How to Play
 1. **Unlock Page**: Navigate to the "Unlock" tab. If the box is glowing and bouncing, click it to reveal a new Amiibo.
 
+![Unlock Showcase](/src/assets/docs/unlock-showcase.gif)
+
 2. **The Wait**: Once unlocked, a timer starts (2 hours). You can leave the app; it will remember your time.
 
 3. **Collection**: Go to the "Collection" tab to view what you have earned.
@@ -75,6 +77,8 @@ npm run dev
     - Click the Heart icon to favorite an Amiibo.
 
     - Use the Filter button to search for specific characters or Game Series (e.g., "Zelda", "Mario").
+
+![Collection Showcase](/src/assets/docs/collection-showcase.gif)
 
 4. **Settings**: Use the User Menu to toggle Dark Mode or Export your save data.
 
@@ -104,19 +108,16 @@ Business logic is extracted into reusable hooks:
 ---
 
 ## 🧠 Technologies
-Core: React 19, TypeScript
+| Technology | Description |
+|------------|-------------|
+| ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white) | A JavaScript library for building user interfaces using components. |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-4.9-3178C6?logo=typescript&logoColor=white) | Adds static typing to JavaScript for safer and more maintainable code. |
+| ![Vite](https://img.shields.io/badge/Vite-BuildTool-646CFF?logo=vite&logoColor=white) | Fast frontend build tool and development server. |
+| ![React Router DOM](https://img.shields.io/badge/React%20Router%20DOM-v7-CA4245?logo=react&logoColor=white) | Handles routing and navigation in React applications. |
+| ![Vanilla CSS](https://img.shields.io/badge/Vanilla%20CSS-Styling-1572B6?logo=css3&logoColor=white) | Standard CSS for styling components without frameworks. |
+| ![React Icons](https://img.shields.io/badge/React%20Icons-Icons-61DAFB?logo=react&logoColor=white) | Provides a collection of popular icon packs as React components. |
+| ![React Confetti](https://img.shields.io/badge/React%20Confetti-Effects-61DAFB?logo=react&logoColor=white) | Adds confetti effects and animations in React apps. |
 
-Build Tool: Vite
-
-Routing: React Router DOM v7
-
-Styling: CSS Modules / Vanilla CSS
-
-Icons: React Icons
-
-Effects: React Confetti
-
-Linting: ESLint + TypeScript-ESLint
 
 ---
 
