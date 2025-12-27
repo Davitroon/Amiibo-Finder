@@ -1,21 +1,25 @@
 <h1 align="center">Amiibo Finder</h1>
 
-<p align="center">
-{Short description here}
+<p align="center" style="font-style: italic">
+Unlock, collect, and manage your favorite Nintendo figures in this Gacha-style Amiibo discovery experience.
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/HTML5-Structure-E34F26?logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/CSS3-Styling-1572B6?logo=css3&logoColor=white" alt="CSS3" />
-  <img src="https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript" />
-</p>
+<div align="center">
+
+<img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
+
+<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
+
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+
+</div>
 
 ---
 
 ## 📚 Table of Contents
 - [📝 Description](#-description "Learn more about the game's concept and purpose")
 - [⚙️ Installation](#️-installation "Instructions to install and run the project locally")
-- [🕹️ How to Play](#-how-to-play "Step-by-step guide on how to play the game")
+- [🕹️ How to Play](#%EF%B8%8F-how-to-play "Step-by-step guide on how to play the game")
 - [🔧 Game Architecture](#-game-architecture "Understand the structure and logic behind the game")
 - [🧠 Technologies](#-technologies "See which technologies were used to build the project")
 - [🔗 API](#-api "Information about the Truth or Dare API used in this project")
