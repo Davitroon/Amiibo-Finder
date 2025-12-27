@@ -1,7 +1,7 @@
 <h1 align="center">Amiibo Finder</h1>
 
-<p align="center" style="font-style: italic">
-Unlock, collect, and manage your favorite Nintendo figures in this Gacha-style Amiibo discovery experience.
+<p align="center">
+<em>Unlock, collect, and manage your favorite Nintendo figures in this Gacha-style Amiibo discovery experience.</em>
 </p>
 
 <div align="center">
