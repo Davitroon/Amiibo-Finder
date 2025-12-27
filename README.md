@@ -1,73 +1,131 @@
-# React + TypeScript + Vite
+<h1 align="center">Amiibo Finder</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">
+<em>Unlock, collect, and manage your favorite Nintendo figures in this Gacha-style Amiibo discovery experience.</em>
+</p>
 
-Currently, two official plugins are available:
+<div align="center">
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
 
-## React Compiler
+<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 
-## Expanding the ESLint configuration
+</div>
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📚 Table of Contents
+- [📝 Description](#-description "Learn more about the game's concept and purpose")
+- [⚙️ Installation](#️-installation "Instructions to install and run the project locally")
+- [🕹️ How to Play](#%EF%B8%8F-how-to-play "Step-by-step guide on how to play the game")
+- [🔧 Game Architecture](#-game-architecture "Understand the structure and logic behind the game")
+- [🧠 Technologies](#-technologies "See which technologies were used to build the project")
+- [🔗 API](#-api "Information about the Truth or Dare API used in this project")
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📝 Description
+The core purpose of this application is to simulate the excitement of collecting. Users cannot simply view all Amiibos at once; they must "unlock" them. 
+
+The application persists data locally, allowing users to keep their collection across sessions.
+
+**Key Features**:
+
+- **Gacha System**: Open a mystery gift box to receive a random Amiibo.
+
+- **Cooldown Mechanic**: After opening a gift, a 2-hour timer prevents further unlocks, adding a real-time element to the game.
+
+- **Browser Notifications**: Alerts the user when their cooldown is over and a new gift is ready.
+
+- **Collection Management**: Filter your collection by game series, search by name, or sort by date/favorites.
+
+- **Data Persistence**: Uses localStorage to save the collection and timer state.
+
+- **Import/Export**: Users can backup their collection to a JSON file and restore it later.
+
+- **Theming**: Fully supported Dark/Light mode.
+
+---
+
+## ⚙️ Installation
+To run this project locally, ensure you have Node.js installed and run the following commands.
+
+
+```bash
+git clone https://github.com/your-username/amiibo-finder.git
+
+cd amiibo-finder
+
+npm install
+
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🕹️ How to Play
+1. **Unlock Page**: Navigate to the "Unlock" tab. If the box is glowing and bouncing, click it to reveal a new Amiibo.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+![Unlock Showcase](/src/assets/docs/unlock-showcase.gif)
+
+2. **The Wait**: Once unlocked, a timer starts (2 hours). You can leave the app; it will remember your time.
+
+3. **Collection**: Go to the "Collection" tab to view what you have earned.
+
+    - Click the Heart icon to favorite an Amiibo.
+
+    - Use the Filter button to search for specific characters or Game Series (e.g., "Zelda", "Mario").
+
+![Collection Showcase](/src/assets/docs/collection-showcase.gif)
+
+4. **Settings**: Use the User Menu to toggle Dark Mode or Export your save data.
+
+---
+
+## 🔧 Game Architecture
+The application is structured to separate Business Logic from UI Components. It heavily relies on the Context API to avoid prop-drilling and manage global state.
+
+### Provider Hierarchy
+The `App.tsx` composes several providers to ensure data is available throughout the tree:
+
+- `ThemeProvider`: Manages visual style (Light/Dark).
+
+- `AmiiboProvider`: The core "database." Handles the list of owned Amiibos, storage persistence, and Import/Export logic.
+
+- `FilterProvider`: Manages the complex state of search inputs, sorting criteria, and active filters.
+
+- `ToastProvider`: A global notification system for user feedback.
+
+### Custom Hooks (`/src/logic`)
+Business logic is extracted into reusable hooks:
+
+- `useUnlockLogic`: Handles the countdown timer, the randomization algorithm to ensure you don't get duplicates easily, and API pre-fetching.
+
+- `useFilteredCollection`: Efficiently filters and sorts the user's collection using useMemo to prevent unnecessary re-renders during search.
+
+---
+
+## 🧠 Technologies
+| Technology | Description |
+|------------|-------------|
+| ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white) | A JavaScript library for building user interfaces using components. |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-4.9-3178C6?logo=typescript&logoColor=white) | Adds static typing to JavaScript for safer and more maintainable code. |
+| ![Vite](https://img.shields.io/badge/Vite-BuildTool-646CFF?logo=vite&logoColor=white) | Fast frontend build tool and development server. |
+| ![React Router DOM](https://img.shields.io/badge/React%20Router%20DOM-v7-CA4245?logo=react&logoColor=white) | Handles routing and navigation in React applications. |
+| ![Vanilla CSS](https://img.shields.io/badge/Vanilla%20CSS-Styling-1572B6?logo=css3&logoColor=white) | Standard CSS for styling components without frameworks. |
+| ![React Icons](https://img.shields.io/badge/React%20Icons-Icons-61DAFB?logo=react&logoColor=white) | Provides a collection of popular icon packs as React components. |
+| ![React Confetti](https://img.shields.io/badge/React%20Confetti-Effects-61DAFB?logo=react&logoColor=white) | Adds confetti effects and animations in React apps. |
+
+
+---
+
+## 🔗 API
+This project relies on the external AmiiboAPI to fetch figure data.
+
+- Documentation: https://amiiboapi.com/
+
+- Endpoint Used: `GET /api/amiibo/?type=figure`
+
+The app implements a caching strategy (in `utils.ts`) to download the full Amiibo database only once and store it locally, minimizing network requests and respecting the API's bandwidth.
