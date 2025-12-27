@@ -1,86 +1,105 @@
-Amiibo Finder
-Amiibo Finder is a gamified React application that allows users to build their own collection of Nintendo Amiibo figures. Unlike a standard database viewer, this project implements a "Gacha" (mystery gift) mechanic, requiring users to unlock figures over time, making the collection process interactive and rewarding.
+<h1 align="center">Amiibo Finder</h1>
 
-It is built with React 19, TypeScript, and Vite, utilizing a robust architecture based on Global Contexts for state management.
+<p align="center">
+{Short description here}
+</p>
 
-📝 Description
-The core purpose of this application is to simulate the excitement of collecting. Users cannot simply view all Amiibos at once; they must "unlock" them. The application persists data locally, allowing users to keep their collection across sessions.
+<p align="center">
+  <img src="https://img.shields.io/badge/HTML5-Structure-E34F26?logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/CSS3-Styling-1572B6?logo=css3&logoColor=white" alt="CSS3" />
+  <img src="https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript" />
+</p>
 
-Key Features:
+---
 
-Gacha System: Open a mystery gift box to receive a random Amiibo.
+## 📚 Table of Contents
+- [📝 Description](#-description "Learn more about the game's concept and purpose")
+- [⚙️ Installation](#️-installation "Instructions to install and run the project locally")
+- [🕹️ How to Play](#-how-to-play "Step-by-step guide on how to play the game")
+- [🔧 Game Architecture](#-game-architecture "Understand the structure and logic behind the game")
+- [🧠 Technologies](#-technologies "See which technologies were used to build the project")
+- [🔗 API](#-api "Information about the Truth or Dare API used in this project")
 
-Cooldown Mechanic: After opening a gift, a 2-hour timer prevents further unlocks, adding a real-time element to the game.
+---
 
-Browser Notifications: Alerts the user when their cooldown is over and a new gift is ready.
+## 📝 Description
+The core purpose of this application is to simulate the excitement of collecting. Users cannot simply view all Amiibos at once; they must "unlock" them. 
 
-Collection Management: Filter your collection by game series, search by name, or sort by date/favorites.
+The application persists data locally, allowing users to keep their collection across sessions.
 
-Data Persistence: Uses localStorage to save the collection and timer state.
+**Key Features**:
 
-Import/Export: Users can backup their collection to a JSON file and restore it later.
+- **Gacha System**: Open a mystery gift box to receive a random Amiibo.
 
-Theming: Fully supported Dark/Light mode.
+- **Cooldown Mechanic**: After opening a gift, a 2-hour timer prevents further unlocks, adding a real-time element to the game.
 
-⚙️ Installation
-To run this project locally, ensure you have Node.js installed.
+- **Browser Notifications**: Alerts the user when their cooldown is over and a new gift is ready.
 
-Clone the repository
+- **Collection Management**: Filter your collection by game series, search by name, or sort by date/favorites.
 
-Bash
+- **Data Persistence**: Uses localStorage to save the collection and timer state.
 
+- **Import/Export**: Users can backup their collection to a JSON file and restore it later.
+
+- **Theming**: Fully supported Dark/Light mode.
+
+---
+
+## ⚙️ Installation
+To run this project locally, ensure you have Node.js installed and run the following commands.
+
+
+```bash
 git clone https://github.com/your-username/amiibo-finder.git
-cd amiibo-finder
-Install dependencies
 
-Bash
+cd amiibo-finder
 
 npm install
-Run the development server
-
-Bash
 
 npm run dev
-Build for production
+```
 
-Bash
+---
 
-npm run build
-🕹️ How to Play
-Unlock Page: Navigate to the "Unlock" tab. If the box is glowing and bouncing, click it to reveal a new Amiibo.
+## 🕹️ How to Play
+1. **Unlock Page**: Navigate to the "Unlock" tab. If the box is glowing and bouncing, click it to reveal a new Amiibo.
 
-The Wait: Once unlocked, a timer starts (2 hours). You can leave the app; it will remember your time.
+2. **The Wait**: Once unlocked, a timer starts (2 hours). You can leave the app; it will remember your time.
 
-Collection: Go to the "Collection" tab to view what you have earned.
+3. **Collection**: Go to the "Collection" tab to view what you have earned.
 
-Click the Heart icon to favorite an Amiibo.
+    - Click the Heart icon to favorite an Amiibo.
 
-Use the Filter button to search for specific characters or Game Series (e.g., "Zelda", "Mario").
+    - Use the Filter button to search for specific characters or Game Series (e.g., "Zelda", "Mario").
 
-Settings: Use the User Menu to toggle Dark Mode or Export your save data.
+4. **Settings**: Use the User Menu to toggle Dark Mode or Export your save data.
 
-🔧 Game Architecture
+---
+
+## 🔧 Game Architecture
 The application is structured to separate Business Logic from UI Components. It heavily relies on the Context API to avoid prop-drilling and manage global state.
 
-Provider Hierarchy
-The App.tsx composes several providers to ensure data is available throughout the tree:
+### Provider Hierarchy
+The `App.tsx` composes several providers to ensure data is available throughout the tree:
 
-ThemeProvider: Manages visual style (Light/Dark).
+- `ThemeProvider`: Manages visual style (Light/Dark).
 
-AmiiboProvider: The core "database." Handles the list of owned Amiibos, storage persistence, and Import/Export logic.
+- `AmiiboProvider`: The core "database." Handles the list of owned Amiibos, storage persistence, and Import/Export logic.
 
-FilterProvider: Manages the complex state of search inputs, sorting criteria, and active filters.
+- `FilterProvider`: Manages the complex state of search inputs, sorting criteria, and active filters.
 
-ToastProvider: A global notification system for user feedback.
+- `ToastProvider`: A global notification system for user feedback.
 
-Custom Hooks (/src/logic)
+### Custom Hooks (`/src/logic`)
 Business logic is extracted into reusable hooks:
 
-useUnlockLogic: Handles the countdown timer, the randomization algorithm to ensure you don't get duplicates easily, and API pre-fetching.
+- `useUnlockLogic`: Handles the countdown timer, the randomization algorithm to ensure you don't get duplicates easily, and API pre-fetching.
 
-useFilteredCollection: Efficiently filters and sorts the user's collection using useMemo to prevent unnecessary re-renders during search.
+- `useFilteredCollection`: Efficiently filters and sorts the user's collection using useMemo to prevent unnecessary re-renders during search.
 
-🧠 Technologies
+---
+
+## 🧠 Technologies
 Core: React 19, TypeScript
 
 Build Tool: Vite
@@ -95,11 +114,13 @@ Effects: React Confetti
 
 Linting: ESLint + TypeScript-ESLint
 
-🔗 API
+---
+
+## 🔗 API
 This project relies on the external AmiiboAPI to fetch figure data.
 
-Documentation: https://amiiboapi.com/
+- Documentation: https://amiiboapi.com/
 
-Endpoint Used: GET /api/amiibo/?type=figure
+- Endpoint Used: `GET /api/amiibo/?type=figure`
 
-The app implements a caching strategy (in utils.ts) to download the full Amiibo database only once and store it locally, minimizing network requests and respecting the API's bandwidth.
+The app implements a caching strategy (in `utils.ts`) to download the full Amiibo database only once and store it locally, minimizing network requests and respecting the API's bandwidth.
