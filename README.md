@@ -6,11 +6,11 @@
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
+<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
 
 <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
 
-<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css&logoColor=white">
 
 </div>
 
@@ -110,11 +110,11 @@ Business logic is extracted into reusable hooks:
 ## 🧠 Technologies
 | Technology | Description |
 |------------|-------------|
-| ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white) | A JavaScript library for building user interfaces using components. |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-4.9-3178C6?logo=typescript&logoColor=white) | Adds static typing to JavaScript for safer and more maintainable code. |
+| ![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react&logoColor=white) | A JavaScript library for building user interfaces using components. |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-Typed-3178C6?logo=typescript&logoColor=white) | Adds static typing to JavaScript for safer and more maintainable code. |
 | ![Vite](https://img.shields.io/badge/Vite-BuildTool-646CFF?logo=vite&logoColor=white) | Fast frontend build tool and development server. |
-| ![React Router DOM](https://img.shields.io/badge/React%20Router%20DOM-v7-CA4245?logo=react&logoColor=white) | Handles routing and navigation in React applications. |
-| ![Vanilla CSS](https://img.shields.io/badge/Vanilla%20CSS-Styling-1572B6?logo=css3&logoColor=white) | Standard CSS for styling components without frameworks. |
+| ![React Router DOM](https://img.shields.io/badge/React%20Router%20DOM-Routing-CA4245?logo=react&logoColor=white) | Handles routing and navigation in React applications. |
+| ![CSS](https://img.shields.io/badge/Vanilla%20CSS-Styling-1572B6?logo=css&logoColor=white) | Standard CSS for styling components without frameworks. |
 | ![React Icons](https://img.shields.io/badge/React%20Icons-Icons-61DAFB?logo=react&logoColor=white) | Provides a collection of popular icon packs as React components. |
 | ![React Confetti](https://img.shields.io/badge/React%20Confetti-Effects-61DAFB?logo=react&logoColor=white) | Adds confetti effects and animations in React apps. |
 
