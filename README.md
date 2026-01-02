@@ -22,7 +22,7 @@
 - [🕹️ How to Play](#%EF%B8%8F-how-to-play "Step-by-step guide on how to play the game")
 - [🔧 Game Architecture](#-game-architecture "Understand the structure and logic behind the game")
 - [🧠 Technologies](#-technologies "See which technologies were used to build the project")
-- [🔗 API](#-api "Information about the Truth or Dare API used in this project")
+- [🔗 API](#-api "Information about the Amiibo API used in this project")
 
 ---
 
