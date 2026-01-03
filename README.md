@@ -129,3 +129,15 @@ This project relies on the external AmiiboAPI to fetch figure data.
 - Endpoint Used: `GET /api/amiibo/?type=figure`
 
 The app implements a caching strategy (in `utils.ts`) to download the full Amiibo database only once and store it locally, minimizing network requests and respecting the API's bandwidth.
+
+---
+
+<div align="center">
+
+<sub>
+This project is licensed under the MIT License.  
+
+Disclaimer: Fan-made project, not affiliated with or endorsed by Nintendo.
+</sub>
+
+</div>

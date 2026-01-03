@@ -9,6 +9,9 @@ const Footer: React.FC = () => {
     return (
         <footer className="site-footer">
             <p>
+                © 2025 Davitroon — MIT License
+            </p>
+            <p>
                 Data obtained from{" "}
                 <a
                     href="https://amiiboapi.com/"
